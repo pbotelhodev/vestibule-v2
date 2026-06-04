@@ -87,7 +87,7 @@ const LandingPage = () => {
           <div className="text-center lg:text-left flex flex-col gap-4">
             <div className={markups}>Soluções</div>
             <h2 className="text-2xl tracking-tight font-extrabold text-slate-950 sm:text-2xl">
-              Dois públicos, uma só experiência.
+              Para quem estuda. Para quem acompanha.
             </h2>
           </div>
           {/* Cards */}
@@ -111,38 +111,38 @@ const LandingPage = () => {
                 <h3 className="text-xl font-extrabold">Para alunos</h3>
                 {/* Legenda */}
                 <p className="text-sm text-slate-500 ">
-                  Um painel simples para treinar, continuar simulados e entender
-                  onde melhorar.
+                  Treine com simulados, acompanhe sua evolução e entenda
+                  exatamente onde melhorar.
                 </p>
               </div>
 
               {/* Cards */}
               <div className="flex gap-4">
                 {/* Card 1 */}
-                <div className="border border-slate-200 rounded-2xl p-4 flex-1 bg-white shadow-sm transition hover:shadow-md">
+                <div className="border border-slate-200 rounded-3xl p-4 flex-1 bg-white shadow-sm transition hover:shadow-md">
                   <h2 className="font-semibold">Metas</h2>
                   <p className="text-slate-500 text-xs">
-                    Curso, nota e progresso.
+                    Acompanhe seu progresso.
                   </p>
                 </div>
                 {/* Card 2 */}
-                <div className="border border-slate-200 rounded-2xl p-4 flex-1 bg-white shadow-sm transition hover:shadow-md">
+                <div className="border border-slate-200 rounded-3xl p-4 flex-1 bg-white shadow-sm transition hover:shadow-md">
                   <h2 className="font-semibold">Trilhas</h2>
                   <p className="text-slate-500 text-xs">
-                    Foco nos pontos fracos.
+                    Estude pelos seus pontos fracos.
                   </p>
                 </div>
                 {/* Card 3 */}
-                <div className="border border-slate-200 rounded-2xl p-4 flex-1 bg-white shadow-sm transition hover:shadow-md">
+                <div className="border border-slate-200 rounded-3xl p-4 flex-1 bg-white shadow-sm transition hover:shadow-md">
                   <h2 className="font-semibold">Simulados</h2>
                   <p className="text-slate-500 text-xs">
-                    Treino direto e limpo.
+                    Treine com foco e clareza.
                   </p>
                 </div>
               </div>
 
               {/* Botão */}
-              <button className="flex text-sm font-bold bg-violet-600 text-white py-3 px-5 rounded-xl hover:bg-violet-700 transition-colors">
+              <button className="flex items-center cursor-pointer text-sm font-bold bg-violet-600 text-white py-3 px-5 rounded-xl hover:bg-violet-700 transition-colors">
                 Acessar como aluno
                 <ChevronRight />
               </button>
@@ -168,36 +168,36 @@ const LandingPage = () => {
                 <h3 className="text-xl font-extrabold">Para instituições</h3>
                 {/* Legenda */}
                 <p className="text-sm text-white/90">
-                  Ideal para cursinhos, colégios de ensino médio e coordenações
-                  pedagógicas.
+                  Crie simulados, acompanhe turmas e transforme resultados em
+                  decisões pedagógicas.
                 </p>
               </div>
               {/* Cards */}
               <div className="flex gap-4">
                 {/* Card 1 */}
-                <div className="border border-purple-600 rounded-2xl p-4 flex-1 bg-white/10 shadow-sm transition hover:shadow-md">
-                  <h2 className="font-semibold">Metas</h2>
+                <div className="border border-purple-600 rounded-3xl p-4 flex-1 bg-white/10 shadow-sm transition hover:shadow-md">
+                  <h2 className="font-semibold">Turmas</h2>
                   <p className="text-slate-200 text-xs">
-                    Curso, nota e progresso.
+                    Organize alunos por grupos.
                   </p>
                 </div>
                 {/* Card 2 */}
-                <div className="border border-purple-600 rounded-2xl p-4 flex-1 bg-white/10 shadow-sm transition hover:shadow-md">
-                  <h2 className="font-semibold">Trilhas</h2>
+                <div className="border border-purple-600 rounded-3xl p-4 flex-1 bg-white/10 shadow-sm transition hover:shadow-md">
+                  <h2 className="font-semibold">Provas</h2>
                   <p className="text-slate-200 text-xs">
-                    Foco nos pontos fracos.
+                    Crie e aplique simulados.
                   </p>
                 </div>
                 {/* Card 3 */}
-                <div className="border border-purple-600 rounded-2xl p-4 flex-1 bg-white/10 shadow-sm transition hover:shadow-md">
-                  <h2 className="font-semibold">Simulados</h2>
+                <div className="border border-purple-600 rounded-3xl p-4 flex-1 bg-white/10 shadow-sm transition hover:shadow-md">
+                  <h2 className="font-semibold">Relatórios</h2>
                   <p className="text-slate-200 text-xs">
-                    Treino direto e limpo.
+                    Visualize resultados com clareza.
                   </p>
                 </div>
               </div>
               {/* Botão */}
-              <button className="flex text-sm font-bold bg-violet-600 text-white py-3 px-5 rounded-xl hover:bg-violet-700 transition-colors">
+              <button className="flex items-center cursor-pointer text-sm font-bold bg-white text-purple-800 py-3 px-5 rounded-xl hover:bg-slate-100 transition-colors">
                 Solicitar acesso institucional
                 <ChevronRight />
               </button>
