@@ -2,11 +2,20 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import HeroMockup from "../components/HeroMockup";
-import { ChevronDown, ChevronRight, Building2 } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronRight,
+  Building2,
+  GraduationCap,
+  School,
+} from "lucide-react";
 
 const LandingPage = () => {
+  /* variáveis */
+  const markups =
+    "inline-flex w-fit text-[10px] uppercase font-bold text-purple-700 rounded-2xl bg-purple-100 px-3 py-1.5";
   return (
-    <div className="min-h-dvh bg-white">
+    <div id="produto" className="min-h-dvh bg-white">
       <Header />
 
       <main>
@@ -69,8 +78,133 @@ const LandingPage = () => {
           </div>
         </section>
 
-        <section id="alunos"></section>
-        <section id="instituicoes"></section>
+        {/* Solutions */}
+        <section
+          id="solucoes"
+          className="relative flex flex-col justify-center items-star mx-auto max-w-7xl px-6 py-10 min-h-[calc(100dvh-72px)]"
+        >
+          {/* header da seção */}
+          <div className="text-center lg:text-left flex flex-col gap-4">
+            <div className={markups}>Soluções</div>
+            <h2 className="text-2xl tracking-tight font-extrabold text-slate-950 sm:text-2xl">
+              Dois públicos, uma só experiência.
+            </h2>
+          </div>
+          {/* Cards */}
+          <div className="mt-7 grid gap-12 lg:grid-cols-2">
+            {/* campo Aluno */}
+            <div className="p-5 inline-flex flex-col gap-6 rounded-2xl border border-slate-200  shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl lg:items-start">
+              {/* Header */}
+              <div className="flex items-center justify-between w-full gap-4">
+                {/* icon */}
+                <div className="flex size-13 items-center justify-center rounded-2xl bg-slate-100 text-violet-600 ring-1 ring-white/10">
+                  <GraduationCap />
+                </div>
+                {/* Type */}
+                <div className=" text-xs font-bold text-purple-600 bg-slate-100 px-2 py-1 rounded-2xl">
+                  B2C
+                </div>
+              </div>
+              {/* Title */}
+              <div className="flex flex-col gap-3">
+                {/* titulo */}
+                <h3 className="text-xl font-extrabold">Para alunos</h3>
+                {/* Legenda */}
+                <p className="text-sm text-slate-500 ">
+                  Um painel simples para treinar, continuar simulados e entender
+                  onde melhorar.
+                </p>
+              </div>
+
+              {/* Cards */}
+              <div className="flex gap-4">
+                {/* Card 1 */}
+                <div className="border border-slate-200 rounded-2xl p-4 flex-1 bg-white shadow-sm transition hover:shadow-md">
+                  <h2 className="font-semibold">Metas</h2>
+                  <p className="text-slate-500 text-xs">
+                    Curso, nota e progresso.
+                  </p>
+                </div>
+                {/* Card 2 */}
+                <div className="border border-slate-200 rounded-2xl p-4 flex-1 bg-white shadow-sm transition hover:shadow-md">
+                  <h2 className="font-semibold">Trilhas</h2>
+                  <p className="text-slate-500 text-xs">
+                    Foco nos pontos fracos.
+                  </p>
+                </div>
+                {/* Card 3 */}
+                <div className="border border-slate-200 rounded-2xl p-4 flex-1 bg-white shadow-sm transition hover:shadow-md">
+                  <h2 className="font-semibold">Simulados</h2>
+                  <p className="text-slate-500 text-xs">
+                    Treino direto e limpo.
+                  </p>
+                </div>
+              </div>
+
+              {/* Botão */}
+              <button className="flex text-sm font-bold bg-violet-600 text-white py-3 px-5 rounded-xl hover:bg-violet-700 transition-colors">
+                Acessar como aluno
+                <ChevronRight />
+              </button>
+            </div>
+
+            {/* campo Instituição */}
+            <div className="p-5 inline-flex flex-col gap-6 rounded-2xl border border-purple-700 bg-purple-800 text-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl lg:items-start">
+              {/* Header */}
+              <div className="flex items-center justify-between w-full gap-4">
+                {/* icon */}
+                <div className="flex size-14 items-center justify-center rounded-2xl bg-white/10 text-amber-300 ring-1 ring-white/10">
+                  <School />
+                </div>
+                {/* Type */}
+                <div className=" text-xs font-bold text-amber-300 bg-white/10 px-2 py-1 rounded-2xl">
+                  B2B
+                </div>
+              </div>
+
+              {/* Title */}
+              <div className="flex flex-col gap-3">
+                {/* titulo */}
+                <h3 className="text-xl font-extrabold">Para instituições</h3>
+                {/* Legenda */}
+                <p className="text-sm text-white/90">
+                  Ideal para cursinhos, colégios de ensino médio e coordenações
+                  pedagógicas.
+                </p>
+              </div>
+              {/* Cards */}
+              <div className="flex gap-4">
+                {/* Card 1 */}
+                <div className="border border-purple-600 rounded-2xl p-4 flex-1 bg-white/10 shadow-sm transition hover:shadow-md">
+                  <h2 className="font-semibold">Metas</h2>
+                  <p className="text-slate-200 text-xs">
+                    Curso, nota e progresso.
+                  </p>
+                </div>
+                {/* Card 2 */}
+                <div className="border border-purple-600 rounded-2xl p-4 flex-1 bg-white/10 shadow-sm transition hover:shadow-md">
+                  <h2 className="font-semibold">Trilhas</h2>
+                  <p className="text-slate-200 text-xs">
+                    Foco nos pontos fracos.
+                  </p>
+                </div>
+                {/* Card 3 */}
+                <div className="border border-purple-600 rounded-2xl p-4 flex-1 bg-white/10 shadow-sm transition hover:shadow-md">
+                  <h2 className="font-semibold">Simulados</h2>
+                  <p className="text-slate-200 text-xs">
+                    Treino direto e limpo.
+                  </p>
+                </div>
+              </div>
+              {/* Botão */}
+              <button className="flex text-sm font-bold bg-violet-600 text-white py-3 px-5 rounded-xl hover:bg-violet-700 transition-colors">
+                Solicitar acesso institucional
+                <ChevronRight />
+              </button>
+            </div>
+          </div>
+        </section>
+
         <section id="produto"></section>
         <section id="recursos"></section>
         <section id="planos"></section>

@@ -8,16 +8,12 @@ import Logo from "./ui/Logo";
 
 const navItems = [
   {
-    label: "Alunos",
-    path: "#alunos",
-  },
-  {
-    label: "Instituições",
-    path: "#instituicoes",
-  },
-  {
     label: "Produto",
     path: "#produto",
+  },
+  {
+    label: "Soluções",
+    path: "#solucoes",
   },
   {
     label: "Recursos",
@@ -38,7 +34,7 @@ const Header = () => {
     <header className="absolut sticky top-0 z-50 border-b border-slate-100 bg-white/90 backdrop-blur-xl">
       <div className="mx-auto flex h-18 max-w-7xl items-center justify-between px-5 sm:px-6">
         {/* Logo */}
-        <a href="#inicio" onClick={closeMenu}>
+        <a href="/" onClick={closeMenu}>
           <Logo />
         </a>
 
