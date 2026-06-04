@@ -1,100 +1,198 @@
+/* Tools */
+import { useState } from "react";
+import { Menu, X } from "lucide-react";
 import { NavLink } from "react-router-dom";
-import logo from "../assets/logo.png";
+
+/* Component */
+import Logo from "./ui/Logo";
 
 const navItems = [
   {
     label: "Alunos",
-    path: "/alunos",
+    path: "#alunos",
   },
   {
     label: "Instituições",
-    path: "/instituicoes",
+    path: "#instituicoes",
   },
   {
     label: "Produto",
-    path: "/produto",
+    path: "#produto",
   },
   {
     label: "Recursos",
-    path: "/recursos",
+    path: "#recursos",
   },
   {
     label: "Planos",
-    path: "/planos",
+    path: "#planos",
   },
 ];
 
 const Header = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const closeMenu = () => setMenuOpen(false);
+
   return (
     <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/90 backdrop-blur-xl">
-      <div className="mx-auto flex h-18 max-w-7xl items-center justify-between px-6">
+      <div className="mx-auto flex h-18 max-w-7xl items-center justify-between px-5 sm:px-6">
         {/* Logo */}
-        <NavLink to="/" className="flex items-center gap-3">
-          <img src={logo} alt="Vestibule" className="h-10 w-auto" />
-
-          <div className="leading-none">
-            <h1 className="text-xl font-extrabold tracking-tight text-slate-950">
-              Vestibule
-            </h1>
-            <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.32em] text-violet-600">
-              Edtech SaaS
-            </p>
-          </div>
-        </NavLink>
+        <a href="#inicio" onClick={closeMenu}>
+          <Logo />
+        </a>
 
         {/* Menu desktop */}
-        <nav className="hidden items-center gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-2 shadow-sm lg:flex">
+        <nav className="hidden items-center gap-1 rounded-2xl border border-slate-200 bg-white p-1 shadow-sm xl:flex">
           {navItems.map((item) => (
-            <NavLink
+            <a
               key={item.path}
-              to={item.path}
-              className={({ isActive }) =>
-                `
-                  rounded-xl px-6 py-2 text-sm font-bold transition
-                  ${
-                    isActive
-                      ? "bg-violet-50 text-violet-600"
-                      : "text-slate-500 hover:bg-slate-50 hover:text-slate-950"
-                  }
-                `
-              }
+              href={item.path}
+              className="
+                group relative overflow-hidden rounded-xl px-5 py-2
+                text-sm font-bold text-slate-500 transition-all duration-300
+                hover:-translate-y-0.5 hover:bg-linear-to-r hover:from-violet-100 hover:via-purple-100 hover:to-blue-100
+                hover:text-violet-700 hover:shadow-sm
+              "
             >
-              {item.label}
-            </NavLink>
+              <span className="relative z-10">{item.label}</span>
+
+              <span
+                className="
+                  absolute inset-y-0 -left-10 w-8 rotate-12 bg-white/50 blur-sm
+                  transition-all duration-700 group-hover:left-[120%]
+                "
+              />
+            </a>
           ))}
         </nav>
 
-        {/* Ações */}
-        <div className="hidden items-center gap-4 lg:flex">
+        {/* Ações desktop */}
+        <div className="hidden items-center gap-3 xl:flex">
           <NavLink
             to="/portal"
-            className="text-sm font-bold text-violet-600 transition hover:text-violet-700"
+            className="
+              group relative overflow-hidden rounded-2xl bg-violet-50 px-5 py-3
+              text-sm font-bold text-violet-600 shadow-sm transition-all duration-300
+              hover:-translate-y-0.5 hover:bg-linear-to-r hover:from-violet-100 hover:via-purple-100 hover:to-blue-100
+              hover:text-violet-700 hover:shadow-md
+            "
           >
-            Portal do aluno
+            <span className="relative z-10">Portal do aluno</span>
+
+            <span
+              className="
+                absolute inset-y-0 -left-12 w-10 rotate-12 bg-white/50 blur-sm
+                transition-all duration-700 group-hover:left-[120%]
+              "
+            />
           </NavLink>
 
           <NavLink
             to="/criar-conta"
-            className="rounded-2xl bg-blue-950 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-violet-600 hover:shadow-xl"
+            className="
+              group relative overflow-hidden rounded-2xl bg-blue-950 px-5 py-3
+              text-sm font-bold text-white shadow-sm transition-all duration-300
+              hover:-translate-y-0.5 hover:bg-linear-to-r hover:from-violet-600 hover:via-purple-500 hover:to-blue-600
+              hover:shadow-xl
+            "
           >
-            Criar conta
+            <span className="relative z-10">Criar conta</span>
+
+            <span
+              className="
+                absolute inset-y-0 -left-12 w-10 rotate-12 bg-white/40 blur-sm
+                transition-all duration-700 group-hover:left-[120%]
+              "
+            />
           </NavLink>
         </div>
 
-        {/* Mobile simples */}
-        <div className="flex items-center gap-3 lg:hidden">
-          <NavLink to="/portal" className="text-sm font-bold text-violet-600">
-            Portal
-          </NavLink>
-
-          <NavLink
-            to="/criar-conta"
-            className="rounded-full bg-blue-950 px-4 py-2.5 text-sm font-bold text-white"
-          >
-            Criar
-          </NavLink>
-        </div>
+        {/* Botão mobile/tablet */}
+        <button
+          type="button"
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="
+            flex size-11 items-center justify-center rounded-2xl border border-slate-200
+            bg-white text-slate-700 shadow-sm transition hover:bg-violet-50 hover:text-violet-600 xl:hidden
+          "
+          aria-label="Abrir menu"
+        >
+          {menuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+        </button>
       </div>
+
+      {/* Menu mobile/tablet */}
+      {menuOpen && (
+        <div className="border-t border-slate-100 bg-white px-5 py-5 shadow-sm sm:px-6 xl:hidden">
+          <nav className="grid gap-2">
+            {navItems.map((item) => (
+              <a
+                key={item.path}
+                href={item.path}
+                onClick={closeMenu}
+                className="
+                  group relative overflow-hidden rounded-2xl px-4 py-3
+                  text-sm font-bold text-slate-500 transition-all duration-300
+                  hover:bg-linear-to-r hover:from-violet-100 hover:via-purple-100 hover:to-blue-100
+                  hover:text-violet-700
+                "
+              >
+                <span className="relative z-10">{item.label}</span>
+
+                <span
+                  className="
+                    absolute inset-y-0 -left-12 w-10 rotate-12 bg-white/50 blur-sm
+                    transition-all duration-700 group-hover:left-[120%]
+                  "
+                />
+              </a>
+            ))}
+          </nav>
+
+          <div className="mt-5 grid gap-3 border-t border-slate-100 pt-5 sm:grid-cols-2">
+            <NavLink
+              to="/portal"
+              onClick={closeMenu}
+              className="
+                group relative overflow-hidden rounded-2xl bg-violet-50 px-4 py-3
+                text-center text-sm font-bold text-violet-600 shadow-sm transition-all duration-300
+                hover:bg-linear-to-r hover:from-violet-100 hover:via-purple-100 hover:to-blue-100
+                hover:text-violet-700
+              "
+            >
+              <span className="relative z-10">Portal do aluno</span>
+
+              <span
+                className="
+                  absolute inset-y-0 -left-12 w-10 rotate-12 bg-white/50 blur-sm
+                  transition-all duration-700 group-hover:left-[120%]
+                "
+              />
+            </NavLink>
+
+            <NavLink
+              to="/criar-conta"
+              onClick={closeMenu}
+              className="
+                group relative overflow-hidden rounded-2xl bg-blue-950 px-4 py-3
+                text-center text-sm font-bold text-white shadow-sm transition-all duration-300
+                hover:bg-linear-to-r hover:from-violet-600 hover:via-purple-500 hover:to-blue-600
+                hover:shadow-lg
+              "
+            >
+              <span className="relative z-10">Criar conta</span>
+
+              <span
+                className="
+                  absolute inset-y-0 -left-12 w-10 rotate-12 bg-white/40 blur-sm
+                  transition-all duration-700 group-hover:left-[120%]
+                "
+              />
+            </NavLink>
+          </div>
+        </div>
+      )}
     </header>
   );
 };

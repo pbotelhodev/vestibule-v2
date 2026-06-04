@@ -1,5 +1,7 @@
-import { GraduationCap, Instagram, Linkedin, Mail } from "lucide-react";
-import logo from "../assets/logo.png";
+import { Instagram, Linkedin, Mail } from "lucide-react";
+
+/* Component */
+import Logo from "./ui/Logo";
 
 const Footer = () => {
   const year = new Date().getFullYear();
@@ -7,22 +9,10 @@ const Footer = () => {
   return (
     <footer className="border-t border-slate-200 bg-white">
       <div className="mx-auto max-w-7xl px-6 py-10">
-        <div className="grid gap-10 md:grid-cols-[1.4fr_0.8fr_0.8fr_0.8fr]">
+        <div className="grid gap-10 lg:grid-cols-[1fr_1.8fr] lg:items-start">
           {/* Marca */}
-          <div>
-            {/* Logo */}
-            <div className="flex items-center gap-3">
-              <img src={logo} alt="Vestibule" className="h-14 w-auto" />
-
-              <div className="relative">
-                <h2 className="text-2xl font-bold tracking-tight text-slate-950">
-                  Vestibule
-                </h2>
-                <p className="text-xs font-bold uppercase text-purple-500 tracking-widest">
-                  Student SaaS
-                </p>
-              </div>
-            </div>
+          <div className="flex flex-col items-start">
+            <Logo />
 
             <p className="mt-5 max-w-sm text-sm leading-6 text-slate-500">
               Simulados online, desempenho em tempo real e trilhas de estudo
@@ -36,32 +26,49 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Produto */}
-          <FooterColumn
-            title="Produto"
-            links={["Painel", "Simulados", "Desempenho", "Trilhas", "Perfil"]}
-          />
+          {/* Colunas */}
+          <div className="relative min-w-0">
+            {/* Fade indicando rolagem no mobile */}
+            <div className="pointer-events-none absolute top-0 right-0 z-10 h-full w-16 bg-linear-to-l from-white to-transparent lg:hidden" />
 
-          {/* Plataforma */}
-          <FooterColumn
-            title="Plataforma"
-            links={[
-              "ENEM",
-              "FUVEST",
-              "Vestibulares",
-              "Cursinhos",
-              "Ensino médio",
-            ]}
-          />
+            <div className="flex gap-4 overflow-x-auto pb-4 pr-12 lg:grid lg:grid-cols-4 lg:gap-6 lg:overflow-visible lg:pb-0 lg:pr-0">
+              <FooterColumn
+                title="Produto"
+                links={[
+                  "Painel",
+                  "Simulados",
+                  "Desempenho",
+                  "Trilhas",
+                  "Perfil",
+                ]}
+              />
 
-          {/* Empresa */}
-          <FooterColumn
-            title="Empresa"
-            links={["Sobre", "Contato", "Privacidade", "Termos"]}
-          />
+              <FooterColumn
+                title="Plataforma"
+                links={[
+                  "ENEM",
+                  "FUVEST",
+                  "Vestibulares",
+                  "Cursinhos",
+                  "Ensino médio",
+                ]}
+              />
+
+              <FooterColumn
+                title="Empresa"
+                links={["Sobre", "Contato", "Privacidade", "Termos"]}
+              />
+
+              <FooterColumn
+                title="Suporte"
+                links={["Ajuda", "Contato", "Dúvidas", "Central"]}
+              />
+            </div>
+          </div>
         </div>
 
-        <div className="mt-10 flex flex-col gap-3 border-t border-slate-200 pt-6 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+        {/* Direitos */}
+        <div className="mt-10 flex flex-col items-center gap-3 border-t border-slate-200 pt-6 text-center text-sm text-slate-500 sm:flex-row sm:justify-between sm:text-left">
           <p>© {year} Vestibule. All rights reserved.</p>
 
           <p>
@@ -83,7 +90,7 @@ const Footer = () => {
 
 const FooterColumn = ({ title, links }) => {
   return (
-    <div>
+    <div className="min-w-44 rounded-3xl bg-white p-5 lg:min-w-0">
       <h3 className="text-sm font-bold tracking-tight text-slate-950">
         {title}
       </h3>
