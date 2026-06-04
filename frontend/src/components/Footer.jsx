@@ -10,22 +10,23 @@ const Footer = () => {
         <div className="grid gap-10 md:grid-cols-[1.4fr_0.8fr_0.8fr_0.8fr]">
           {/* Marca */}
           <div>
+            {/* Logo */}
             <div className="flex items-center gap-3">
-              <img src={logo} alt="Vestibule" className="h-10 w-auto" />
+              <img src={logo} alt="Vestibule" className="h-14 w-auto" />
 
-              <div>
-                <h2 className="text-lg font-extrabold tracking-tight text-slate-950">
+              <div className="relative">
+                <h2 className="text-2xl font-bold tracking-tight text-slate-950">
                   Vestibule
                 </h2>
-                <p className="text-sm font-medium text-slate-500">
+                <p className="text-xs font-bold uppercase text-purple-500 tracking-widest">
                   Student SaaS
                 </p>
               </div>
             </div>
 
             <p className="mt-5 max-w-sm text-sm leading-6 text-slate-500">
-              Plataforma moderna para simulados, desempenho e trilhas de estudo
-              para vestibulares, ENEM, cursinhos e ensino médio.
+              Simulados online, desempenho em tempo real e trilhas de estudo
+              personalizadas para alunos, escolas e cursinhos.
             </p>
 
             <div className="mt-6 flex items-center gap-3">
@@ -61,7 +62,7 @@ const Footer = () => {
         </div>
 
         <div className="mt-10 flex flex-col gap-3 border-t border-slate-200 pt-6 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {year} Vestibule. Todos os direitos reservados.</p>
+          <p>© {year} Vestibule. All rights reserved.</p>
 
           <p>
             Developed by{" "}
@@ -83,7 +84,7 @@ const Footer = () => {
 const FooterColumn = ({ title, links }) => {
   return (
     <div>
-      <h3 className="text-sm font-extrabold tracking-tight text-slate-950">
+      <h3 className="text-sm font-bold tracking-tight text-slate-950">
         {title}
       </h3>
 
