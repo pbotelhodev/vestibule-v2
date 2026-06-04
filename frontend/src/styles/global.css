@@ -1,6 +1,51 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap");
 @import "tailwindcss";
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap");
 
+html,
 body {
-  font-family: "Manrope", "Inter", sans-serif;
+  font-family: "Plus Jakarta Sans", "Manrope" , sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+@keyframes floatSoft {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px);
+  }
+
+  50% {
+    transform: translateY(-14px) translateX(8px);
+  }
+}
+
+@keyframes floatReverse {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px);
+  }
+
+  50% {
+    transform: translateY(12px) translateX(-8px);
+  }
+}
+
+@keyframes dotFloat {
+  0%,
+  100% {
+    transform: translateY(0px) scale(1);
+    opacity: 0.45;
+  }
+
+  50% {
+    transform: translateY(-14px) scale(1.2);
+    opacity: 0.8;
+  }
 }

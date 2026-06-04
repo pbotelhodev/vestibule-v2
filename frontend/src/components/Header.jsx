@@ -35,7 +35,7 @@ const Header = () => {
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/90 backdrop-blur-xl">
+    <header className="absolut sticky top-0 z-50 border-b border-slate-100 bg-white/90 backdrop-blur-xl">
       <div className="mx-auto flex h-18 max-w-7xl items-center justify-between px-5 sm:px-6">
         {/* Logo */}
         <a href="#inicio" onClick={closeMenu}>
