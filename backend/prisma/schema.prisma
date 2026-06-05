@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  STUDENT
+  TEACHER
+  INSTITUTION
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  PENDING
+  SUSPENDED
+  DELETED
+}
+
+enum AuthProvider {
+  GOOGLE
+  LOCAL
+}
+
+enum StudentType {
+  INDIVIDUAL
+  INSTITUTIONAL
+}
+
+/**
+ * Schemas db
+ */
+
+/**
+ * Schema User
+ */
+
+model User {
+  id              String       @id @default(uuid())
+  name            String
+  email           String       @unique
+  passwordHash    String?      @map("password_hash")
+  role            UserRole     @default(STUDENT)
+  status          UserStatus   @default(ACTIVE)
+  authProvider    AuthProvider @default(LOCAL) @map("auth_provider")
+  googleId        String?      @unique @map("google_id")
+  studentType     StudentType  @default(INDIVIDUAL) @map("student_type")
+  institutionCode String?      @map("institution_code")
+  avatarUrl       String?      @map("avatar_url")
+  phone           String?
+  emailVerifiedAt DateTime?    @map("email_verified_at")
+  lastLoginAt     DateTime?    @map("last_login_at")
+  createdAt       DateTime     @default(now()) @map("created_at")
+  updatedAt       DateTime     @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+/**
+ * npx prisma validate      → confere se o schema está válido
+ * npx prisma format        → organiza o schema.prisma
+ * npx prisma migrate dev   → cria/atualiza tabelas no banco com histórico
+ * npx prisma generate      → gera o client usado pelo backend
+ * npx prisma studio        → abre painel visual do banco
+ * npx prisma db push       → empurra schema para banco sem migration
+ * npx prisma db pull       → puxa banco existente para o schema
+ */
