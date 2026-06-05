@@ -23,6 +23,10 @@ const navItems = [
     label: "Planos",
     path: "#planos",
   },
+  {
+    label: "FAQs",
+    path: "#perguntas",
+  }
 ];
 
 const Header = () => {
@@ -74,7 +78,7 @@ const Header = () => {
               hover:text-violet-700 hover:shadow-md
             "
           >
-            <span className="relative z-10">Portal do aluno</span>
+            <span className="relative z-10">Acessar Portal</span>
 
             <span
               className="
@@ -157,7 +161,7 @@ const Header = () => {
                 hover:text-violet-700
               "
             >
-              <span className="relative z-10">Portal do aluno</span>
+              <span className="relative z-10">Acessar Portal</span>
 
               <span
                 className="

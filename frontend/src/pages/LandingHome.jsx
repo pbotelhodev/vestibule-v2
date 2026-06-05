@@ -9,6 +9,7 @@ import { ChevronRight, Building2, GraduationCap, School } from "lucide-react";
 /* Services */
 import { recursos } from "../services/recursos";
 import { planos } from "../services/planos";
+import { faqs } from "../services/faqs";
 
 const LandingPage = () => {
   const markups =
@@ -357,6 +358,43 @@ const LandingPage = () => {
                 >
                   {plan.button}
                 </a>
+              </div>
+            ))}
+          </div>
+        </section>
+        {/* Perguntas frequentes */}
+        <section
+          id="perguntas"
+          className="relative mx-auto max-w-7xl border-t border-dotted border-purple-100 px-4 py-16 sm:px-6 sm:py-20"
+        >
+          {/* Header */}
+          <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">
+            <div className={markups}>Perguntas</div>
+
+            <h2 className="text-2xl font-extrabold tracking-tight text-slate-950 sm:text-3xl lg:text-4xl">
+              Dúvidas comuns antes de começar.
+            </h2>
+
+            <p className="max-w-xl text-sm leading-6 text-slate-500 sm:text-base">
+              Entenda como o Vestibule funciona para alunos, escolas, cursinhos
+              e equipes pedagógicas.
+            </p>
+          </div>
+
+          {/* Lista */}
+          <div className="mx-auto mt-10 grid max-w-5xl gap-4 lg:grid-cols-2">
+            {faqs.map((faq) => (
+              <div
+                key={faq.question}
+                className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-violet-200 hover:shadow-lg sm:p-6"
+              >
+                <h3 className="text-base font-bold text-slate-950">
+                  {faq.question}
+                </h3>
+
+                <p className="mt-3 text-sm leading-6 text-slate-500">
+                  {faq.answer}
+                </p>
               </div>
             ))}
           </div>
