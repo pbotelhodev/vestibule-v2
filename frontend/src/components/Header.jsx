@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 /* Tools */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 /* Component */
 import Logo from "./ui/Logo";
@@ -26,21 +27,64 @@ const navItems = [
   {
     label: "FAQs",
     path: "#perguntas",
-  }
+  },
 ];
 
 const Header = () => {
+  const navigate = useNavigate();
+
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const keyLogin = false;
+
+  useEffect(() => {
+    setIsLoggedIn(Boolean(keyLogin));
+  }, [keyLogin]);
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
 
   const closeMenu = () => setMenuOpen(false);
 
+  const handlePortalClick = () => {
+    closeMenu();
+
+    if (isLoggedIn) {
+      navigate("/portal");
+      return;
+    }
+
+    navigate("/login");
+  };
+
+  const handleCreateAccountClick = () => {
+    closeMenu();
+    navigate("/signup");
+  };
+
+  const handleLogoClick = () => {
+    closeMenu();
+    navigate("/");
+  };
+
   return (
-    <header className="absolut sticky top-0 z-50 border-b border-slate-100 bg-white/90 backdrop-blur-xl">
-      <div className="mx-auto flex h-18 max-w-7xl items-center justify-between px-5 sm:px-6">
+    <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/90 backdrop-blur-xl">
+      <div className="mx-auto flex h-18 max-w-7xl items-center justify-between px-5 sm:px-6 2xl:max-w-360 2xl:px-8">
         {/* Logo */}
-        <a href="/" onClick={closeMenu}>
+        <button
+          type="button"
+          onClick={handleLogoClick}
+          className="shrink-0"
+          aria-label="Ir para o início"
+        >
           <Logo />
-        </a>
+        </button>
 
         {/* Menu desktop */}
         <nav className="hidden items-center gap-1 rounded-2xl border border-slate-200 bg-white p-1 shadow-sm xl:flex">
@@ -53,6 +97,7 @@ const Header = () => {
                 text-sm font-bold text-slate-500 transition-all duration-300
                 hover:-translate-y-0.5 hover:bg-linear-to-r hover:from-violet-100 hover:via-purple-100 hover:to-blue-100
                 hover:text-violet-700 hover:shadow-sm
+                2xl:px-6
               "
             >
               <span className="relative z-10">{item.label}</span>
@@ -69,13 +114,15 @@ const Header = () => {
 
         {/* Ações desktop */}
         <div className="hidden items-center gap-3 xl:flex">
-          <NavLink
-            to="/portal"
+          <button
+            type="button"
+            onClick={handlePortalClick}
             className="
               group relative overflow-hidden rounded-2xl bg-violet-50 px-5 py-3
               text-sm font-bold text-violet-600 shadow-sm transition-all duration-300
               hover:-translate-y-0.5 hover:bg-linear-to-r hover:from-violet-100 hover:via-purple-100 hover:to-blue-100
               hover:text-violet-700 hover:shadow-md
+              2xl:px-6
             "
           >
             <span className="relative z-10">Acessar Portal</span>
@@ -86,15 +133,17 @@ const Header = () => {
                 transition-all duration-700 group-hover:left-[120%]
               "
             />
-          </NavLink>
+          </button>
 
-          <NavLink
-            to="/criar-conta"
+          <button
+            type="button"
+            onClick={handleCreateAccountClick}
             className="
               group relative overflow-hidden rounded-2xl bg-blue-950 px-5 py-3
               text-sm font-bold text-white shadow-sm transition-all duration-300
               hover:-translate-y-0.5 hover:bg-linear-to-r hover:from-violet-600 hover:via-purple-500 hover:to-blue-600
               hover:shadow-xl
+              2xl:px-6
             "
           >
             <span className="relative z-10">Criar conta</span>
@@ -105,40 +154,67 @@ const Header = () => {
                 transition-all duration-700 group-hover:left-[120%]
               "
             />
-          </NavLink>
+          </button>
         </div>
 
-        {/* Botão mobile/tablet */}
+        {/* Botão mobile/tablet/lg */}
         <button
           type="button"
-          onClick={() => setMenuOpen(!menuOpen)}
+          onClick={() => setMenuOpen((prev) => !prev)}
           className="
             flex size-11 items-center justify-center rounded-2xl border border-slate-200
             bg-white text-slate-700 shadow-sm transition hover:bg-violet-50 hover:text-violet-600 xl:hidden
           "
-          aria-label="Abrir menu"
+          aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
+          aria-expanded={menuOpen}
         >
           {menuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
         </button>
       </div>
 
-      {/* Menu mobile/tablet */}
+      {/* Menu mobile/tablet/lg */}
       {menuOpen && (
-        <div className="border-t border-slate-100 bg-white px-5 py-5 shadow-sm sm:px-6 xl:hidden">
-          <nav className="grid gap-2">
-            {navItems.map((item) => (
-              <a
-                key={item.path}
-                href={item.path}
-                onClick={closeMenu}
+        <div className="xl:hidden">
+          <div className="max-h-[calc(100dvh-72px)] overflow-y-auto overscroll-contain border-t border-slate-100 bg-white px-5 py-5 shadow-sm sm:px-6 lg:px-8">
+            <nav className="grid gap-2">
+              {navItems.map((item) => (
+                <a
+                  key={item.path}
+                  href={item.path}
+                  onClick={closeMenu}
+                  className="
+                    group relative overflow-hidden rounded-2xl px-4 py-3
+                    text-sm font-bold text-slate-500 transition-all duration-300
+                    hover:bg-linear-to-r hover:from-violet-100 hover:via-purple-100 hover:to-blue-100
+                    hover:text-violet-700
+                    lg:px-5 lg:py-3.5
+                  "
+                >
+                  <span className="relative z-10">{item.label}</span>
+
+                  <span
+                    className="
+                      absolute inset-y-0 -left-12 w-10 rotate-12 bg-white/50 blur-sm
+                      transition-all duration-700 group-hover:left-[120%]
+                    "
+                  />
+                </a>
+              ))}
+            </nav>
+
+            <div className="mt-5 grid gap-3 border-t border-slate-100 pt-5 sm:grid-cols-2">
+              <button
+                type="button"
+                onClick={handlePortalClick}
                 className="
-                  group relative overflow-hidden rounded-2xl px-4 py-3
-                  text-sm font-bold text-slate-500 transition-all duration-300
+                  group relative overflow-hidden rounded-2xl bg-violet-50 px-4 py-3
+                  text-center text-sm font-bold text-violet-600 shadow-sm transition-all duration-300
                   hover:bg-linear-to-r hover:from-violet-100 hover:via-purple-100 hover:to-blue-100
                   hover:text-violet-700
+                  lg:py-3.5
                 "
               >
-                <span className="relative z-10">{item.label}</span>
+                <span className="relative z-10">Acessar Portal</span>
 
                 <span
                   className="
@@ -146,50 +222,29 @@ const Header = () => {
                     transition-all duration-700 group-hover:left-[120%]
                   "
                 />
-              </a>
-            ))}
-          </nav>
+              </button>
 
-          <div className="mt-5 grid gap-3 border-t border-slate-100 pt-5 sm:grid-cols-2">
-            <NavLink
-              to="/portal"
-              onClick={closeMenu}
-              className="
-                group relative overflow-hidden rounded-2xl bg-violet-50 px-4 py-3
-                text-center text-sm font-bold text-violet-600 shadow-sm transition-all duration-300
-                hover:bg-linear-to-r hover:from-violet-100 hover:via-purple-100 hover:to-blue-100
-                hover:text-violet-700
-              "
-            >
-              <span className="relative z-10">Acessar Portal</span>
-
-              <span
+              <button
+                type="button"
+                onClick={handleCreateAccountClick}
                 className="
-                  absolute inset-y-0 -left-12 w-10 rotate-12 bg-white/50 blur-sm
-                  transition-all duration-700 group-hover:left-[120%]
+                  group relative overflow-hidden rounded-2xl bg-blue-950 px-4 py-3
+                  text-center text-sm font-bold text-white shadow-sm transition-all duration-300
+                  hover:bg-linear-to-r hover:from-violet-600 hover:via-purple-500 hover:to-blue-600
+                  hover:shadow-lg
+                  lg:py-3.5
                 "
-              />
-            </NavLink>
+              >
+                <span className="relative z-10">Criar conta</span>
 
-            <NavLink
-              to="/criar-conta"
-              onClick={closeMenu}
-              className="
-                group relative overflow-hidden rounded-2xl bg-blue-950 px-4 py-3
-                text-center text-sm font-bold text-white shadow-sm transition-all duration-300
-                hover:bg-linear-to-r hover:from-violet-600 hover:via-purple-500 hover:to-blue-600
-                hover:shadow-lg
-              "
-            >
-              <span className="relative z-10">Criar conta</span>
-
-              <span
-                className="
-                  absolute inset-y-0 -left-12 w-10 rotate-12 bg-white/40 blur-sm
-                  transition-all duration-700 group-hover:left-[120%]
-                "
-              />
-            </NavLink>
+                <span
+                  className="
+                    absolute inset-y-0 -left-12 w-10 rotate-12 bg-white/40 blur-sm
+                    transition-all duration-700 group-hover:left-[120%]
+                  "
+                />
+              </button>
+            </div>
           </div>
         </div>
       )}
