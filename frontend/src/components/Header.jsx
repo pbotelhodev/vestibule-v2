@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/set-state-in-effect */
+
 /* Tools */
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
@@ -75,7 +76,7 @@ const Header = () => {
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/90 backdrop-blur-xl">
-      <div className="mx-auto flex h-18 max-w-7xl items-center justify-between px-5 sm:px-6 2xl:max-w-360 2xl:px-8">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 xl:h-18 xl:max-w-6xl xl:gap-5 xl:px-6 2xl:max-w-360 2xl:px-8">
         {/* Logo */}
         <button
           type="button"
@@ -87,17 +88,17 @@ const Header = () => {
         </button>
 
         {/* Menu desktop */}
-        <nav className="hidden items-center gap-1 rounded-2xl border border-slate-200 bg-white p-1 shadow-sm xl:flex">
+        <nav className="hidden min-w-0 items-center gap-1 rounded-2xl border border-slate-200 bg-white p-1 shadow-sm xl:flex">
           {navItems.map((item) => (
             <a
               key={item.path}
               href={item.path}
               className="
-                group relative overflow-hidden rounded-xl px-5 py-2
+                group relative overflow-hidden whitespace-nowrap rounded-xl px-3.5 py-2
                 text-sm font-bold text-slate-500 transition-all duration-300
                 hover:-translate-y-0.5 hover:bg-linear-to-r hover:from-violet-100 hover:via-purple-100 hover:to-blue-100
                 hover:text-violet-700 hover:shadow-sm
-                2xl:px-6
+                2xl:px-5
               "
             >
               <span className="relative z-10">{item.label}</span>
@@ -113,16 +114,16 @@ const Header = () => {
         </nav>
 
         {/* Ações desktop */}
-        <div className="hidden items-center gap-3 xl:flex">
+        <div className="hidden shrink-0 items-center gap-2 xl:flex 2xl:gap-3">
           <button
             type="button"
             onClick={handlePortalClick}
             className="
-              group relative overflow-hidden rounded-2xl bg-violet-50 px-5 py-3
+              group relative overflow-hidden whitespace-nowrap rounded-2xl bg-violet-50 px-4 py-2.5
               text-sm font-bold text-violet-600 shadow-sm transition-all duration-300
               hover:-translate-y-0.5 hover:bg-linear-to-r hover:from-violet-100 hover:via-purple-100 hover:to-blue-100
               hover:text-violet-700 hover:shadow-md
-              2xl:px-6
+              2xl:px-5 2xl:py-3
             "
           >
             <span className="relative z-10">Acessar Portal</span>
@@ -139,11 +140,11 @@ const Header = () => {
             type="button"
             onClick={handleCreateAccountClick}
             className="
-              group relative overflow-hidden rounded-2xl bg-blue-950 px-5 py-3
+              group relative overflow-hidden whitespace-nowrap rounded-2xl bg-blue-950 px-4 py-2.5
               text-sm font-bold text-white shadow-sm transition-all duration-300
               hover:-translate-y-0.5 hover:bg-linear-to-r hover:from-violet-600 hover:via-purple-500 hover:to-blue-600
               hover:shadow-xl
-              2xl:px-6
+              2xl:px-5 2xl:py-3
             "
           >
             <span className="relative z-10">Criar conta</span>
@@ -162,7 +163,7 @@ const Header = () => {
           type="button"
           onClick={() => setMenuOpen((prev) => !prev)}
           className="
-            flex size-11 items-center justify-center rounded-2xl border border-slate-200
+            flex size-11 shrink-0 items-center justify-center rounded-2xl border border-slate-200
             bg-white text-slate-700 shadow-sm transition hover:bg-violet-50 hover:text-violet-600 xl:hidden
           "
           aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
@@ -175,8 +176,13 @@ const Header = () => {
       {/* Menu mobile/tablet/lg */}
       {menuOpen && (
         <div className="xl:hidden">
-          <div className="max-h-[calc(100dvh-72px)] overflow-y-auto overscroll-contain border-t border-slate-100 bg-white px-5 py-5 shadow-sm sm:px-6 lg:px-8">
-            <nav className="grid gap-2">
+          <div
+            className="
+              border-t border-slate-100 bg-white px-5 py-4 shadow-sm sm:px-6 lg:px-8
+              max-lg:max-h-[calc(100dvh-64px)] max-lg:overflow-y-auto max-lg:overscroll-contain
+            "
+          >
+            <nav className="grid gap-2 lg:grid-cols-5 lg:gap-2">
               {navItems.map((item) => (
                 <a
                   key={item.path}
@@ -187,7 +193,7 @@ const Header = () => {
                     text-sm font-bold text-slate-500 transition-all duration-300
                     hover:bg-linear-to-r hover:from-violet-100 hover:via-purple-100 hover:to-blue-100
                     hover:text-violet-700
-                    lg:px-5 lg:py-3.5
+                    lg:px-3 lg:py-2.5 lg:text-center
                   "
                 >
                   <span className="relative z-10">{item.label}</span>
@@ -202,7 +208,7 @@ const Header = () => {
               ))}
             </nav>
 
-            <div className="mt-5 grid gap-3 border-t border-slate-100 pt-5 sm:grid-cols-2">
+            <div className="mt-4 grid gap-3 border-t border-slate-100 pt-4 sm:grid-cols-2 lg:mx-auto lg:max-w-xl">
               <button
                 type="button"
                 onClick={handlePortalClick}
@@ -211,7 +217,7 @@ const Header = () => {
                   text-center text-sm font-bold text-violet-600 shadow-sm transition-all duration-300
                   hover:bg-linear-to-r hover:from-violet-100 hover:via-purple-100 hover:to-blue-100
                   hover:text-violet-700
-                  lg:py-3.5
+                  lg:py-2.5
                 "
               >
                 <span className="relative z-10">Acessar Portal</span>
@@ -232,7 +238,7 @@ const Header = () => {
                   text-center text-sm font-bold text-white shadow-sm transition-all duration-300
                   hover:bg-linear-to-r hover:from-violet-600 hover:via-purple-500 hover:to-blue-600
                   hover:shadow-lg
-                  lg:py-3.5
+                  lg:py-2.5
                 "
               >
                 <span className="relative z-10">Criar conta</span>

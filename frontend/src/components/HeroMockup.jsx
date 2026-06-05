@@ -3,6 +3,35 @@ import { BarChart3, Clock3, Play, CheckCircle2 } from "lucide-react";
 const HeroMockup = () => {
   return (
     <div className="relative mx-auto w-full max-w-2xl">
+      {/* Card flutuante mobile */}
+      <div className="pointer-events-none absolute -top-6 right-4 z-40 flex animate-[floatSoft_8s_ease-in-out_infinite] items-center gap-2 rounded-2xl border border-violet-100 bg-white px-3 py-2 shadow-xl shadow-violet-950/10 backdrop-blur-md sm:hidden">
+        <div className="grid size-8 place-items-center rounded-xl bg-violet-50 text-violet-600">
+          <BarChart3 className="size-4" />
+        </div>
+
+        <div>
+          <p className="text-[10px] font-extrabold uppercase tracking-wide text-violet-600">
+            Evolução
+          </p>
+          <p className="text-xs font-bold text-slate-700">+12% na semana</p>
+        </div>
+      </div>
+      {/* Card flutuante inferior mobile/tablet — Desafio do dia */}
+      <div className="pointer-events-none absolute -bottom-5 left-4 z-40 flex animate-[floatReverse_9s_ease-in-out_infinite] items-center gap-2 rounded-2xl border border-amber-100 bg-white/95 px-3 py-2 shadow-xl shadow-amber-950/10 backdrop-blur-md sm:-bottom-6 sm:left-6 xl:hidden">
+        <div className="grid size-8 place-items-center rounded-xl bg-amber-50 text-amber-500">
+          <Clock3 className="size-4" />
+        </div>
+
+        <div>
+          <p className="text-[10px] font-extrabold uppercase tracking-wide text-amber-600">
+            Desafio do dia
+          </p>
+
+          <p className="text-xs font-bold text-slate-700">
+            20 questões rápidas
+          </p>
+        </div>
+      </div>
       {/* Caixa principal */}
       <div className="relative z-20 rounded-4xl border border-slate-200 bg-white p-6 shadow-2xl shadow-violet-950/10">
         <div className="flex size-12 items-center justify-center rounded-2xl bg-blue-500 text-white shadow-sm">
@@ -43,9 +72,8 @@ const HeroMockup = () => {
         </div>
       </div>
 
-    
       {/* Card flutuante superior/entre centro e direita — Taxa de Acerto */}
-      <div className="absolute -top-18 right-20 z-30 hidden w-60 animate-[floatSoft_8s_ease-in-out_infinite] rounded-3xl border border-slate-200 bg-white p-5 shadow-xl shadow-slate-950/10 lg:block">
+      <div className="absolute -top-18 right-20 z-30 hidden w-60 animate-[floatSoft_8s_ease-in-out_infinite] rounded-3xl border border-slate-200 bg-white p-5 shadow-xl shadow-slate-950/10 sm:block">
         <p className="text-sm font-semibold text-slate-500">
           Taxa de Acerto Geral
         </p>
