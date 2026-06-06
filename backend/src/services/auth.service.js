@@ -2,6 +2,8 @@
 const bcrypt = require("bcrypt");
 /* Importa o banco de dados */
 const db = require("../db/prisma");
+/* Importa o JWT */
+const jwt = require("jsonwebtoken");
 
 /* Função que cadastra o aluno */
 
@@ -97,19 +99,64 @@ const loginStudent = async (data) => {
   if (student.status !== "ACTIVE") {
     throw new Error("Conta inativa");
   }
+  /* gera o token */
+  const token = jwt.sign(
+    {
+      id: student.id,
+      role: student.role,
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.JWT_EXPIRES_IN,
+    },
+  );
 
   /* Retorna apenas os dados seguros */
   return {
-    id: student.id,
-    name: student.name,
-    email: student.email,
-    role: student.role,
-    status: student.status,
-    studentType: student.studentType,
+    student: {
+      id: student.id,
+      name: student.name,
+      email: student.email,
+      role: student.role,
+      status: student.status,
+      studentType: student.studentType,
+    },
+    token,
+  };
+};
+
+const getMe = async (userId) => {
+  /* Busca o usuário logado pelo id que veio do token */
+  const user = await db.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  /* Se o token for válido, mas o usuário não existir mais no banco */
+  if (!user) {
+    throw new Error("Usuário não encontrado");
+  }
+
+  /* Mesmo com token válido, só deixa seguir se a conta estiver ativa */
+  if (user.status !== "ACTIVE") {
+    throw new Error("Conta inativa");
+  }
+
+  /* Retorna apenas dados seguros para o frontend */
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    status: user.status,
+    studentType: user.studentType,
+    avatarUrl: user.avatarUrl,
   };
 };
 
 module.exports = {
   registerStudent,
   loginStudent,
+  getMe,
 };

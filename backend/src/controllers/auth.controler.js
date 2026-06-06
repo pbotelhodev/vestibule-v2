@@ -1,7 +1,11 @@
 /* Chamamos o service */
-const { registerStudent } = require("../services/auth.service");
+const {
+  registerStudent,
+  loginStudent,
+  getMe: getMeService,
+} = require("../services/auth.service");
 
-/* Função que executa o service */
+/* Função que executa o service de cadastro */
 const register = async (req, res) => {
   try {
     /* Coloca a função numa variavel */
@@ -26,8 +30,73 @@ const register = async (req, res) => {
   }
 };
 
+/* Função que executa o service de login */
+const login = async (req, res) => {
+  try {
+    const result = await loginStudent(req.body);
+
+    return res.status(200).json({
+      message: "Usuário autenticado com sucesso",
+      student: result.student,
+      token: result.token,
+    });
+  } catch (error) {
+    if (
+      error.message === "E-mail é obrigatório" ||
+      error.message === "Senha é obrigatória"
+    ) {
+      return res.status(400).json({
+        message: error.message,
+      });
+    }
+
+    if (error.message === "Credenciais inválidas") {
+      return res.status(401).json({
+        message: error.message,
+      });
+    }
+
+    if (error.message === "Conta inativa") {
+      return res.status(403).json({
+        message: error.message,
+      });
+    }
+
+    return res.status(500).json({
+      message: "Erro interno no servidor",
+    });
+  }
+};
+
+/* Função que executa o service de token */
+const getMe = async (req, res) => {
+  try {
+    const user = await getMeService(req.user.id);
+
+    return res.status(200).json({
+      user,
+    });
+  } catch (error) {
+    if (error.message === "Usuário não encontrado") {
+      return res.status(404).json({
+        message: error.message,
+      });
+    }
+
+    if (error.message === "Conta inativa") {
+      return res.status(403).json({
+        message: error.message,
+      });
+    }
+
+    return res.status(500).json({
+      message: "Erro interno no servidor",
+    });
+  }
+};
+
 /* Exporta a função */
-module.exports = { register };
+module.exports = { register, login, getMe };
 
 /* 200 OK
 Requisição deu certo.
