@@ -22,14 +22,14 @@ const Alert = ({ data, onClose }) => {
 
   const colors = {
     success: {
-      bg: "bg-blue-50",
-      border: "border-blue-200",
-      text: "text-blue-700",
+      bg: "bg-green-50",
+      border: "border-green-200",
+      text: "text-green-800",
     },
     error: {
       bg: "bg-red-50",
       border: "border-red-200",
-      text: "text-red-700",
+      text: "text-red-800",
     },
     info: {
       bg: "bg-violet-50",

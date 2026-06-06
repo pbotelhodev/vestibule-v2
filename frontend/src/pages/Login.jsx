@@ -1,9 +1,8 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* Imports Tools */
 import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 /* imports components */
 import Loading from "../components/ui/Loading";
@@ -14,12 +13,10 @@ import Logo from "../components/ui/Logo";
 
 /* Imports services */
 import { loginStudent } from "../services/authServices";
-import { useEffect } from "react";
 
 const LoginPage = () => {
   /* Navigate */
   const navigate = useNavigate();
-  const location = useLocation();
 
   /* UseForm */
   const { register, handleSubmit } = useForm();
@@ -37,16 +34,40 @@ const LoginPage = () => {
 
     try {
       const response = await loginStudent(data);
+      const fullName = response.student?.name || "";
+      const names = fullName.trim().split(" ");
 
-      console.log(response.data);
+      if (fullName === "Paulo Tadeu Martins Botelho Júnior") {
+        setAlertData({
+          type: "success",
+          title: "Login bem-sucedido!",
+          message: `Olá Macaquito, ${names[0]} ${names[names.length - 1]}`,
+        });
+      } else {
+        setAlertData({
+          type: "success",
+          title: "Login bem-sucedido!",
+          message: `Ficamos felizes em te ter novamente, ${names[0]} ${names[names.length - 1]}`,
+        });
+      }
     } catch (error) {
       console.log(`Erro: ${error.response?.data?.message || error.message}`);
-      
-      setAlertData({
-        type: "error",
-        title: "Tivemos um probleminha...",
-        message: error.response?.data?.message,
-      });
+      if (
+        error.response?.data?.message == "Senha é obrigatória" ||
+        error.response?.data?.message == "E-mail é obrigatório"
+      ) {
+        setAlertData({
+          type: "warning",
+          title: "Tivemos um probleminha...",
+          message: error.response?.data?.message,
+        });
+      } else {
+        setAlertData({
+          type: "error",
+          title: "Tivemos um probleminha...",
+          message: error.response?.data?.message,
+        });
+      }
     } finally {
       /* Aqui direciona de acordo com o tipo do usuário */
       setLoading(false);
