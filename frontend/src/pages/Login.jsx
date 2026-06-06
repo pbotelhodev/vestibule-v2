@@ -324,7 +324,7 @@ const LoginPage = () => {
                 Ainda não tem conta?{" "}
                 <Link
                   to="/signup"
-                  state={{ infosLogin: { email, password } }}
+                  state={{ infosLogin: { email } }}
                   className="font-extrabold text-violet-600 transition hover:text-violet-700"
                 >
                   Criar conta

@@ -1,49 +1,58 @@
-/* importa bcrypt */
 const bcrypt = require("bcrypt");
-/* Importa o banco de dados */
 const db = require("../db/prisma");
-/* Importa o JWT */
 const jwt = require("jsonwebtoken");
 
-/* Função que cadastra o aluno */
+/* Valida formato de e-mail */
+const isValidEmail = (email) => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
+
+/* Valida força da senha: mínimo 8 chars, pelo menos 1 letra e 1 número */
+const isValidPassword = (password) => {
+  return (
+    password.length >= 8 && /[a-zA-Z]/.test(password) && /[0-9]/.test(password)
+  );
+};
 
 const registerStudent = async (data) => {
-  /* Desestrutura os dados recebidos */
   const { name, email, password } = data;
 
-  /* regras de negócio */
-  if (!name) {
-    throw new Error("Nome do aluno é obrigatório");
+  if (!name || name.trim().length < 2) {
+    throw new Error(
+      "Nome do aluno é obrigatório e deve ter ao menos 2 caracteres",
+    );
   }
 
   if (!email) {
     throw new Error("E-mail do aluno é obrigatório");
   }
 
+  if (!isValidEmail(email)) {
+    throw new Error("E-mail inválido");
+  }
+
   if (!password) {
     throw new Error("Senha do aluno é obrigatória");
   }
 
-  /* verifica se o aluno ja existe */
-  const studentExist = await db.user.findUnique({
-    where: {
-      email,
-    },
-  });
-  /* Se existente, retorna erro */
+  if (!isValidPassword(password)) {
+    throw new Error(
+      "A senha deve ter ao menos 8 caracteres, incluindo letras e números",
+    );
+  }
+
+  const studentExist = await db.user.findUnique({ where: { email } });
 
   if (studentExist) {
     throw new Error("Este e-mail já está cadastrado");
   }
-  /* Coloca criptografia na senha */
-  const passwordHash = await bcrypt.hash(password, 10);
 
-  /* Cadastra o aluno no banco de dados */
+  const passwordHash = await bcrypt.hash(password, 10);
 
   const student = await db.user.create({
     data: {
-      name,
-      email,
+      name: name.trim(),
+      email: email.toLowerCase().trim(),
       passwordHash,
     },
     select: {
@@ -56,13 +65,13 @@ const registerStudent = async (data) => {
       createdAt: true,
     },
   });
+
   return student;
 };
 
 const loginStudent = async (data) => {
   const { email, password } = data;
 
-  /* Regras de negócio */
   if (!email) {
     throw new Error("E-mail é obrigatório");
   }
@@ -71,47 +80,34 @@ const loginStudent = async (data) => {
     throw new Error("Senha é obrigatória");
   }
 
-  /* Busca o estudante pelo e-mail */
   const student = await db.user.findUnique({
-    where: {
-      email,
-    },
+    where: { email: email.toLowerCase().trim() },
   });
 
-  /* Não informa se o e-mail existe ou não por segurança */
   if (!student) {
     throw new Error("Credenciais inválidas");
   }
 
-  /* Garante que esse usuário tem senha local cadastrada */
   if (!student.passwordHash) {
     throw new Error("Credenciais inválidas");
   }
 
-  /* Compara a senha digitada com o hash salvo no banco */
   const passwordIsValid = await bcrypt.compare(password, student.passwordHash);
 
   if (!passwordIsValid) {
     throw new Error("Credenciais inválidas");
   }
 
-  /* Verifica se a conta está ativa */
   if (student.status !== "ACTIVE") {
     throw new Error("Conta inativa");
   }
-  /* gera o token */
+
   const token = jwt.sign(
-    {
-      id: student.id,
-      role: student.role,
-    },
+    { id: student.id, role: student.role },
     process.env.JWT_SECRET,
-    {
-      expiresIn: process.env.JWT_EXPIRES_IN,
-    },
+    { expiresIn: process.env.JWT_EXPIRES_IN },
   );
 
-  /* Retorna apenas os dados seguros */
   return {
     student: {
       id: student.id,
@@ -126,24 +122,16 @@ const loginStudent = async (data) => {
 };
 
 const getMe = async (userId) => {
-  /* Busca o usuário logado pelo id que veio do token */
-  const user = await db.user.findUnique({
-    where: {
-      id: userId,
-    },
-  });
+  const user = await db.user.findUnique({ where: { id: userId } });
 
-  /* Se o token for válido, mas o usuário não existir mais no banco */
   if (!user) {
     throw new Error("Usuário não encontrado");
   }
 
-  /* Mesmo com token válido, só deixa seguir se a conta estiver ativa */
   if (user.status !== "ACTIVE") {
     throw new Error("Conta inativa");
   }
 
-  /* Retorna apenas dados seguros para o frontend */
   return {
     id: user.id,
     name: user.name,
@@ -155,8 +143,4 @@ const getMe = async (userId) => {
   };
 };
 
-module.exports = {
-  registerStudent,
-  loginStudent,
-  getMe,
-};
+module.exports = { registerStudent, loginStudent, getMe };
