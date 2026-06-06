@@ -13,12 +13,12 @@ import Logo from "../components/ui/Logo";
 
 /* Imports services */
 import { loginStudent } from "../services/authServices";
+import { useEffect } from "react";
 
 const LoginPage = () => {
   /* Navigate */
   const navigate = useNavigate();
   const location = useLocation();
-  const dataAlert = location.state?.alert || {}
 
   /* UseForm */
   const { register, handleSubmit } = useForm();
@@ -60,6 +60,11 @@ const LoginPage = () => {
   };
 
   /* Effects */
+  useEffect(() => {
+    if (location.state?.from === "register") {
+      
+    }
+  }, [])
 
   return (
     <div>

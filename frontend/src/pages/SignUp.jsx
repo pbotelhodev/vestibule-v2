@@ -65,6 +65,7 @@ const RegisterPage = () => {
             message: "Cadastro realizado com sucesso.",
           },
         },
+        from: "register"
       });
     }
   };
