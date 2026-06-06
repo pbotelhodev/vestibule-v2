@@ -12,6 +12,7 @@ import Alert from "../components/ui/Alert";
 
 /* import services */
 import { registerStudent } from "../services/authServices";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 const RegisterPage = () => {
   /* navigate */
@@ -64,6 +65,9 @@ const RegisterPage = () => {
       setLoading(false);
     }
   };
+
+  /* Hooks */
+  usePageTitle("Criar conta")
 
   /* Effects */
   useEffect(() => {

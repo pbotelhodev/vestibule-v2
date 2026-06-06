@@ -1,8 +1,9 @@
 /* Imports Tools */
 import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 /* imports components */
 import Loading from "../components/ui/Loading";
@@ -74,7 +75,13 @@ const LoginPage = () => {
     }
   };
 
+  /* Hooks */
+  usePageTitle("Entrar");
+
   /* Effects */
+  useEffect(() => {
+    document.title = "Entrar | Vestibule";
+  }, []);
 
   return (
     <div>
@@ -219,7 +226,10 @@ const LoginPage = () => {
             {/* Direita */}
             <div className="mx-auto flex w-full max-w-md flex-col justify-center rounded-3xl border border-slate-200 bg-white/90 p-5 shadow-2xl shadow-violet-950/10 backdrop-blur-xl sm:p-6 lg:max-w-xl lg:p-7 xl:max-w-xl xl:p-6 2xl:min-h-155 2xl:max-w-2xl 2xl:p-9">
               {/* Topo mobile/tablet */}
-              <div className="mb-5 flex items-center justify-between gap-4 xl:hidden">
+              <div
+                onClick={() => navigate("/")}
+                className="cursor-pointer flex items-center justify-between gap-4 xl:hidden"
+              >
                 <Logo />
 
                 <button
@@ -233,7 +243,10 @@ const LoginPage = () => {
               </div>
 
               {/* Logo desktop */}
-              <div className="mb-5 hidden xl:block 2xl:mb-8">
+              <div
+                onClick={() => navigate("/")}
+                className="cursor-pointer hidden xl:block 2xl:mb-8"
+              >
                 <Logo />
               </div>
 

@@ -2,9 +2,12 @@ import { ArrowLeft, Home } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
 import logo from "../assets/logo.png";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 const ErrorPage = () => {
   const navigate = useNavigate();
+
+  usePageTitle("Página não encontrada")
 
   return (
     <main className="relative grid min-h-dvh place-items-center overflow-hidden bg-white px-6 text-slate-900">
