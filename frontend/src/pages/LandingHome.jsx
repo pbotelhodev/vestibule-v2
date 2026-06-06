@@ -55,7 +55,7 @@ const LandingPage = () => {
 
               <div className="mt-6 flex w-full flex-col items-center gap-3 sm:mt-8 sm:flex-row sm:justify-center xl:justify-start">
                 <a
-                  href="#"
+                  href="/signup"
                   className="flex w-full items-center justify-center rounded-full bg-violet-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-violet-600/20 transition hover:-translate-y-0.5 hover:bg-violet-700 sm:w-fit sm:px-6"
                 >
                   Começar como aluno
@@ -63,7 +63,7 @@ const LandingPage = () => {
                 </a>
 
                 <a
-                  href="#planos"
+                  href="/enterprise"
                   className="flex w-full items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:border-violet-200 hover:text-violet-600 sm:w-fit sm:px-6"
                 >
                   Sou cursinho ou escola
@@ -368,7 +368,7 @@ const LandingPage = () => {
         {/* Perguntas frequentes */}
         <section
           id="perguntas"
-          className="relative mx-auto max-w-7xl border-t border-dotted border-purple-100 px-4 py-14 sm:px-6 sm:py-16 lg:max-w-5xl lg:py-18 xl:max-w-6xl xl:py-18 2xl:max-w-[1440px] 2xl:px-8 2xl:py-24"
+          className="relative mx-auto max-w-7xl border-t border-dotted border-purple-100 px-4 py-14 sm:px-6 sm:py-16 lg:max-w-5xl lg:py-18 xl:max-w-6xl xl:py-18 2xl:max-w-360 2xl:px-8 2xl:py-24"
         >
           {/* Header */}
           <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">
