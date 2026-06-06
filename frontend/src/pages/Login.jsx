@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* Imports Tools */
 import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -62,9 +63,13 @@ const LoginPage = () => {
   /* Effects */
   useEffect(() => {
     if (location.state?.from === "register") {
-      
+      setAlertData({
+        title: location.alert.title,
+        type: location.alert.type,
+        message: location.alert.message,
+      });
     }
-  }, [])
+  }, [location.state])
 
   return (
     <div>
