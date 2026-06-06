@@ -4,7 +4,7 @@ const HeroMockup = () => {
   return (
     <div className="relative mx-auto w-full max-w-2xl">
       {/* Card flutuante mobile */}
-      <div className="pointer-events-none absolute -top-6 right-4 z-40 flex animate-[floatSoft_8s_ease-in-out_infinite] items-center gap-2 rounded-2xl border border-violet-100 bg-white px-3 py-2 shadow-xl shadow-violet-950/10 backdrop-blur-md sm:hidden">
+      <div className="pointer-events-none absolute -top-6 right-4 z-40 flex animate-[floatSoft_8s_ease-in-out_infinite] items-center gap-2 rounded-2xl border border-violet-100 bg-white px-3 py-2 shadow-xl shadow-violet-950/10 backdrop-blur-md sm:hidden md:-top-1">
         <div className="grid size-8 place-items-center rounded-xl bg-violet-50 text-violet-600">
           <BarChart3 className="size-4" />
         </div>
@@ -17,7 +17,7 @@ const HeroMockup = () => {
         </div>
       </div>
       {/* Card flutuante inferior mobile/tablet — Desafio do dia */}
-      <div className="pointer-events-none absolute -bottom-5 left-4 z-40 flex animate-[floatReverse_9s_ease-in-out_infinite] items-center gap-2 rounded-2xl border border-amber-100 bg-white/95 px-3 py-2 shadow-xl shadow-amber-950/10 backdrop-blur-md sm:-bottom-6 sm:left-6 xl:hidden">
+      <div className="pointer-events-none absolute -bottom-5 left-4 z-40 flex animate-[floatReverse_9s_ease-in-out_infinite] items-center gap-2 rounded-2xl border border-amber-100 bg-white/95 px-3 py-2 shadow-xl shadow-amber-950/10 backdrop-blur-md sm:-bottom-6 sm:left-6 xl:hidden md:hidden">
         <div className="grid size-8 place-items-center rounded-xl bg-amber-50 text-amber-500">
           <Clock3 className="size-4" />
         </div>
@@ -73,7 +73,7 @@ const HeroMockup = () => {
       </div>
 
       {/* Card flutuante superior/entre centro e direita — Taxa de Acerto */}
-      <div className="absolute -top-18 right-20 z-30 hidden w-60 animate-[floatSoft_8s_ease-in-out_infinite] rounded-3xl border border-slate-200 bg-white p-5 shadow-xl shadow-slate-950/10 sm:block">
+      <div className="absolute -top-15 right-20 z-30 hidden w-60 animate-[floatSoft_8s_ease-in-out_infinite] rounded-3xl border border-slate-200 bg-white p-5 shadow-xl shadow-slate-950/10 sm:hidden md:block md:-top-5 lg:block lg:-top-10">
         <p className="text-sm font-semibold text-slate-500">
           Taxa de Acerto Geral
         </p>
@@ -99,7 +99,7 @@ const HeroMockup = () => {
       </div>
 
       {/* Card flutuante inferior/direita — Evolução */}
-      <div className="absolute -right-5 bottom-10 z-30 hidden w-40 animate-[floatReverse_9s_ease-in-out_infinite] rounded-3xl border border-slate-200 bg-white p-4 shadow-xl shadow-slate-950/10 sm:block">
+      <div className="absolute -right-5 bottom-10 z-30 hidden w-40 animate-[floatReverse_9s_ease-in-out_infinite] rounded-3xl border border-slate-200 bg-white p-4 shadow-xl shadow-slate-950/10 sm:block md:-bottom-0.5">
         <div className="flex size-10 items-center justify-center rounded-2xl bg-amber-50 text-amber-500">
           <BarChart3 className="size-5" />
         </div>

@@ -12,7 +12,7 @@ const Alert = ({ data, onClose }) => {
       const timer = setTimeout(() => {
         setShow(false);
         setTimeout(() => onClose?.(), 300); // espera a animação terminar
-      }, 3000);
+      }, 4000);
 
       return () => clearTimeout(timer);
     }

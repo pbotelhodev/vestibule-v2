@@ -15,7 +15,7 @@ const isValidPassword = (password) => {
 };
 
 const registerStudent = async (data) => {
-  const { name, email, password } = data;
+  const { name, email, password, confirmePass } = data;
 
   if (!name || name.trim().length < 2) {
     throw new Error(
@@ -31,8 +31,18 @@ const registerStudent = async (data) => {
     throw new Error("E-mail inválido");
   }
 
+  const studentExist = await db.user.findUnique({ where: { email } });
+
+  if (studentExist) {
+    throw new Error("Este e-mail já está cadastrado");
+  }
+
   if (!password) {
     throw new Error("Senha do aluno é obrigatória");
+  }
+
+  if (!confirmePass) {
+    throw new Error("Confirme a sua senha");
   }
 
   if (!isValidPassword(password)) {
@@ -40,11 +50,8 @@ const registerStudent = async (data) => {
       "A senha deve ter ao menos 8 caracteres, incluindo letras e números",
     );
   }
-
-  const studentExist = await db.user.findUnique({ where: { email } });
-
-  if (studentExist) {
-    throw new Error("Este e-mail já está cadastrado");
+  if (password !== confirmePass) {
+    throw new Error("As senhas não coincidem");
   }
 
   const passwordHash = await bcrypt.hash(password, 10);

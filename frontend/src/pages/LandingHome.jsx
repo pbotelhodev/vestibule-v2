@@ -21,7 +21,7 @@ const LandingPage = () => {
 
       <main>
         {/* Hero */}
-        <section className="relative overflow-hidden bg-white">
+        <section className="relative mt-18 overflow-hidden bg-white">
           {/* Fundo quadriculado */}
           <div className="absolute inset-0 bg-[linear-gradient(rgba(15,23,42,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,0.025)_1px,transparent_1px)] bg-size-[32px_32px] sm:bg-size-[36px_36px] 2xl:bg-size-[40px_40px]" />
 
@@ -38,7 +38,7 @@ const LandingPage = () => {
           {/* Conteúdo */}
           <div className="relative z-10 mx-auto flex min-h-[calc(100dvh-64px)] w-full max-w-7xl flex-col items-center justify-center gap-9 px-4 pt-10 pb-10 sm:min-h-[calc(100dvh-72px)] sm:gap-10 sm:px-6 sm:pt-14 sm:pb-14 lg:max-w-5xl lg:gap-14 lg:py-18 xl:min-h-[calc(100dvh-72px)] xl:max-w-6xl xl:flex-row xl:justify-between xl:gap-8 xl:py-8 2xl:max-w-360 2xl:gap-14 2xl:px-8">
             {/* Hero Title */}
-            <div className="w-full max-w-md text-center sm:max-w-xl xl:max-w-md xl:text-left 2xl:max-w-xl">
+            <div className="w-full max-w-md text-center sm:max-w-xl xl:max-w-lg xl:text-left 2xl:max-w-xl">
               <span className="inline-flex rounded-full border border-violet-200 bg-violet-50 px-3 py-1.5 text-[11px] font-bold text-violet-600 sm:px-5 sm:py-2 sm:text-sm">
                 Uma plataforma completa para sua aprovação.
               </span>

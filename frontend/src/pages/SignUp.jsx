@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* Imports Tools */
 import { ArrowLeft } from "lucide-react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 /* import componets */
@@ -17,6 +18,8 @@ const RegisterPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const initialData = location.state?.infosLogin || {};
+  const alertState = location.state?.alert || {};
+  const stateFrom = location.state?.from || {};
 
   /* UseForm */
   const { register, handleSubmit } = useForm();
@@ -36,17 +39,19 @@ const RegisterPage = () => {
   const handleRegister = async () => {
     setLoading(true);
     try {
-      if (dataUser.password === dataUser.confirmePass) {
-        const response = await registerStudent(dataUser);
-        const fullName = response.student?.name || "";
-        setFirstNameUser(fullName.split(" ")[0]);
-      } else {
-        setAlertData({
-          title: `Ops...!`,
-          type: "warning",
-          message: "As senhas não coincidem",
-        });
-      }
+      const response = await registerStudent(dataUser);
+      const fullName = response.student?.name || "";
+      setFirstNameUser(fullName.split(" ")[0]);
+      navigate("/login", {
+        state: {
+          alert: {
+            title: `Seja bem-vindo, ${firstNameUser}!`,
+            type: "success",
+            message: "Cadastro realizado com sucesso.",
+          },
+          from: "register",
+        },
+      });
     } catch (error) {
       console.log(`Erro: ${error.response?.data?.message || error.message}`);
 
@@ -57,18 +62,19 @@ const RegisterPage = () => {
       });
     } finally {
       setLoading(false);
-      navigate("/login", {
-        state: {
-          alert: {
-            title: `Seja bem-vindo, ${firstNameUser}!`,
-            type: "success",
-            message: "Cadastro realizado com sucesso.",
-          },
-        },
-        from: "register"
-      });
     }
   };
+
+  /* Effects */
+  useEffect(() => {
+    if (stateFrom === "login-account-not-found") {
+      setAlertData({
+        title: alertState.title,
+        type: alertState.type,
+        message: alertState.message,
+      });
+    }
+  }, [alertState]);
 
   return (
     <div>
@@ -212,9 +218,11 @@ const RegisterPage = () => {
             {/* Direita */}
             <div className="mx-auto flex w-full max-w-md flex-col justify-center rounded-3xl border border-slate-200 bg-white/90 p-5 shadow-2xl shadow-violet-950/10 backdrop-blur-xl sm:p-6 lg:max-w-xl lg:p-7 xl:max-w-xl xl:p-6 2xl:min-h-155 2xl:max-w-2xl 2xl:p-9">
               {/* Topo mobile/tablet */}
-              <div className="mb-5 flex items-center justify-between gap-4 xl:hidden">
+              <div
+                onClick={() => navigate("/")}
+                className="cursor-pointer flex items-center justify-between gap-4 xl:hidden"
+              >
                 <Logo />
-
                 <button
                   type="button"
                   onClick={() => navigate(-1)}
@@ -226,7 +234,10 @@ const RegisterPage = () => {
               </div>
 
               {/* Logo desktop */}
-              <div className="mb-5 hidden xl:block 2xl:mb-8">
+              <div
+                onClick={() => navigate("/")}
+                className="cursor-pointer hidden xl:block 2xl:mb-8"
+              >
                 <Logo />
               </div>
 

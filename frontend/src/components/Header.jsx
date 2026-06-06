@@ -75,7 +75,7 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/90 backdrop-blur-xl">
+    <header className=" w-full fixed top-0 z-9999 border-b border-slate-100 bg-white/90 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 xl:h-18 xl:max-w-6xl xl:gap-5 xl:px-6 2xl:max-w-360 2xl:px-8">
         {/* Logo */}
         <button

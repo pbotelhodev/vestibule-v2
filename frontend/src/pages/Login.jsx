@@ -38,21 +38,14 @@ const LoginPage = () => {
     try {
       const response = await loginStudent(data);
 
-      const fullName = response.student?.name || "";
-      const firstName = fullName.split(" ")[0];
-
-      setAlertData({
-        title: `Bem-vindo de volta, ${firstName}!`,
-        type: "success",
-        message: "Login realizado com sucesso.",
-      });
+      console.log(response.data);
     } catch (error) {
       console.log(`Erro: ${error.response?.data?.message || error.message}`);
-
+      
       setAlertData({
         type: "error",
-        title: "Conta não encontrada",
-        message: "Confira seus dados ou crie uma conta para começar.",
+        title: "Tivemos um probleminha...",
+        message: error.response?.data?.message,
       });
     } finally {
       /* Aqui direciona de acordo com o tipo do usuário */
@@ -61,15 +54,6 @@ const LoginPage = () => {
   };
 
   /* Effects */
-  useEffect(() => {
-    if (location.state?.from === "register") {
-      setAlertData({
-        title: location.alert.title,
-        type: location.alert.type,
-        message: location.alert.message,
-      });
-    }
-  }, [location.state])
 
   return (
     <div>
