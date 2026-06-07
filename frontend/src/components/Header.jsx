@@ -23,7 +23,7 @@ const navItems = [
   },
   {
     label: "Planos",
-    path: "#planos",
+    path: "/planos",
   },
   {
     label: "FAQs",

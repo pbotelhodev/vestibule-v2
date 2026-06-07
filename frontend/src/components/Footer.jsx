@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
+import { useEffect } from "react";
 import { Instagram, Linkedin, Mail } from "lucide-react";
-
+import { Link, useLocation } from "react-router-dom";
 /* Component */
 import Logo from "./ui/Logo";
 
@@ -9,17 +10,16 @@ const footerColumns = [
     title: "Plataforma",
     links: [
       { label: "Início", href: "/" },
-      
       { label: "Planos", href: "/planos" },
     ],
   },
   {
     title: "Para instituições",
     links: [
-      { label: "Instituições", href: "/instituicoes" },
-      { label: "Benefícios", href: "/instituicoes#beneficios" },
-      { label: "Demonstração", href: "/instituicoes#demo" },
-      { label: "Falar com especialista", href: "/institucoes#contato" },
+      { label: "Instituições", href: "/enterprise" },
+      { label: "Benefícios", href: "/enterprise" },
+      { label: "Demonstração", href: "/enterprise" },
+      { label: "Falar com especialista", href: "/contato" },
     ],
   },
   {
@@ -37,7 +37,7 @@ const footerColumns = [
       { label: "Sobre", href: "/sobre" },
       { label: "Contato", href: "/contato" },
       { label: "Ajuda", href: "/ajuda" },
-      { label: "Dúvidas frequentes", href: "#perguntas" },
+      { label: "Dúvidas frequentes", href: "/faq" },
       { label: "Termos e privacidade", href: "/termos-e-privacidade" },
     ],
   },
@@ -63,6 +63,33 @@ const socialLinks = [
 
 const Footer = () => {
   const year = new Date().getFullYear();
+  const { pathname, hash } = useLocation();
+
+  useEffect(() => {
+    // Se o usuário clicar em uma rota comum sem hash, sobe para o topo imediatamente
+    if (!hash) {
+      window.scrollTo(0, 0);
+      return;
+    }
+
+    const targetId = hash.replace("#", "");
+
+    // Função interna que tenta localizar o elemento e aplicar o scroll
+    const scrollToElement = () => {
+      const element = document.getElementById(targetId);
+
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        // Se a página mudou mas o React ainda não desenhou a div,
+        // o requestAnimationFrame joga a tentativa para o próximo frame visual do navegador
+        requestAnimationFrame(scrollToElement);
+      }
+    };
+
+    // Inicia o processo de busca e rolagem assim que o pathname ou hash mudarem
+    requestAnimationFrame(scrollToElement);
+  }, [pathname, hash]);
 
   return (
     <footer className="border-t border-slate-200 bg-white">
@@ -88,7 +115,6 @@ const Footer = () => {
 
           {/* Colunas */}
           <div className="relative min-w-0">
-            {/* Fade indicando rolagem no mobile */}
             <div className="pointer-events-none absolute top-0 right-0 z-10 h-full w-14 bg-linear-to-l from-white to-transparent lg:hidden" />
 
             <div className="flex gap-4 overflow-x-auto pb-4 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:grid lg:grid-cols-4 lg:gap-6 lg:overflow-visible lg:pb-0 lg:pr-0 xl:gap-5 2xl:gap-8">
@@ -134,8 +160,8 @@ const FooterColumn = ({ title, links }) => {
       <ul className="mt-4 space-y-3 xl:space-y-2.5 2xl:space-y-3">
         {links.map((link) => (
           <li key={link.label}>
-            <a
-              href={link.href}
+            <Link
+              to={link.href}
               className="
                 group inline-flex items-center gap-2 text-sm font-medium text-slate-500
                 transition-all duration-300 hover:translate-x-1 hover:text-violet-600
@@ -143,7 +169,7 @@ const FooterColumn = ({ title, links }) => {
             >
               <span className="size-1.5 rounded-full bg-violet-300 opacity-0 transition-all duration-300 group-hover:opacity-100" />
               {link.label}
-            </a>
+            </Link>
           </li>
         ))}
       </ul>

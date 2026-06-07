@@ -7,6 +7,7 @@ import {
   ClipboardList,
   LayoutDashboard,
   Mail,
+  School,
   Sparkles,
   UsersRound,
 } from "lucide-react";
@@ -17,13 +18,16 @@ import Logo from "../components/ui/Logo";
 
 /* Services */
 import { userPlansData } from "../services/userPlans.js";
+import { useState } from "react";
 
 const PlansPage = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
-  const isView =
-    state?.view !== "user" || state?.view !== "enterprise" ? "user" : state?.view;
-  alert(isView);
+  const [isView, setIsView] = useState(
+    state?.view !== "user" || state?.view !== "enterprise"
+      ? "user"
+      : state?.view,
+  );
 
   return (
     <main className="relative isolate flex min-h-dvh flex-col overflow-x-hidden bg-white text-slate-900">
@@ -52,14 +56,26 @@ const PlansPage = () => {
           </div>
 
           <div className="flex justify-end">
-            <Link
-              to="/portal"
-              className="inline-flex items-center gap-1.5 rounded-full bg-violet-700 px-3 py-1.5 text-xs font-bold text-white shadow-sm shadow-violet-950/10 transition hover:-translate-y-0.5 hover:bg-violet-600 hover:shadow-xl xl:gap-2 xl:px-4 xl:py-2"
-            >
-              <LayoutDashboard className="size-3.5 xl:size-4" />
-              <span className="hidden sm:inline">Acessar painel</span>
-              <span className="sm:hidden">Painel</span>
-            </Link>
+            {isView === "user" && (
+              <div
+                onClick={() => setIsView("enterprise")}
+                className="inline-flex items-center cursor-pointer gap-1.5 rounded-full bg-violet-700 px-3 py-2 text-xs font-bold text-white shadow-sm shadow-violet-950/10 transition hover:-translate-y-0.5 hover:bg-violet-600 hover:shadow-xl xl:gap-2 xl:px-4 xl:py-2"
+              >
+                <School className="size-3.5 xl:size-4" />
+                <span className="hidden sm:inline">
+                  Solicitar plano intitucional
+                </span>
+              </div>
+            )}
+            {isView === "enterprise" && (
+              <div
+                onClick={() => setIsView("user")}
+                className="inline-flex items-center cursor-pointer gap-1.5 rounded-full bg-violet-700 px-3 py-2 text-xs font-bold text-white shadow-sm shadow-violet-950/10 transition hover:-translate-y-0.5 hover:bg-violet-600 hover:shadow-xl xl:gap-2 xl:px-4 xl:py-2"
+              >
+                <School className="size-3.5 xl:size-4" />
+                <span className="hidden sm:inline">Ver planos individuais</span>
+              </div>
+            )}
           </div>
         </div>
       </header>

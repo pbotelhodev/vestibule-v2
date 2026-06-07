@@ -109,11 +109,11 @@ const LoginPage = () => {
         <section className="relative z-10 grid min-h-[calc(100dvh-32px)] place-items-center xl:h-[calc(100dvh-32px)] xl:min-h-0">
           <div className="mx-auto grid w-full max-w-6xl items-center gap-8 xl:grid-cols-[0.95fr_1.05fr] 2xl:max-w-360 2xl:grid-cols-[1fr_1.05fr] 2xl:gap-12">
             {/* Esquerda */}
-            <div className="hidden w-full flex-col items-start justify-center xl:flex">
+            <div className="hidden  w-full flex-col items-start justify-center xl:flex">
               <button
                 type="button"
                 onClick={() => navigate(-1)}
-                className="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-500 shadow-sm transition hover:-translate-x-0.5 hover:border-violet-200 hover:bg-violet-50 hover:text-violet-600 hover:shadow-md 2xl:mb-8"
+                className="mb-6 cursor-pointer inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-500 shadow-sm transition hover:-translate-x-0.5 hover:border-violet-200 hover:bg-violet-50 hover:text-violet-600 hover:shadow-md 2xl:mb-8"
               >
                 <ArrowLeft className="size-4" />
                 Voltar
@@ -309,7 +309,7 @@ const LoginPage = () => {
                     <button
                       type="button"
                       onClick={() => setShowPassword((prev) => !prev)}
-                      className="absolute top-1/2 right-4 -translate-y-1/2 text-slate-400 transition hover:text-violet-600"
+                      className="absolute cursor-pointer top-1/2 right-4 -translate-y-1/2 text-slate-400 transition hover:text-violet-600"
                       aria-label={
                         showPassword ? "Ocultar senha" : "Mostrar senha"
                       }
@@ -325,7 +325,7 @@ const LoginPage = () => {
 
                 <button
                   type="submit"
-                  className="group relative overflow-hidden rounded-2xl bg-violet-900 px-5 py-3 text-sm font-extrabold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-linear-to-r hover:from-violet-600 hover:via-purple-500 hover:to-blue-600 hover:shadow-xl 2xl:py-3.5"
+                  className="group relative cursor-pointer overflow-hidden rounded-2xl bg-violet-900 px-5 py-3 text-sm font-extrabold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-linear-to-r hover:from-violet-600 hover:via-purple-500 hover:to-blue-600 hover:shadow-xl 2xl:py-3.5"
                 >
                   <span className="relative z-10">Entrar na plataforma</span>
 
@@ -334,7 +334,7 @@ const LoginPage = () => {
 
                 <button
                   type="button"
-                  className="flex items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-extrabold text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-violet-200 hover:bg-slate-50 hover:text-violet-600 hover:shadow-md 2xl:py-3.5"
+                  className="flex cursor-pointer items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-extrabold text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-violet-200 hover:bg-slate-50 hover:text-violet-600 hover:shadow-md 2xl:py-3.5"
                 >
                   <span className="grid size-5 place-items-center rounded-full border border-slate-200 text-xs font-extrabold text-blue-600">
                     G
