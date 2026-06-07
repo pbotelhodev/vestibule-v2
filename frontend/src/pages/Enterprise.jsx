@@ -22,6 +22,7 @@ import Demo from "../components/ui/demo";
 
 const EnterprisePage = () => {
   const [demoActive, setDemoActive] = useState(false);
+  
   return (
     <main className="relative isolate min-h-dvh overflow-x-hidden bg-white text-slate-900">
       {/* Background */}
@@ -36,9 +37,11 @@ const EnterprisePage = () => {
       </div>
 
       {/* Header */}
-      <header className="relative z-20 border-b border-slate-100 bg-white/85 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 xl:px-8 xl:py-3 2xl:max-w-360 2xl:py-4">
-          <Logo />
+      <header className="relative z-20 h-18 border-b border-slate-100 bg-white/85 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6 xl:px-8 xl:py-3 2xl:max-w-360 2xl:py-4">
+          <Link to={"/"}>
+            <Logo />
+          </Link>
 
           <div className="flex items-center gap-2 sm:gap-3">
             <Link
@@ -49,17 +52,18 @@ const EnterprisePage = () => {
             </Link>
 
             <Link
-              to="/contato"
+              to="/planos"
+              state={{ selectedPlan: "enterprise" }}
               className="rounded-full bg-violet-700 px-4 py-2.5 text-xs font-bold text-white shadow-sm shadow-violet-950/10 transition hover:-translate-y-0.5 hover:bg-violet-600 hover:shadow-xl hover:shadow-violet-950/15 sm:text-sm xl:py-2 2xl:py-2.5"
             >
-              Falar com especialista
+              Solicitar proposta
             </Link>
           </div>
         </div>
       </header>
 
       {/* Hero */}
-      <section className="relative z-10 mx-auto grid max-w-7xl items-center gap-10 px-4 py-12 text-center sm:px-6 sm:py-16 xl:min-h-[calc(92dvh-30px)] xl:grid-cols-[1fr_0.9fr] xl:gap-10 xl:px-8 xl:py-8 xl:text-left 2xl:max-w-360 2xl:min-h-[calc(95dvh-70px)] 2xl:gap-16 2xl:py-12">
+      <section className="relative z-10 mx-auto grid max-w-6xl items-center gap-10 px-4 py-12 text-center sm:px-6 sm:py-16 xl:min-h-[calc(92dvh-30px)] xl:grid-cols-[1fr_0.9fr] xl:gap-10 xl:px-8 xl:py-8 xl:text-left 2xl:max-w-360 2xl:min-h-[calc(95dvh-70px)] 2xl:gap-16 2xl:py-12">
         {/* Content */}
         <div className="mx-auto max-w-3xl xl:mx-0 xl:max-w-none">
           <span className="inline-flex items-center gap-2 rounded-full border border-violet-100 bg-violet-50 px-3 py-1.5 text-xs font-bold text-violet-700">
@@ -209,7 +213,7 @@ const EnterprisePage = () => {
       {/* Benefícios */}
       <section
         id="beneficios"
-        className="relative z-10 mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 xl:px-8 xl:py-14 2xl:max-w-360 2xl:py-20"
+        className="relative z-10 mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-14 xl:px-8 xl:py-14 2xl:max-w-360 2xl:py-20"
       >
         <div className="max-w-2xl">
           <span className="inline-flex items-center gap-2 rounded-full border border-violet-100 bg-violet-50 px-3 py-1.5 text-xs font-bold text-violet-700">
@@ -290,7 +294,7 @@ const EnterprisePage = () => {
       </section>
 
       {/* Como funciona */}
-      <section className="relative z-10 mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 xl:px-8 xl:py-14 2xl:max-w-360 2xl:py-20">
+      <section className="relative z-10 mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-14 xl:px-8 xl:py-14 2xl:max-w-360 2xl:py-20">
         <div className="grid gap-8 xl:grid-cols-[0.9fr_1.1fr] xl:items-center 2xl:gap-10">
           <div>
             <span className="inline-flex items-center gap-2 rounded-full border border-amber-100 bg-amber-50 px-3 py-1.5 text-xs font-bold text-amber-600">
@@ -375,7 +379,7 @@ const EnterprisePage = () => {
       </section>
 
       {/* Destaque */}
-      <section className="relative z-10 mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 xl:px-8 xl:py-14 2xl:max-w-360 2xl:py-20">
+      <section className="relative z-10 mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-14 xl:px-8 xl:py-14 2xl:max-w-360 2xl:py-20">
         <div className="overflow-hidden rounded-4xl border border-slate-200 bg-white/90 shadow-2xl shadow-violet-950/10 backdrop-blur-xl">
           <div className="grid xl:grid-cols-[0.9fr_1.1fr]">
             <div className="relative isolate overflow-hidden bg-violet-700 p-6 text-white sm:p-8 xl:p-8 2xl:p-10">
@@ -461,7 +465,7 @@ const EnterprisePage = () => {
       {/* CTA */}
       <section
         id="contato"
-        className="relative z-10 mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 xl:px-8 xl:py-14 2xl:max-w-360 2xl:py-20"
+        className="relative z-10 mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-14 xl:px-8 xl:py-14 2xl:max-w-360 2xl:py-20"
       >
         <div className="relative isolate overflow-hidden rounded-4xl bg-violet-700 p-6 text-white shadow-2xl shadow-violet-950/15 sm:p-8 xl:p-8 2xl:p-14">
           {/* Detalhes visuais */}
@@ -490,10 +494,11 @@ const EnterprisePage = () => {
             </div>
 
             <Link
-              to="/contato"
+              to="/planos"
+              state={{ selectedPlan: "enterprise" }}
               className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-bold text-violet-700 shadow-sm transition hover:-translate-y-0.5 hover:bg-violet-50 hover:text-violet-800 hover:shadow-xl xl:py-2.5 2xl:py-3"
             >
-              Solicitar contato
+              Solicitar proposta
               <ArrowRight className="size-4" />
             </Link>
           </div>
@@ -501,7 +506,7 @@ const EnterprisePage = () => {
       </section>
 
       <footer className="relative z-20 border-t border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-6 text-center sm:px-6 md:flex-row md:text-left xl:px-8 2xl:max-w-360">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 py-6 text-center sm:px-6 md:flex-row md:text-left xl:px-8 2xl:max-w-360">
           <p className="text-sm text-slate-500">
             © {new Date().getFullYear()} Vestibule. Todos os direitos
             reservados.

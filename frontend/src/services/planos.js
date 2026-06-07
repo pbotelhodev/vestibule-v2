@@ -14,6 +14,8 @@ export const planos = [
       "Histórico simples",
       "Painel do aluno",
     ],
+    view: null,
+    url: "/signup",
   },
   {
     name: "Pro",
@@ -30,6 +32,8 @@ export const planos = [
       "Relatórios por matéria",
       "Revisão por pontos fracos",
     ],
+    view: "pro",
+    url: "/planos",
   },
   {
     name: "Premium",
@@ -47,6 +51,8 @@ export const planos = [
       "Análises avançadas",
       "Recomendações inteligentes",
     ],
+    view: "premium",
+    url: "/planos",
   },
   {
     name: "Enterprise",
@@ -63,5 +69,7 @@ export const planos = [
       "Relatórios institucionais",
       "Área para coordenação",
     ],
+    view: "enterprise",
+    url: "/planos",
   },
 ];

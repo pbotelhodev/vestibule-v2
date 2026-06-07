@@ -21,7 +21,9 @@ import { userPlansData } from "../services/userPlans.js";
 const PlansPage = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
-  const isView = state?.view || "enterprise";
+  const isView =
+    state?.view !== "user" || state?.view !== "enterprise" ? "user" : state?.view;
+  alert(isView);
 
   return (
     <main className="relative isolate flex min-h-dvh flex-col overflow-x-hidden bg-white text-slate-900">
@@ -65,7 +67,7 @@ const PlansPage = () => {
       <div className="flex flex-1 flex-col xl:h-[calc(100dvh-4rem)] xl:items-center xl:justify-center xl:overflow-hidden">
         {isView === "user" && <UserPlans />}
         {isView === "enterprise" && <EnterprisePlans />}
-        {isView !== "user" && isView !== "enterprise" && <UserPlans />}
+        {/* {isView !== "user" && isView !== "enterprise" && <UserPlans />} */}
       </div>
     </main>
   );
@@ -180,19 +182,19 @@ const UserPlans = () => {
 
 const EnterprisePlans = () => {
   return (
-    <section className="relative z-10 mx-auto flex h-[calc(100dvh-72px)] w-full max-w-3xl flex-col justify-center gap-4 overflow-hidden px-4 py-4 sm:max-w-3xl sm:px-6 sm:py-5 lg:max-w-4xl xl:max-w-7xl xl:px-8 xl:py-5 2xl:max-w-350 2xl:gap-5 2xl:py-6">
-      <div className="grid min-h-0 w-full gap-4 xl:h-145 xl:grid-cols-[minmax(0,1fr)_320px] xl:items-stretch 2xl:h-155 2xl:grid-cols-[minmax(0,1fr)_352px] 2xl:gap-5">
+    <section className="relative z-10 mx-auto flex w-full max-w-3xl flex-col gap-4 px-4 py-8 sm:max-w-3xl sm:px-6 sm:py-10 lg:max-w-4xl lg:py-12 xl:h-[calc(100dvh-72px)] xl:max-w-7xl xl:justify-center xl:overflow-hidden xl:px-8 xl:py-5 2xl:max-w-350 2xl:gap-5 2xl:py-6">
+      <div className="grid w-full gap-4 xl:h-145 xl:min-h-0 xl:grid-cols-[minmax(0,1fr)_320px] xl:items-stretch 2xl:h-155 2xl:grid-cols-[minmax(0,1fr)_352px] 2xl:gap-5">
         {/* Form card */}
-        <div className="flex h-full min-h-0 w-full flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white/90 shadow-2xl shadow-violet-950/10 backdrop-blur-xl xl:rounded-4xl">
+        <div className="flex w-full flex-col rounded-3xl border border-slate-200 bg-white/90 shadow-2xl shadow-violet-950/10 backdrop-blur-xl xl:h-full xl:min-h-0 xl:overflow-hidden xl:rounded-4xl">
           {/* Card header */}
-          <div className="shrink-0 border-b border-slate-100 px-5 py-3 xl:px-5 xl:py-3 2xl:px-6 2xl:py-4">
+          <div className="shrink-0 border-b border-slate-100 px-5 py-4 xl:px-5 xl:py-3 2xl:px-6 2xl:py-4">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <h1 className="text-xl leading-tight font-bold tracking-tight text-slate-950 sm:text-2xl xl:text-3xl 2xl:text-4xl">
                   Monte o plano da sua instituição.
                 </h1>
 
-                <p className="mt-1 max-w-2xl text-xs leading-5 text-slate-500 xl:text-sm xl:leading-5 2xl:text-sm 2xl:leading-6">
+                <p className="mt-1 max-w-2xl text-xs leading-5 text-slate-500 sm:text-sm sm:leading-6 xl:text-sm xl:leading-5 2xl:text-sm 2xl:leading-6">
                   Informe os dados principais, selecione os serviços desejados e
                   visualize uma estimativa por aluno.
                 </p>
@@ -205,18 +207,18 @@ const EnterprisePlans = () => {
           </div>
 
           {/* Card body */}
-          <div className="min-h-0 flex-1 px-5 py-3 xl:px-5 xl:py-3 2xl:px-6 2xl:py-4">
-            <div className="grid h-full min-h-0 gap-3 md:grid-cols-2 xl:gap-4">
+          <div className="px-5 py-4 xl:min-h-0 xl:flex-1 xl:px-5 xl:py-3 2xl:px-6 2xl:py-4">
+            <div className="grid gap-3 xl:h-full xl:min-h-0 xl:grid-cols-2 xl:gap-4">
               {/* Left: Dados + Representante */}
-              <div className="grid min-h-0 grid-rows-2 gap-3 xl:gap-3 2xl:gap-4">
-                <div className="min-h-0 rounded-3xl border border-slate-200 bg-slate-50/70 p-3 xl:p-3 2xl:p-4">
+              <div className="grid gap-3 xl:min-h-0 xl:grid-rows-2 xl:gap-3 2xl:gap-4">
+                <div className="rounded-3xl border border-slate-200 bg-slate-50/70 p-3 xl:min-h-0 xl:p-3 2xl:p-4">
                   <SectionTitle
                     icon={<Building2 className="size-4" />}
                     title="Dados da empresa"
                     description="Identificação da instituição"
                   />
 
-                  <div className="mt-2.5 grid grid-cols-2 gap-2 xl:gap-2 2xl:mt-3 2xl:gap-2.5">
+                  <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2 xl:mt-2.5 xl:gap-2 2xl:mt-3 2xl:gap-2.5">
                     <Field label="Instituição" placeholder="Ex: Colégio Alfa" />
                     <Field label="CNPJ" placeholder="00.000.000/0001-00" />
                     <Field label="Cidade" placeholder="Montes Claros" />
@@ -224,14 +226,14 @@ const EnterprisePlans = () => {
                   </div>
                 </div>
 
-                <div className="min-h-0 rounded-3xl border border-slate-200 bg-slate-50/70 p-3 xl:p-3 2xl:p-4">
+                <div className="rounded-3xl border border-slate-200 bg-slate-50/70 p-3 xl:min-h-0 xl:p-3 2xl:p-4">
                   <SectionTitle
                     icon={<UsersRound className="size-4" />}
                     title="Representante"
                     description="Pessoa responsável pelo contato"
                   />
 
-                  <div className="mt-2.5 grid grid-cols-2 gap-2 xl:gap-2 2xl:mt-3 2xl:gap-2.5">
+                  <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2 xl:mt-2.5 xl:gap-2 2xl:mt-3 2xl:gap-2.5">
                     <Field label="Nome" placeholder="Seu nome" />
                     <Field label="Cargo" placeholder="Coordenação" />
                     <Field label="E-mail" placeholder="email@empresa.com" />
@@ -241,7 +243,7 @@ const EnterprisePlans = () => {
               </div>
 
               {/* Right: Serviços */}
-              <div className="flex min-h-0 flex-col rounded-3xl border border-slate-200 bg-white p-3 shadow-sm shadow-violet-950/5 xl:p-3 2xl:p-4">
+              <div className="flex flex-col rounded-3xl border border-slate-200 bg-white p-3 shadow-sm shadow-violet-950/5 xl:min-h-0 xl:p-3 2xl:p-4">
                 <SectionTitle
                   variant="solid"
                   icon={<ClipboardList className="size-4" />}
@@ -249,7 +251,7 @@ const EnterprisePlans = () => {
                   description="Selecione o que faz sentido agora"
                 />
 
-                <div className="mt-2.5 flex min-h-0 flex-1 flex-col justify-start gap-1.5 xl:gap-1.5 2xl:mt-3 2xl:gap-2">
+                <div className="mt-3 flex flex-col gap-2 xl:mt-2.5 xl:min-h-0 xl:flex-1 xl:justify-start xl:gap-1.5 2xl:mt-3 2xl:gap-2">
                   <ServiceOption
                     title="Simulados online"
                     price="+ R$4/aluno"
@@ -287,8 +289,8 @@ const EnterprisePlans = () => {
         </div>
 
         {/* Nota aside */}
-        <aside className="h-full min-h-0 w-full overflow-hidden rounded-3xl border border-violet-200 bg-violet-700 text-white shadow-2xl shadow-violet-950/20 xl:rounded-4xl">
-          <div className="relative isolate flex h-full min-h-0 flex-col overflow-hidden p-4 xl:p-4 2xl:p-5">
+        <aside className="w-full rounded-3xl border border-violet-200 bg-violet-700 text-white shadow-2xl shadow-violet-950/20 xl:h-full xl:min-h-0 xl:overflow-hidden xl:rounded-4xl">
+          <div className="relative isolate flex flex-col overflow-hidden p-4 xl:h-full xl:min-h-0 xl:p-4 2xl:p-5">
             {/* Decorative blobs */}
             <div className="absolute inset-0 -z-10 bg-[linear-gradient(rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.08)_1px,transparent_1px)] bg-size-[30px_30px] opacity-40" />
             <div className="absolute -top-24 -right-24 -z-10 size-64 rounded-full bg-white/12 blur-3xl" />
@@ -309,7 +311,7 @@ const EnterprisePlans = () => {
                 Valores estimados por aluno ativo.
               </p>
 
-              <div className="mt-2.5 grid gap-1.5 2xl:mt-3 2xl:gap-2">
+              <div className="mt-3 grid gap-2 xl:mt-2.5 xl:gap-1.5 2xl:mt-3 2xl:gap-2">
                 <QuoteLine label="Base plataforma" value="R$9/aluno" />
                 <QuoteLine label="Simulados online" value="R$4/aluno" />
                 <QuoteLine label="Relatórios por turma" value="R$3/aluno" />
@@ -318,30 +320,30 @@ const EnterprisePlans = () => {
             </div>
 
             {/* Bottom */}
-            <div className="mt-auto shrink-0">
+            <div className="mt-5 shrink-0 xl:mt-auto">
               <div className="mb-3 h-px bg-white/15" />
 
               {/* Price cards */}
-              <div className="grid grid-cols-2 gap-2 2xl:gap-3">
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-2 2xl:gap-3">
                 {/* Mensal */}
-                <div className="min-w-0 rounded-2xl border border-white/10 bg-white/15 p-2.5 backdrop-blur-md 2xl:rounded-3xl 2xl:p-3">
+                <div className="min-w-0 rounded-2xl border border-white/10 bg-white/15 p-3 backdrop-blur-md xl:p-2.5 2xl:rounded-3xl 2xl:p-3">
                   <p className="truncate text-[8px] font-bold uppercase tracking-[0.14em] text-white/50 2xl:text-[9px]">
                     Plano mensal
                   </p>
 
                   <div className="mt-1 flex min-w-0 items-end gap-1">
-                    <span className="text-lg font-bold tracking-tight xl:text-xl 2xl:text-2xl">
+                    <span className="text-xl font-bold tracking-tight xl:text-xl 2xl:text-2xl">
                       R$16
                     </span>
 
-                    <span className="pb-0.5 text-[8px] font-medium text-white/60 xl:text-[9px] 2xl:text-[10px]">
+                    <span className="pb-0.5 text-[9px] font-medium text-white/60 xl:text-[9px] 2xl:text-[10px]">
                       /aluno
                     </span>
                   </div>
                 </div>
 
                 {/* Anual */}
-                <div className="min-w-0 rounded-2xl border border-amber-200/20 bg-amber-300/15 p-2.5 backdrop-blur-md 2xl:rounded-3xl 2xl:p-3">
+                <div className="min-w-0 rounded-2xl border border-amber-200/20 bg-amber-300/15 p-3 backdrop-blur-md xl:p-2.5 2xl:rounded-3xl 2xl:p-3">
                   <div className="flex min-w-0 items-center justify-between gap-1">
                     <p className="truncate text-[8px] font-bold uppercase tracking-[0.14em] text-amber-100 2xl:text-[9px]">
                       Plano anual
@@ -353,11 +355,11 @@ const EnterprisePlans = () => {
                   </div>
 
                   <div className="mt-1 flex min-w-0 items-end gap-1">
-                    <span className="text-lg font-bold tracking-tight xl:text-xl 2xl:text-2xl">
+                    <span className="text-xl font-bold tracking-tight xl:text-xl 2xl:text-2xl">
                       R$14,40
                     </span>
 
-                    <span className="pb-0.5 text-[8px] font-medium text-white/60 xl:text-[9px] 2xl:text-[10px]">
+                    <span className="pb-0.5 text-[9px] font-medium text-white/60 xl:text-[9px] 2xl:text-[10px]">
                       /aluno
                     </span>
                   </div>
@@ -366,7 +368,7 @@ const EnterprisePlans = () => {
 
               <button
                 type="button"
-                className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-bold text-violet-700 shadow-sm transition hover:-translate-y-0.5 hover:bg-violet-50 hover:text-violet-800 hover:shadow-xl xl:py-2 2xl:py-2.5"
+                className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-full bg-white px-4 py-2.5 text-sm font-bold text-violet-700 shadow-sm transition hover:-translate-y-0.5 hover:bg-violet-50 hover:text-violet-800 hover:shadow-xl xl:py-2 2xl:py-2.5"
               >
                 Solicitar proposta
                 <ChevronRight className="size-3.5 xl:size-4" />

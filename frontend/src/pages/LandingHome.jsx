@@ -10,8 +10,10 @@ import { ChevronRight, Building2, GraduationCap, School } from "lucide-react";
 import { recursos } from "../services/recursos";
 import { planos } from "../services/planos";
 import { faqs } from "../services/faqs";
+import { useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
+  const navigate = useNavigate();
   const markups =
     "inline-flex w-fit rounded-full bg-violet-100 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide text-violet-700";
 
@@ -145,7 +147,10 @@ const LandingPage = () => {
               </div>
 
               {/* Botão */}
-              <button className="flex w-full cursor-pointer items-center justify-center rounded-xl bg-violet-600 px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-violet-700 sm:w-fit xl:py-2.5 2xl:py-3">
+              <button
+                onClick={() => navigate("signup")}
+                className="flex w-full cursor-pointer items-center justify-center rounded-xl bg-violet-600 px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-violet-700 sm:w-fit xl:py-2.5 2xl:py-3"
+              >
                 Acessar como aluno
                 <ChevronRight className="ml-1 size-4" />
               </button>
@@ -201,7 +206,10 @@ const LandingPage = () => {
               </div>
 
               {/* Botão */}
-              <button className="flex w-full cursor-pointer items-center justify-center rounded-xl bg-white px-5 py-3 text-sm font-bold text-violet-800 transition-colors hover:bg-slate-100 sm:w-fit xl:py-2.5 2xl:py-3">
+              <button
+                onClick={() => navigate("/planos", { states: "enterprise" })}
+                className="flex w-full cursor-pointer items-center justify-center rounded-xl bg-white px-5 py-3 text-sm font-bold text-violet-800 transition-colors hover:bg-slate-100 sm:w-fit xl:py-2.5 2xl:py-3"
+              >
                 Solicitar acesso institucional
                 <ChevronRight className="ml-1 size-4" />
               </button>
@@ -349,7 +357,7 @@ const LandingPage = () => {
                 </ul>
 
                 <a
-                  href="#"
+                  onClick={() => navigate(plan.url, { state: {view:plan.view} })}
                   className={`mt-6 flex w-full items-center justify-center rounded-2xl px-5 py-3 text-sm font-bold transition hover:-translate-y-0.5 2xl:mt-7 ${
                     plan.dark
                       ? "bg-white text-violet-950 hover:bg-slate-100"

@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import LogoImg from "../../assets/logo.png";
 const Logo = () => {
+  const navigate = useNavigate();
   return (
-    <div className="flex items-center gap-2">
+    <div onClick={() => {navigate("/")}} className="flex cursor-pointer items-center gap-2">
       <img src={LogoImg} alt="Vestibule" className="h-10 w-auto" />
 
       <div className="flex flex-col gap-0 justify-center">
