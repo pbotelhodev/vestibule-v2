@@ -6,39 +6,39 @@ import Logo from "./ui/Logo";
 
 const footerColumns = [
   {
-    title: "Produto",
+    title: "Plataforma",
     links: [
-      { label: "Painel", href: "/portal" },
-      { label: "Simulados", href: "#simulados" },
-      { label: "Desempenho", href: "#desempenho" },
-      { label: "Trilhas", href: "#trilhas" },
-      { label: "Perfil", href: "/perfil" },
+      { label: "Início", href: "/" },
+      
+      { label: "Planos", href: "/planos" },
     ],
   },
   {
-    title: "Plataforma",
+    title: "Para instituições",
     links: [
-      { label: "ENEM", href: "#enem" },
-      { label: "FUVEST", href: "#fuvest" },
-      { label: "Vestibulares", href: "#vestibulares" },
-      { label: "Cursinhos", href: "#cursinhos" },
-      { label: "Ensino médio", href: "#ensino-medio" },
+      { label: "Instituições", href: "/instituicoes" },
+      { label: "Benefícios", href: "/instituicoes#beneficios" },
+      { label: "Demonstração", href: "/instituicoes#demo" },
+      { label: "Falar com especialista", href: "/institucoes#contato" },
+    ],
+  },
+  {
+    title: "Conta",
+    links: [
+      { label: "Entrar", href: "/login" },
+      { label: "Criar conta", href: "/signup" },
+      { label: "Recuperar senha", href: "/credenciais/recuperar" },
+      { label: "Portal do aluno", href: "/portal" },
     ],
   },
   {
     title: "Empresa",
     links: [
-      { label: "Sobre", href: "#sobre" },
+      { label: "Sobre", href: "/sobre" },
       { label: "Contato", href: "/contato" },
-      { label: "Privacidade", href: "/privacidade" },
-      { label: "Termos", href: "/termos" },
-    ],
-  },
-  {
-    title: "Suporte",
-    links: [
       { label: "Ajuda", href: "/ajuda" },
       { label: "Dúvidas frequentes", href: "#perguntas" },
+      { label: "Termos e privacidade", href: "/termos-e-privacidade" },
     ],
   },
 ];
