@@ -5,14 +5,17 @@ import {
   Crown,
   LayoutDashboard,
   LogOut,
+  Menu,
   Settings,
   UserRound,
   X,
 } from "lucide-react";
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
-import logo from "../../assets/logo.png";
+import Logo from "../../assets/logo.png";
+import LogoBlue from "../../assets/logo-blue.png";
+import LogoAmber from "../../assets/logo-amber.png";
 
 const navItems = [
   {
@@ -48,35 +51,107 @@ const planLabels = {
   premium: "Plano Premium",
 };
 
+const planThemes = {
+  free: {
+    active: "bg-violet-600 text-white",
+    hover: "hover:bg-violet-50 hover:text-violet-700",
+    iconBox: "bg-violet-50 text-violet-600",
+    avatar: "bg-violet-600 text-white",
+    border: "border-violet-100",
+    softBorder: "border-violet-200",
+    card: "from-violet-50 via-white to-blue-50",
+    text: "text-violet-600",
+    textStrong: "text-violet-700",
+    button: "bg-violet-600 hover:bg-violet-700",
+    mobileButton: "border-violet-100 text-violet-700 hover:bg-violet-50",
+  },
+  pro: {
+    active: "bg-blue-700 text-white",
+    hover: "hover:bg-blue-50 hover:text-blue-700",
+    iconBox: "bg-blue-50 text-blue-700",
+    avatar: "bg-blue-700 text-white",
+    border: "border-blue-100",
+    softBorder: "border-blue-200",
+    card: "from-blue-50 via-white to-violet-50",
+    text: "text-blue-700",
+    textStrong: "text-blue-800",
+    button: "bg-blue-700 hover:bg-blue-800",
+    mobileButton: "border-blue-100 text-blue-700 hover:bg-blue-50",
+  },
+  premium: {
+    active: "bg-amber-500 text-white",
+    hover: "hover:bg-amber-50 hover:text-amber-700",
+    iconBox: "bg-amber-50 text-amber-600",
+    avatar: "bg-amber-500 text-white",
+    border: "border-amber-200",
+    softBorder: "border-amber-300",
+    card: "from-amber-50 via-white to-violet-50",
+    text: "text-amber-600",
+    textStrong: "text-amber-700",
+    button: "bg-amber-500 hover:bg-amber-600",
+    mobileButton: "border-amber-200 text-amber-700 hover:bg-amber-50",
+  },
+};
+
+const planLogos = {
+  free: Logo,
+  pro: LogoBlue,
+  premium: LogoAmber,
+};
+
 const PanelAside = ({ student }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const studentInitial = student?.name?.charAt(0)?.toUpperCase() || "A";
-  const firstName = student?.name?.split(" ")?.[0] || "Aluno";
-  const currentPlan = planLabels[student?.plan] || "Plano Free";
+  const currentTheme = planThemes[student?.plan] || planThemes.free;
+  const currentPlan = planLabels[student?.plan] || planLabels.free;
+  const currentLogo = planLogos[student?.plan] || planLogos.free;
+
+  const fullName = student?.name || "Aluno Vestibule";
+  const nameParts = fullName.trim().split(" ");
+  const firstName = nameParts[0] || "Aluno";
+  const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : "";
+  const displayName = lastName ? `${firstName} ${lastName}` : firstName;
+  const studentInitial = firstName.charAt(0).toUpperCase() || "A";
+
+  const navigate = useNavigate();
 
   const openAside = () => setIsOpen(true);
   const closeAside = () => setIsOpen(false);
 
   const handleAsideClick = () => {
-    const isTouchDevice = window.matchMedia(
-      "(hover: none), (pointer: coarse)",
-    ).matches;
+    const isTouchLayout = window.innerWidth < 1280;
 
-    if (isTouchDevice && !isOpen) {
+    if (isTouchLayout && !isOpen) {
       openAside();
     }
   };
 
+  const handleExitUser = () => {
+    navigate("/login");
+  };
+
   const labelVisibility = isOpen
-    ? "w-44 opacity-100"
-    : "w-0 opacity-0 xl:group-hover:w-44 xl:group-hover:opacity-100";
+    ? "w-40 opacity-100"
+    : "w-0 opacity-0 xl:group-hover:w-40 xl:group-hover:opacity-100";
 
   const itemLayout = isOpen ? "gap-3" : "gap-0 xl:group-hover:gap-3";
 
   return (
     <>
-      {/* Overlay touch/mobile/tablet */}
+      {/* Botão mobile */}
+      <button
+        type="button"
+        onClick={openAside}
+        className={[
+          "fixed top-4 left-4 z-40 grid size-12 place-items-center rounded-2xl border bg-white shadow-sm transition md:hidden",
+          currentTheme.mobileButton,
+        ].join(" ")}
+        aria-label="Abrir menu lateral"
+      >
+        <Menu className="size-5" />
+      </button>
+
+      {/* Overlay mobile/tablet quando aberto */}
       {isOpen && (
         <button
           type="button"
@@ -89,10 +164,30 @@ const PanelAside = ({ student }) => {
       <aside
         onClick={handleAsideClick}
         className={[
-          "group fixed top-0 bottom-0 left-0 z-50 flex flex-col overflow-hidden border-r border-slate-200 bg-white shadow-sm",
-          "transition-[width] duration-300 ease-out will-change-[width]",
-          isOpen ? "w-55 xl:w-20" : "w-20",
-          "xl:hover:w-55",
+          "group fixed top-0 bottom-0 left-0 z-50 flex flex-col overflow-hidden border-r bg-white shadow-sm",
+          "transition-[width,transform] duration-300 ease-out will-change-[width,transform]",
+          currentTheme.border,
+
+          /*
+            Mobile < 768px:
+            fechado sai da tela
+            aberto entra como drawer
+          */
+          isOpen ? "translate-x-0 w-64" : "-translate-x-full w-64",
+
+          /*
+            Tablet >= 768px:
+            fechado fica compacto na lateral
+            aberto expande por clique
+          */
+          isOpen ? "md:translate-x-0 md:w-55" : "md:translate-x-0 md:w-20.5",
+
+          /*
+            Desktop >= 1280px:
+            não trava aberto por clique
+            abre apenas no hover
+          */
+          "xl:w-20.5 xl:hover:w-55",
         ].join(" ")}
       >
         {/* Logo */}
@@ -100,7 +195,7 @@ const PanelAside = ({ student }) => {
           <div className="flex min-w-0 items-center gap-3">
             <div className="grid size-12 shrink-0 place-items-center overflow-hidden rounded-2xl">
               <img
-                src={logo}
+                src={currentLogo}
                 alt="Vestibule"
                 className="h-10 w-auto object-contain"
               />
@@ -115,7 +210,12 @@ const PanelAside = ({ student }) => {
               <p className="truncate text-sm font-bold text-slate-950">
                 Vestibule
               </p>
-              <p className="truncate text-xs font-medium text-violet-500">
+              <p
+                className={[
+                  "truncate text-xs font-medium",
+                  currentTheme.text,
+                ].join(" ")}
+              >
                 Preparação inteligente
               </p>
             </div>
@@ -128,9 +228,13 @@ const PanelAside = ({ student }) => {
                 event.stopPropagation();
                 closeAside();
               }}
-              className="ml-auto grid size-10 shrink-0 place-items-center rounded-2xl border border-slate-200 text-slate-500 transition hover:bg-slate-50 hover:text-slate-800 xl:hidden"
+              className={[
+                "ml-auto grid size-8 shrink-0 place-items-center rounded-2xl border text-slate-500 transition hover:bg-slate-50 hover:text-slate-800 xl:hidden",
+                currentTheme.border,
+              ].join(" ")}
+              aria-label="Fechar menu lateral"
             >
-              <X className="size-5" />
+              <X className="size-4" />
             </button>
           )}
         </div>
@@ -139,16 +243,22 @@ const PanelAside = ({ student }) => {
         <div className="shrink-0 px-3">
           <div
             className={[
-              "flex h-14 w-full items-center overflow-hidden rounded-xl border border-slate-200 bg-slate-50 px-1.5",
+              "flex h-14 w-full items-center overflow-hidden rounded-xl border bg-slate-50 px-1.5",
               "transition-[gap,background-color,border-color] duration-200 ease-out",
+              currentTheme.border,
               itemLayout,
             ].join(" ")}
           >
-            <div className="grid size-11 shrink-0 place-items-center overflow-hidden rounded-xl bg-violet-600 text-sm font-bold text-white shadow-sm">
+            <div
+              className={[
+                "grid size-11 shrink-0 place-items-center overflow-hidden rounded-xl text-sm font-bold shadow-sm",
+                currentTheme.avatar,
+              ].join(" ")}
+            >
               {student?.avatarUrl ? (
                 <img
                   src={student.avatarUrl}
-                  alt={student?.name || "Aluno"}
+                  alt={fullName}
                   className="size-full object-cover"
                 />
               ) : (
@@ -163,7 +273,7 @@ const PanelAside = ({ student }) => {
               ].join(" ")}
             >
               <p className="truncate text-sm font-bold text-slate-950">
-                Olá, {firstName}
+                {displayName}
               </p>
 
               <p className="truncate text-xs font-medium text-slate-500">
@@ -190,8 +300,8 @@ const PanelAside = ({ student }) => {
                   "transition-[gap,background-color,color,box-shadow] duration-200 ease-out",
                   itemLayout,
                   isActive
-                    ? "bg-violet-600 text-white shadow-sm"
-                    : "text-slate-500 hover:bg-violet-50 hover:text-violet-700",
+                    ? `${currentTheme.active} shadow-sm`
+                    : `text-slate-500 ${currentTheme.hover}`,
                 ].join(" ")
               }
             >
@@ -220,12 +330,19 @@ const PanelAside = ({ student }) => {
               event.stopPropagation();
             }}
             className={[
-              "flex h-14 w-full items-center overflow-hidden rounded-3xl border border-violet-100 bg-linear-to-br from-violet-50 via-white to-blue-50 px-1.5 text-violet-600",
-              "transition-[gap,border-color,box-shadow] duration-200 ease-out hover:border-violet-200 hover:shadow-sm",
+              "flex h-14 w-full items-center overflow-hidden rounded-3xl border bg-linear-to-br px-1.5",
+              "transition-[gap,border-color,box-shadow] duration-200 ease-out hover:shadow-sm",
+              currentTheme.border,
+              currentTheme.card,
               itemLayout,
             ].join(" ")}
           >
-            <div className="grid size-11 shrink-0 place-items-center rounded-2xl bg-white shadow-sm">
+            <div
+              className={[
+                "grid size-11 shrink-0 place-items-center rounded-2xl shadow-sm",
+                currentTheme.iconBox,
+              ].join(" ")}
+            >
               <Crown className="size-5" />
             </div>
 
@@ -238,7 +355,12 @@ const PanelAside = ({ student }) => {
               <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">
                 Assinatura
               </p>
-              <p className="truncate text-xs font-bold text-slate-800">
+              <p
+                className={[
+                  "truncate text-xs font-bold",
+                  currentTheme.textStrong,
+                ].join(" ")}
+              >
                 {currentPlan}
               </p>
             </div>
@@ -249,6 +371,7 @@ const PanelAside = ({ student }) => {
             type="button"
             onClick={(event) => {
               event.stopPropagation();
+              handleExitUser();
             }}
             className={[
               "flex h-12 w-full cursor-pointer items-center overflow-hidden rounded-2xl px-1.5 text-sm font-bold text-slate-400",
@@ -256,7 +379,9 @@ const PanelAside = ({ student }) => {
               itemLayout,
             ].join(" ")}
           >
-            <LogOut className="size-5 shrink-0" />
+            <span className="grid size-11 shrink-0 place-items-center">
+              <LogOut className="size-5" />
+            </span>
 
             <span
               className={[
