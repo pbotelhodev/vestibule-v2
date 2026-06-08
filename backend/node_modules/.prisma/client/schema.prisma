@@ -60,6 +60,50 @@ model User {
 }
 
 /**
+ * Schema Simulations
+ */
+
+enum SimulationSubject {
+  MATEMATICA
+  LINGUAS
+  PORTUGUES
+  LITERATURA
+  INGLES
+  ESPANHOL
+  ARTES
+  HISTORIA
+  GEOGRAFIA
+  BIOLOGIA
+  FISICA
+  QUIMICA
+  CIENCIAS_HUMANAS
+  CIENCIAS_NATUREZA
+  GERAL
+}
+
+enum RequiredPlan {
+  FREE
+  PRO
+  PREMIUM
+}
+
+model Simulation {
+  id              String            @id @default(uuid())
+  publicId        String            @unique @map("public_id")
+  title           String
+  description     String
+  subject         SimulationSubject
+  originCode      String            @default("vest") @map("origin_code")
+  requiredPlan    RequiredPlan      @default(FREE) @map("required_plan")
+  timePerQuestion Int               @map("time_per_question")
+  isPublished     Boolean           @default(false) @map("is_published")
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+
+  @@map("simulations")
+}
+
+/**
  * npx prisma validate      → confere se o schema está válido
  * npx prisma format        → organiza o schema.prisma
  * npx prisma migrate dev   → cria/atualiza tabelas no banco com histórico

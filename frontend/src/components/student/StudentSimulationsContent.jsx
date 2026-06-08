@@ -95,7 +95,7 @@ const getSimulationStatus = (simulation, currentPlan) => {
   return simulation.status;
 };
 
-const StudentSimulationsContent = ({ student }) => {
+const StudentSimulationsContent = ({ student, simulations }) => {
   const [activeFilter, setActiveFilter] = useState("all");
 
   const currentPlan = student?.plan || "free";
