@@ -371,7 +371,7 @@ const StudentSimulationContent = ({
                         src={currentQuestion.image}
                         alt={currentQuestion.imageAlt || "Imagem da questão"}
                         onError={() => handleImageError(currentQuestion.id)}
-                        className="max-h-[320px] w-full object-contain p-3 sm:max-h-[380px] xl:max-h-[180px] xl:p-2 2xl:max-h-[420px] 2xl:p-4"
+                        className="max-h-80 w-full object-contain p-3 sm:max-h-95 xl:max-h-45 xl:p-2 2xl:max-h-105 2xl:p-4"
                       />
 
                       {currentQuestion.imageCaption && (
