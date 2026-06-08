@@ -1,17 +1,11 @@
-/* Const Tools */
+import { useOutletContext } from "react-router-dom";
 
-/* Const Assets */
+import StudentSimulationsContent from "../../components/student/StudentSimulationsContent";
 
-/* Const components */
+const StudentSimulations = () => {
+  const { student } = useOutletContext();
 
-/* aConst services */
-
-/* Const services */
-
-const StudentDashboard = () => {
-  return (
-    /* Conatiner */
-    <div></div>
-  );
+  return <StudentSimulationsContent student={student} />;
 };
-export default StudentDashboard;
+
+export default StudentSimulations;

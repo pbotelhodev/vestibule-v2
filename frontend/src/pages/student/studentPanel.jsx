@@ -19,7 +19,7 @@ const StudentPanel = () => {
     lastLoginAt: null,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    plan: "premium",
+    plan: "free",
   };
 
   return (
