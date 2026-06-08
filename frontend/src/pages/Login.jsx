@@ -334,6 +334,7 @@ const LoginPage = () => {
 
                 <button
                   type="button"
+                  onClick={() => navigate("/student")}
                   className="flex cursor-pointer items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-extrabold text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-violet-200 hover:bg-slate-50 hover:text-violet-600 hover:shadow-md 2xl:py-3.5"
                 >
                   <span className="grid size-5 place-items-center rounded-full border border-slate-200 text-xs font-extrabold text-blue-600">
