@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const authroutes = require("./routes/auth.routes");
+const simulationsRoutes = require("./routes/simulations.routes")
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use(
 
 app.use(express.json());
 app.use("/api/auth/", authroutes);
+app.use("/api/student/", simulationsRoutes)
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", service: "Backend vestibule ativo 🟢" });

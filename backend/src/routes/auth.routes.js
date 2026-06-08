@@ -1,14 +1,14 @@
 const express = require("express");
 const rateLimit = require("express-rate-limit");
-const { register, login, getMe } = require("../controllers/auth.controler");
+const { register, login, getMe } = require("../controllers/auth.controller");
 const authMiddleware = require("../middlewares/auth.middleware");
 
 const router = express.Router();
 
 /* Limite: 10 tentativas por IP a cada 15 minutos nas rotas de auth */
 const authLimiter = rateLimit({
-  windowMs: 0.1 * 60 * 1000, //Modificar quando subir o site
-  max: 30, //Adicionar no maximo 15 tentativas
+  windowMs: 0.1 * 60 * 1000, //Modificar quando subir o site pra 15
+  max: 30, //Adicionar no maximo 10 tentativas
   message: { message: "Muitas tentativas. Tente novamente em 15 minutos." },
   standardHeaders: true,
   legacyHeaders: false,
