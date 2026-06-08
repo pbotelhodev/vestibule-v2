@@ -1,14 +1,15 @@
 export const pageTitles = {
   /* Página Inicial */
-  OKhome: "Vestibule | Simulados inteligentes, desempenho por matéria e trilhas de estudo para evoluir com clareza", //Página inicial pública com a landing page comercial e foco em SEO
+  OKhome:
+    "Vestibule | Simulados inteligentes, desempenho por matéria e trilhas de estudo para evoluir com clareza", //Página inicial pública com a landing page comercial e foco em SEO
   OKnotFound: "Página não encontrada | Vestibule", // Página exibida quando a rota não existe
   OKlogin: "Entrar | Vestibule", // Página de login para alunos, instituições, professores ou admins acessarem a plataforma
   OKregister: "Criar conta | Vestibule", // Página de cadastro para aluno avulso criar sua conta
-  forgotPassword: "Recuperar senha | Vestibule", // Página para iniciar o fluxo de recuperação de senha
-  enterprise: "Instituições | Vestibule", // Página comercial para escolas, cursinhos e instituições conhecerem benefícios e solicitarem contato
+  OKforgotPassword: "Recuperar senha | Vestibule", // Página para iniciar o fluxo de recuperação de senha
+  OKenterprise: "Instituições | Vestibule", // Página comercial para escolas, cursinhos e instituições conhecerem benefícios e solicitarem contato
 
   /* Pós cadastro */
-  plans: "Escolha seu plano | Vestibule", // Página pós-cadastro onde o aluno escolhe seu plano antes de seguir para a plataforma
+  OKplans: "Escolha seu plano | Vestibule", // Página pós-cadastro onde o aluno escolhe seu plano antes de seguir para a plataforma
 
   /* Footer e Extras */
   support: "Suporte e ajuda | Vestibule", // Página de suporte com ajuda, dúvidas frequentes e orientações de uso
@@ -17,6 +18,7 @@ export const pageTitles = {
   contact: "Contato | Vestibule", // Página de contato geral para dúvidas, suporte comercial ou mensagens institucionais
 
   /* Área do estudante */
+  studentPanel: 0, //Onde as telas serão linkadas
   studentDashboard: "Painel do aluno | Vestibule", // Página inicial do painel do aluno com resumo, próximos simulados, desempenho geral e atalhos principais
   studentSimulations: "Simulados | Vestibule", // Página com todos os simulados disponíveis, filtros, categorias e histórico de simulados
   studentSimulation: "Simulado {nome ou id do simulado} | Vestibule", // Página onde o aluno realiza um simulado específico
@@ -31,6 +33,7 @@ export const pageTitles = {
   studentEssayCorrection: "Correção de redação | Vestibule", // Página futura com análise detalhada da redação corrigida
 
   /* Área da instituição */
+  institutionPanel: 0, //Onde as telas serão linkadas
   institutionDashboard: "Painel da instituição | Vestibule", // Dashboard principal da escola com resumo de turmas, alunos, professores, simulados e desempenho geral
   institutionClasses: "Turmas | Vestibule", // Página onde a instituição cria, edita, organiza e acessa suas turmas
   institutionClass: "Turma {nome ou id da turma} | Vestibule", // Página de uma turma específica com alunos, professores, simulados vinculados e desempenho da turma
@@ -46,6 +49,7 @@ export const pageTitles = {
   institutionSettings: "Configurações da instituição | Vestibule", // Configurações do perfil institucional, dados da escola, permissões, administradores e preferências
 
   /* Área do professor */
+  teacherPanel: 0, //Onde as telas serão linkadas
   teacherDashboard: "Painel do professor | Vestibule", // Dashboard principal do professor com resumo das turmas, alunos, simulados aplicados e desempenho recente
   teacherClasses: "Minhas turmas | Vestibule", // Página onde o professor acessa as turmas vinculadas a ele
   teacherClass: "Turma {nome ou id da turma} | Vestibule", // Página de uma turma específica com alunos, simulados, desempenho e acompanhamento pedagógico
@@ -56,7 +60,8 @@ export const pageTitles = {
   teacherReports: "Acompanhamento | Vestibule", // Página com relatórios pedagógicos, evolução das turmas, dificuldades recorrentes e desempenho por matéria
   teacherSettings: "Configurações do professor | Vestibule", // Página de preferências, dados do perfil e configurações básicas da conta do professor
 
-    /* Área do Admin Master */
+  /* Área do Admin Master */
+  masterPanel: 0, //Onde as telas serão linkadas
   adminDashboard: "Painel administrativo | Vestibule", // Dashboard principal do admin master com visão geral da plataforma, usuários, instituições, planos, simulados e operações internas
   adminUsers: "Usuários | Vestibule", // Página onde o admin visualiza e gerencia usuários gerais da plataforma, como alunos individuais, professores internos, admins e equipe
   adminUser: "{Nome do usuário} - Detalhes | Vestibule", // Página individual de um usuário geral com dados da conta, role, status, plano, histórico e ações administrativas
@@ -69,7 +74,8 @@ export const pageTitles = {
   adminSimulations: "Simulados oficiais | Vestibule", // Página onde o admin gerencia simulados oficiais da plataforma, publicados ou em preparação
   adminSimulation: "Simulado {nome ou id do simulado} | Vestibule", // Página de detalhes de um simulado oficial com status, matérias, autor, revisão e publicação
   adminSimulationSubmissions: "Simulados para aprovação | Vestibule", // Página onde a equipe interna envia simulados criados para revisão e aprovação antes de publicar
-  adminSimulationSubmission: "Revisão do simulado {nome ou id do simulado} | Vestibule", // Página para revisar, aprovar, reprovar ou solicitar ajustes em um simulado criado pela equipe
+  adminSimulationSubmission:
+    "Revisão do simulado {nome ou id do simulado} | Vestibule", // Página para revisar, aprovar, reprovar ou solicitar ajustes em um simulado criado pela equipe
   adminContentTeam: "Equipe de conteúdo | Vestibule", // Página para gerenciar pessoas da empresa responsáveis por criar simulados e conteúdos educacionais
   adminContentMember: "{Nome do colaborador} - Conteúdo | Vestibule", // Página individual de um membro da equipe com permissões, simulados criados, revisões e histórico
   adminPlans: "Planos e assinaturas | Vestibule", // Página para gerenciar planos, limites, recursos disponíveis e assinaturas dos alunos gerais e instituições
