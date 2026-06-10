@@ -207,7 +207,9 @@ const LandingPage = () => {
 
               {/* Botão */}
               <button
-                onClick={() => navigate("/planos", { states: "enterprise" })}
+                onClick={() =>
+                  navigate("/planos", { state: { view: "enterprise" } })
+                }
                 className="flex w-full cursor-pointer items-center justify-center rounded-xl bg-white px-5 py-3 text-sm font-bold text-violet-800 transition-colors hover:bg-slate-100 sm:w-fit xl:py-2.5 2xl:py-3"
               >
                 Solicitar acesso institucional

@@ -126,7 +126,7 @@ const Header = () => {
               2xl:px-5 2xl:py-3
             "
           >
-            <span className="relative z-10">Acessar Portal</span>
+            <span className="relative z-10 cursor-pointer">Acessar Portal</span>
 
             <span
               className="
@@ -147,7 +147,7 @@ const Header = () => {
               2xl:px-5 2xl:py-3
             "
           >
-            <span className="relative z-10">Criar conta</span>
+            <span className="relative z-10 cursor-pointer">Criar conta</span>
 
             <span
               className="
@@ -220,7 +220,9 @@ const Header = () => {
                   lg:py-2.5
                 "
               >
-                <span className="relative z-10">Acessar Portal</span>
+                <span className="relative cursor-pointer z-10">
+                  Acessar Portal
+                </span>
 
                 <span
                   className="
@@ -241,7 +243,9 @@ const Header = () => {
                   lg:py-2.5
                 "
               >
-                <span className="relative z-10">Criar conta</span>
+                <span className="relative z-10 cursor-pointer">
+                  Criar conta
+                </span>
 
                 <span
                   className="

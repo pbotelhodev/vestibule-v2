@@ -24,10 +24,11 @@ const PlansPage = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const [isView, setIsView] = useState(
-    state?.view !== "user" || state?.view !== "enterprise"
+    state?.view !== "user" && state?.view !== "enterprise"
       ? "user"
       : state?.view,
   );
+  console.log(isView)
 
   return (
     <main className="relative isolate flex min-h-dvh flex-col overflow-x-hidden bg-white text-slate-900">
