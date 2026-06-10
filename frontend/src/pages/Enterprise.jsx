@@ -22,7 +22,7 @@ import Demo from "../components/ui/demo";
 
 const EnterprisePage = () => {
   const [demoActive, setDemoActive] = useState(false);
-  
+
   return (
     <main className="relative isolate min-h-dvh overflow-x-hidden bg-white text-slate-900">
       {/* Background */}
@@ -53,7 +53,7 @@ const EnterprisePage = () => {
 
             <Link
               to="/planos"
-              state={{ selectedPlan: "enterprise" }}
+              state={{ view: "enterprise" }}
               className="rounded-full bg-violet-700 px-4 py-2.5 text-xs font-bold text-white shadow-sm shadow-violet-950/10 transition hover:-translate-y-0.5 hover:bg-violet-600 hover:shadow-xl hover:shadow-violet-950/15 sm:text-sm xl:py-2 2xl:py-2.5"
             >
               Solicitar proposta
@@ -94,6 +94,7 @@ const EnterprisePage = () => {
 
             <Link
               to="/planos"
+              state={{ view: "enterprise" }}
               className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700 hover:shadow-md xl:py-2.5 2xl:py-3"
             >
               Planos para enterprise
@@ -495,7 +496,7 @@ const EnterprisePage = () => {
 
             <Link
               to="/planos"
-              state={{ selectedPlan: "enterprise" }}
+              state={{ view: "enterprise" }}
               className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-bold text-violet-700 shadow-sm transition hover:-translate-y-0.5 hover:bg-violet-50 hover:text-violet-800 hover:shadow-xl xl:py-2.5 2xl:py-3"
             >
               Solicitar proposta
