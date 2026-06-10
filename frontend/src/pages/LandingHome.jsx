@@ -10,7 +10,7 @@ import { ChevronRight, Building2, GraduationCap, School } from "lucide-react";
 import { recursos } from "../services/recursos";
 import { planos } from "../services/planos";
 import { faqs } from "../services/faqs";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -56,21 +56,21 @@ const LandingPage = () => {
               </p>
 
               <div className="mt-6 flex w-full flex-col items-center gap-3 sm:mt-8 sm:flex-row sm:justify-center xl:justify-start">
-                <a
-                  href="/signup"
+                <Link
+                  to="/signup"
                   className="flex w-full items-center justify-center rounded-full bg-violet-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-violet-600/20 transition hover:-translate-y-0.5 hover:bg-violet-700 sm:w-fit sm:px-6"
                 >
                   Começar como aluno
                   <ChevronRight className="ml-1 size-4" />
-                </a>
+                </Link>
 
-                <a
-                  href="/enterprise"
+                <Link
+                  to="/enterprise"
                   className="flex w-full items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:border-violet-200 hover:text-violet-600 sm:w-fit sm:px-6"
                 >
                   Sou cursinho ou escola
                   <Building2 className="ml-2 size-4" />
-                </a>
+                </Link>
               </div>
             </div>
 
@@ -357,7 +357,9 @@ const LandingPage = () => {
                 </ul>
 
                 <a
-                  onClick={() => navigate(plan.url, { state: {view:plan.view} })}
+                  onClick={() =>
+                    navigate(plan.url, { state: { view: plan.view } })
+                  }
                   className={`mt-6 flex w-full items-center justify-center rounded-2xl px-5 py-3 text-sm font-bold transition hover:-translate-y-0.5 2xl:mt-7 ${
                     plan.dark
                       ? "bg-white text-violet-950 hover:bg-slate-100"

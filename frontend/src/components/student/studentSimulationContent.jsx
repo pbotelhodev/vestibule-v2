@@ -511,18 +511,18 @@ const StudentSimulationContent = ({
                 </span>
 
                 <h2
-                  className={`mt-4 text-2xl font-extrabold sm:text-3xl ${theme.title}`}
+                  className={`mt-2 text-2xl font-extrabold sm:text-3xl ${theme.title}`}
                 >
                   Prepare-se para o simulado
                 </h2>
 
-                <p className="mt-3 text-sm leading-6 text-slate-500 sm:text-base sm:leading-7">
+                <p className="mt-2 text-sm leading-6 text-slate-500 sm:text-base sm:leading-7">
                   Ao iniciar, o tempo começa a contar e as questões ficam
                   liberadas para resposta.
                 </p>
 
-                <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                  <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
+                <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                  <div className="rounded-3xl border border-slate-200 bg-slate-50 p-2">
                     <span className="text-xs font-extrabold uppercase tracking-[0.16em] text-slate-400">
                       Questões
                     </span>
@@ -534,7 +534,7 @@ const StudentSimulationContent = ({
                     </strong>
                   </div>
 
-                  <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
+                  <div className="rounded-3xl border border-slate-200 bg-slate-50 p-2">
                     <span className="text-xs font-extrabold uppercase tracking-[0.16em] text-slate-400">
                       Tempo
                     </span>
@@ -546,7 +546,7 @@ const StudentSimulationContent = ({
                     </strong>
                   </div>
 
-                  <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
+                  <div className="rounded-3xl border border-slate-200 bg-slate-50 p-2">
                     <span className="text-xs font-extrabold uppercase tracking-[0.16em] text-slate-400">
                       Matéria
                     </span>
@@ -559,12 +559,12 @@ const StudentSimulationContent = ({
                   </div>
                 </div>
 
-                <div className="mt-6 rounded-4xl border border-slate-200 bg-slate-50 p-5 text-left">
+                <div className="mt-4 rounded-4xl border border-slate-200 bg-slate-50 px-5 py-2 text-left">
                   <h3 className={`text-base font-extrabold ${theme.title}`}>
                     Como funciona
                   </h3>
 
-                  <div className="mt-3 grid gap-2 text-sm leading-6 text-slate-500">
+                  <div className="mt-2 grid gap-1 text-xs leading-6 text-slate-500">
                     <p>• Leia cada enunciado com atenção antes de responder.</p>
                     <p>
                       • Marque questões para revisar quando estiver em dúvida.
@@ -586,7 +586,7 @@ const StudentSimulationContent = ({
                     <Play className="size-4" />
                   </button>
 
-                  <p className="text-xs font-semibold text-slate-400">
+                  <p className="text-xs font-semibold xl:hidden 2xl:flex text-slate-400">
                     As questões só aparecem depois que o simulado for iniciado.
                   </p>
                 </div>
