@@ -2,23 +2,38 @@ import {
   ArrowRight,
   Atom,
   BookOpenCheck,
+  BookOpenText,
   Calculator,
   CheckCircle2,
   Clock3,
+  FlaskConical,
   Globe2,
+  Landmark,
   Languages,
+  LibraryBig,
   Lock,
-  PenLine,
+  Microscope,
+  Palette,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { timePerQuestions } from "../../services/simulations/timePerQuestions";
 
 const areaIcons = {
-  Matemática: Calculator,
-  Linguagens: Languages,
-  Humanas: Globe2,
-  Natureza: Atom,
-  Redação: PenLine,
-  Completo: BookOpenCheck,
+  matematica: Calculator,
+  linguas: Languages,
+  portugues: BookOpenText,
+  literatura: LibraryBig,
+  ingles: Languages,
+  espanhol: Languages,
+  artes: Palette,
+  historia: Landmark,
+  geografia: Globe2,
+  biologia: Microscope,
+  fisica: Atom,
+  quimica: FlaskConical,
+  "ciencias_humanas": Globe2,
+  "ciencias_natureza": Atom,
+  geral: BookOpenCheck,
 };
 
 const planRank = {
@@ -77,19 +92,38 @@ const themeByPlan = {
     infoBorder: "border-amber-100",
   },
 };
+const subjectLabel = {
+  matematica: "Matemática",
+  linguas: "Línguas",
+  portugues: "Português",
+  literatura: "Literatura",
+  ingles: "Inglês",
+  espanhol: "Espanhol",
+  artes: "Artes",
+  historia: "História",
+  geografia: "Geografia",
+  biologia: "Biologia",
+  fisica: "Física",
+  quimica: "Química",
+  "ciencias_humanas": "Ciências Humanas",
+  "ciencias_natureza": "Ciências da Natureza",
+  geral: "Geral",
+};
 
 const SimulationCard = ({ simulation, studentPlan }) => {
   const navigate = useNavigate();
 
   const currentTheme = themeByPlan[studentPlan] || themeByPlan.free;
-
+  const requiredPlan = simulation.requiredPlan?.toLowerCase() || "free"
+  const subject = simulation.subject?.toLowerCase() || "geral"
   const userPlanLevel = planRank[studentPlan] || 1;
-  const simulationPlanLevel = planRank[simulation.requiredPlan] || 1;
+  const simulationPlanLevel =
+    planRank[requiredPlan] || 1;
 
   const isLockedByPlan = userPlanLevel < simulationPlanLevel;
   const finalStatus = isLockedByPlan
     ? "locked"
-    : simulation.finalStatus || simulation.status;
+    : simulation.finalStatus || simulation.status || "available";
 
   const statusConfig = {
     available: {
@@ -111,27 +145,29 @@ const SimulationCard = ({ simulation, studentPlan }) => {
       buttonLabel: "Ver resultado",
     },
     locked: {
-      label: `Plano ${requiredPlanLabel[simulation.requiredPlan]}`,
+      label: `Plano ${requiredPlanLabel[requiredPlan]}`,
       Icon: Lock,
       badge: "bg-slate-100 text-slate-400 ring-slate-200",
       buttonLabel: "Bloqueado",
     },
   };
-
+  
   const currentStatus = statusConfig[finalStatus] || statusConfig.available;
-  const AreaIcon = areaIcons[simulation.area] || BookOpenCheck;
+  const AreaIcon = areaIcons[subject] || BookOpenCheck;
   const CardIcon = finalStatus === "locked" ? Lock : AreaIcon;
+  const quantQuestions = simulation.questions?.length || 0;
 
   const handleAction = () => {
     if (finalStatus === "locked") return;
 
     if (finalStatus === "done") {
-      navigate(`/student/simulados/${simulation.id}/resultado`);
+      navigate(`/student/simulados/${simulation.publicId}/resultado`);
       return;
     }
 
-    navigate(`/student/simulados/${simulation.id}`);
+    navigate(`/student/simulados/${simulation.publicId}`);
   };
+  
 
   return (
     <article
@@ -186,10 +222,10 @@ const SimulationCard = ({ simulation, studentPlan }) => {
           {/* Conteúdo */}
           <div className="mt-5">
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-slate-400">
-              {simulation.area}
+              {subjectLabel[subject]}
             </p>
 
-            <h3 className="mt-2 text-lg font-bold leading-snug text-slate-950 xl:text-base 2xl:text-lg">
+            <h3 className="mt-2 text-lg font-bold leading-snug text-blue-950 xl:text-base 2xl:text-lg">
               {simulation.title}
             </h3>
 
@@ -236,8 +272,8 @@ const SimulationCard = ({ simulation, studentPlan }) => {
               ].join(" ")}
             >
               <p className="text-xs font-medium text-slate-500">Questões</p>
-              <p className="mt-1 text-sm font-bold text-slate-950">
-                {simulation.questions}
+              <p className="mt-1 text-sm font-bold text-blue-950">
+                {quantQuestions}
               </p>
             </div>
 
@@ -250,8 +286,8 @@ const SimulationCard = ({ simulation, studentPlan }) => {
               ].join(" ")}
             >
               <p className="text-xs font-medium text-slate-500">Duração</p>
-              <p className="mt-1 text-sm font-bold text-slate-950">
-                {simulation.duration}
+              <p className="mt-1 text-sm font-bold text-blue-950">
+                {timePerQuestions(simulation.timePerQuestion, quantQuestions)}
               </p>
             </div>
           </div>

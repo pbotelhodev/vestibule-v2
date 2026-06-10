@@ -100,9 +100,50 @@ model Simulation {
   createdAt       DateTime          @default(now()) @map("created_at")
   updatedAt       DateTime          @updatedAt @map("updated_at")
 
+  questions       Question[]
+
   @@map("simulations")
 }
+model Question {
+  id           String @id @default(uuid())
+  simulationId String @map("simulation_id")
 
+  statement    String
+  imageUrl     String? @map("image_url")
+  imageAlt     String? @map("image_alt")
+  imageCaption String? @map("image_caption")
+
+  subject      SimulationSubject
+  topic        String?
+  order        Int
+
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  simulation   Simulation @relation(fields: [simulationId], references: [id], onDelete: Cascade)
+  
+  alternatives Alternative[]
+
+  @@map("questions")
+}
+
+model Alternative {
+  id         String @id @default(uuid())
+  questionId String @map("question_id")
+
+  text       String?
+  imageUrl   String? @map("image_url")
+  imageAlt   String? @map("image_alt")
+  isCorrect  Boolean @default(false) @map("is_correct")
+  order      Int
+
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@map("alternatives")
+}
 /**
  * npx prisma validate      → confere se o schema está válido
  * npx prisma format        → organiza o schema.prisma

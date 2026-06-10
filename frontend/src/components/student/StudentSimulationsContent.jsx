@@ -1,5 +1,6 @@
 import {
   BookOpenCheck,
+  Check,
   CheckCircle2,
   Clock3,
   Filter,
@@ -31,20 +32,6 @@ const filters = [
   {
     label: "Bloqueados",
     value: "locked",
-  },
-];
-
-const simulations = [
-  {
-    id: "k2j34jkhj234",
-    title: "ENEM — Matemática básica",
-    description: "Questões essenciais para treinar fundamentos matemáticos.",
-    area: "Matemática",
-    questions: 45,
-    duration: "2h",
-    status: "available",
-    requiredPlan: "free",
-    progress: 0,
   },
 ];
 
@@ -86,7 +73,8 @@ const planTheme = {
 
 const getSimulationStatus = (simulation, currentPlan) => {
   const userPlanLevel = planRank[currentPlan] || 1;
-  const simulationPlanLevel = planRank[simulation.requiredPlan] || 1;
+  const simulationPlanLevel =
+    planRank[simulation.requiredPlan.toLowerCase()] || 1;
 
   if (userPlanLevel < simulationPlanLevel) {
     return "locked";
@@ -95,15 +83,14 @@ const getSimulationStatus = (simulation, currentPlan) => {
   return simulation.status;
 };
 
-const StudentSimulationsContent = ({ student, simulations }) => {
+const StudentSimulationsContent = ({ student, simulations = [] }) => {
   const [activeFilter, setActiveFilter] = useState("all");
-
-  const currentPlan = student?.plan || "free";
+  const currentPlan = student?.planActive || "free";
   const theme = planTheme[currentPlan] || planTheme.free;
 
   const simulationsWithStatus = simulations.map((simulation) => ({
     ...simulation,
-    finalStatus: getSimulationStatus(simulation, currentPlan),
+    finalStatus: getSimulationStatus(simulation, currentPlan),  
   }));
 
   const filteredSimulations = simulationsWithStatus.filter((simulation) => {
@@ -118,6 +105,10 @@ const StudentSimulationsContent = ({ student, simulations }) => {
 
   const totalProgress = simulationsWithStatus.filter(
     (simulation) => simulation.finalStatus === "progress",
+  ).length;
+
+  const totalFinished = simulationsWithStatus.filter(
+    (simulation) => simulation.finalStatus === "finished",
   ).length;
 
   const totalLocked = simulationsWithStatus.filter(
@@ -141,7 +132,7 @@ const StudentSimulationsContent = ({ student, simulations }) => {
         <div className="absolute bottom-20 left-24 size-3 rounded-full bg-amber-400/70" />
         <div className="absolute right-1/3 bottom-16 hidden size-2 rounded-full bg-violet-400/60 md:block" />
 
-        <div className="relative z-10 flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
+        <div className="relative z-10 flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-start">
           <div className="max-w-3xl">
             <span
               className={[
@@ -154,20 +145,21 @@ const StudentSimulationsContent = ({ student, simulations }) => {
               Área de simulados
             </span>
 
-            <h1 className="mt-5 text-3xl font-bold tracking-tight text-slate-950 md:text-4xl xl:text-4xl 2xl:text-6xl">
+            <h1 className="mt-5 text-3xl font-bold tracking-tight text-blue-950 md:text-4xl xl:text-4xl 2xl:text-6xl">
               Escolha seu próximo simulado.
             </h1>
 
-            <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-500 md:text-base md:leading-7 2xl:text-lg 2xl:leading-8">
+            <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-600 md:text-base md:leading-7 2xl:text-lg 2xl:leading-8">
               Treine por área, continue simulados em andamento e acompanhe quais
               provas estão disponíveis no seu plano.
             </p>
           </div>
-
-          <div className="grid gap-3 sm:grid-cols-3 xl:min-w-130 2xl:min-w-150">
+          <div
+            className={`grid gap-3 ${student.planActive === "premium" ? "sm:grid-cols-3" : "sm:grid-cols-4"} xl:min-w-130 2xl:min-w-150`}
+          >
             <div className="rounded-3xl border border-slate-200 bg-white/80 p-4 shadow-sm backdrop-blur-md">
               <CheckCircle2 className="size-5 text-emerald-500" />
-              <p className="mt-3 text-2xl font-bold text-slate-950">
+              <p className="mt-3 text-2xl font-bold text-blue-950">
                 {totalAvailable}
               </p>
               <p className="text-xs font-medium text-slate-500">Liberados</p>
@@ -175,19 +167,29 @@ const StudentSimulationsContent = ({ student, simulations }) => {
 
             <div className="rounded-3xl border border-slate-200 bg-white/80 p-4 shadow-sm backdrop-blur-md">
               <Clock3 className="size-5 text-blue-600" />
-              <p className="mt-3 text-2xl font-bold text-slate-950">
+              <p className="mt-3 text-2xl font-bold text-blue-950">
                 {totalProgress}
               </p>
               <p className="text-xs font-medium text-slate-500">Em andamento</p>
             </div>
 
             <div className="rounded-3xl border border-slate-200 bg-white/80 p-4 shadow-sm backdrop-blur-md">
-              <Lock className="size-5 text-slate-400" />
-              <p className="mt-3 text-2xl font-bold text-slate-950">
-                {totalLocked}
+              <Check className="size-5 text-blue-600" />
+              <p className="mt-3 text-2xl font-bold text-blue-950">
+                {totalFinished}
               </p>
-              <p className="text-xs font-medium text-slate-500">Bloqueados</p>
+              <p className="text-xs font-medium text-slate-500">Finalizados</p>
             </div>
+
+            {student.planActive !== "premium" && (
+              <div className="rounded-3xl border border-slate-200 bg-white/80 p-4 shadow-sm backdrop-blur-md">
+                <Lock className="size-5 text-slate-400" />
+                <p className="mt-3 text-2xl font-bold text-blue-950">
+                  {totalLocked}
+                </p>
+                <p className="text-xs font-medium text-slate-500">Bloqueados</p>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -212,7 +214,7 @@ const StudentSimulationsContent = ({ student, simulations }) => {
                   type="button"
                   onClick={() => setActiveFilter(filter.value)}
                   className={[
-                    "shrink-0 rounded-full border px-4 py-2.5 text-xs font-bold transition",
+                    "shrink-0 rounded-full cursor-pointer border px-4 py-2.5 text-xs font-bold transition",
                     isActive
                       ? `${theme.bg} ${theme.border} ${theme.textStrong}`
                       : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50",
@@ -236,7 +238,7 @@ const StudentSimulationsContent = ({ student, simulations }) => {
         <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3">
           {filteredSimulations.map((simulation) => (
             <SimulationCard
-              key={simulation.id}
+              key={simulation.publicId}
               simulation={simulation}
               studentPlan={currentPlan}
             />
@@ -245,46 +247,48 @@ const StudentSimulationsContent = ({ student, simulations }) => {
       </section>
 
       {/* Aviso inferior */}
-      <section
-        className={[
-          "rounded-3xl border bg-white p-5 shadow-sm md:rounded-4xl md:p-6 2xl:p-7",
-          theme.border,
-        ].join(" ")}
-      >
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div className="flex items-start gap-3">
-            <div
+      {student.planActive !== "premium" && (
+        <section
+          className={[
+            "rounded-3xl border bg-white p-5 shadow-sm md:rounded-4xl md:p-6 2xl:p-7",
+            theme.border,
+          ].join(" ")}
+        >
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-start gap-3">
+              <div
+                className={[
+                  "grid size-11 shrink-0 place-items-center rounded-2xl",
+                  theme.icon,
+                ].join(" ")}
+              >
+                <Sparkles className="size-5" />
+              </div>
+
+              <div>
+                <h3 className="text-base font-bold text-blue-950">
+                  Mais simulados serão liberados conforme seu plano.
+                </h3>
+
+                <p className="mt-1 text-sm leading-6 text-slate-500">
+                  O Free começa com simulados básicos, o Pro libera relatórios
+                  por matéria e o Premium terá análises avançadas e trilhas.
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
               className={[
-                "grid size-11 shrink-0 place-items-center rounded-2xl",
-                theme.icon,
+                "rounded-full px-5 cursor-pointer py-3 text-sm font-bold text-white transition",
+                theme.button,
               ].join(" ")}
             >
-              <Sparkles className="size-5" />
-            </div>
-
-            <div>
-              <h3 className="text-base font-bold text-slate-950">
-                Mais simulados serão liberados conforme seu plano.
-              </h3>
-
-              <p className="mt-1 text-sm leading-6 text-slate-500">
-                O Free começa com simulados básicos, o Pro libera relatórios por
-                matéria e o Premium terá análises avançadas e trilhas.
-              </p>
-            </div>
+              Comparar planos
+            </button>
           </div>
-
-          <button
-            type="button"
-            className={[
-              "rounded-full px-5 py-3 text-sm font-bold text-white transition",
-              theme.button,
-            ].join(" ")}
-          >
-            Comparar planos
-          </button>
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   );
 };

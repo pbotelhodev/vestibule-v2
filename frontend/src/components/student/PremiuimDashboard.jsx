@@ -136,7 +136,7 @@ const PremiumDashboard = ({ student }) => {
               Plano Premium
             </span>
 
-            <h1 className="mt-5 text-3xl font-bold tracking-tight text-slate-950 md:text-4xl xl:max-w-2xl xl:text-4xl 2xl:text-6xl">
+            <h1 className="mt-5 text-3xl font-bold tracking-tight text-blue-950 md:text-4xl xl:max-w-2xl xl:text-4xl 2xl:text-6xl">
               Olá, {firstName}. Sua preparação agora é estratégica.
             </h1>
 
@@ -171,7 +171,7 @@ const PremiumDashboard = ({ student }) => {
                   Seu plano
                 </p>
 
-                <h2 className="mt-2 text-2xl font-bold text-slate-950 2xl:text-3xl">
+                <h2 className="mt-2 text-2xl font-bold text-blue-950 2xl:text-3xl">
                   Premium
                 </h2>
               </div>
@@ -195,14 +195,14 @@ const PremiumDashboard = ({ student }) => {
             <div className="mt-4 grid grid-cols-2 gap-3">
               <div className="rounded-2xl bg-amber-50/80 p-3">
                 <p className="text-xs font-medium text-slate-500">IA</p>
-                <p className="mt-1 text-sm font-bold text-slate-950">
+                <p className="mt-1 text-sm font-bold text-blue-950">
                   Recomendações
                 </p>
               </div>
 
               <div className="rounded-2xl bg-violet-50/70 p-3">
                 <p className="text-xs font-medium text-slate-500">Redação</p>
-                <p className="mt-1 text-sm font-bold text-slate-950">
+                <p className="mt-1 text-sm font-bold text-blue-950">
                   Correção IA
                 </p>
               </div>
@@ -228,7 +228,7 @@ const PremiumDashboard = ({ student }) => {
               </span>
             </div>
 
-            <p className="mt-5 text-3xl font-bold tracking-tight text-slate-950 2xl:text-4xl">
+            <p className="mt-5 text-3xl font-bold tracking-tight text-blue-950 2xl:text-4xl">
               {value}
             </p>
 
@@ -247,7 +247,7 @@ const PremiumDashboard = ({ student }) => {
                 Inteligência premium
               </p>
 
-              <h2 className="mt-2 text-xl font-bold text-slate-950 md:text-2xl">
+              <h2 className="mt-2 text-xl font-bold text-blue-950 md:text-2xl">
                 Análise avançada da sua evolução
               </h2>
 
@@ -278,7 +278,7 @@ const PremiumDashboard = ({ student }) => {
                     </div>
 
                     <div>
-                      <h3 className="text-sm font-bold text-slate-950 md:text-base">
+                      <h3 className="text-sm font-bold text-blue-950 md:text-base">
                         {item.title}
                       </h3>
 
@@ -313,7 +313,7 @@ const PremiumDashboard = ({ student }) => {
               <WandSparkles className="size-5" />
             </div>
 
-            <h3 className="mt-5 text-lg font-bold text-slate-950">
+            <h3 className="mt-5 text-lg font-bold text-blue-950">
               Próxima recomendação
             </h3>
 
@@ -353,7 +353,7 @@ const PremiumDashboard = ({ student }) => {
               <FileText className="size-5" />
             </div>
 
-            <h3 className="mt-5 text-lg font-bold text-slate-950">
+            <h3 className="mt-5 text-lg font-bold text-blue-950">
               Redação com IA
             </h3>
 
@@ -381,7 +381,7 @@ const PremiumDashboard = ({ student }) => {
               Recursos premium
             </p>
 
-            <h2 className="mt-2 text-xl font-bold text-slate-950 md:text-2xl">
+            <h2 className="mt-2 text-xl font-bold text-blue-950 md:text-2xl">
               Tudo para estudar com direção
             </h2>
           </div>
@@ -404,7 +404,7 @@ const PremiumDashboard = ({ student }) => {
                 <Icon className="size-5" />
               </div>
 
-              <h3 className="mt-4 text-sm font-bold text-slate-950 md:text-base">
+              <h3 className="mt-4 text-sm font-bold text-blue-950 md:text-base">
                 {title}
               </h3>
 
@@ -424,7 +424,7 @@ const PremiumDashboard = ({ student }) => {
               Próximas ações
             </p>
 
-            <h2 className="mt-2 text-xl font-bold text-slate-950 md:text-2xl">
+            <h2 className="mt-2 text-xl font-bold text-blue-950 md:text-2xl">
               Continue sua preparação premium
             </h2>
           </div>
@@ -447,7 +447,7 @@ const PremiumDashboard = ({ student }) => {
                 <Medal className="size-5" />
               </div>
 
-              <h3 className="mt-4 text-sm font-bold text-slate-950 md:text-base">
+              <h3 className="mt-4 text-sm font-bold text-blue-950 md:text-base">
                 {simulation.title}
               </h3>
 

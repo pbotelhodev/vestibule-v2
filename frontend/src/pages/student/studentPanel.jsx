@@ -5,25 +5,27 @@ import PanelAside from "../../components/student/panelAside";
 const StudentPanel = () => {
   const student = {
     id: "user_fake_id",
-    name: "Pedro Paulo Mendes Botelho",
+    authProvider: "LOCAL",
+    avatarUrl: null,
+    createdAt: new Date().toISOString(),
     email: "pp@teste.com",
+    emailVerifiedAt: null,
+    googleId: null,
+    institutionCode: null,
+    lastLoginAt: null,
+    name: "Pedro Paulo Mendes Botelho",
+    passwordHash: 12345,
+    phone: null,
     role: "STUDENT",
     status: "ACTIVE",
-    authProvider: "LOCAL",
-    googleId: null,
     studentType: "INDIVIDUAL",
-    institutionCode: null,
-    avatarUrl: null,
-    phone: null,
-    emailVerifiedAt: null,
-    lastLoginAt: null,
-    createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    plan: "premium",
+    /* Inserir no db essa coluna */
+    planActive: "premium",
   };
 
   return (
-    <main className="relative min-h-dvh bg-white text-slate-900">
+    <main className="relative min-h-dvh bg-white text-blue-950">
       {/* Fundo fixo */}
       <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-white">
         {/* Fundo quadriculado suave */}
@@ -46,7 +48,7 @@ const StudentPanel = () => {
       <PanelAside student={student} />
 
       {/* Conteúdo rolável */}
-      <section className="relative z-10 min-h-dvh px-4 py-4 pt-20 md:pl-24 md:pt-4 lg:pr-8 xl:pl-28 2xl:px-10 2xl:pl-32">
+      <section className="relative min-h-dvh px-4 py-4 pt-20 md:pl-24 md:pt-4 lg:pr-8 xl:pl-28 2xl:px-10 2xl:pl-32">
         <div className="mx-auto w-full max-w-7xl 2xl:max-w-430">
           <Outlet context={{ student }} />
         </div>

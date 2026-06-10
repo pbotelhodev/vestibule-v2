@@ -119,7 +119,7 @@ const ProDashboard = ({ student }) => {
               Plano Pro
             </span>
 
-            <h1 className="mt-5 text-3xl font-bold tracking-tight text-slate-950 md:text-4xl xl:max-w-2xl xl:text-4xl 2xl:text-6xl">
+            <h1 className="mt-5 text-3xl font-bold tracking-tight text-blue-950 md:text-4xl xl:max-w-2xl xl:text-4xl 2xl:text-6xl">
               Olá, {firstName}. Sua preparação agora tem mais ritmo.
             </h1>
 
@@ -154,7 +154,7 @@ const ProDashboard = ({ student }) => {
                   Seu plano
                 </p>
 
-                <h2 className="mt-2 text-2xl font-bold text-slate-950 2xl:text-3xl">
+                <h2 className="mt-2 text-2xl font-bold text-blue-950 2xl:text-3xl">
                   Pro
                 </h2>
               </div>
@@ -178,12 +178,12 @@ const ProDashboard = ({ student }) => {
             <div className="mt-4 grid grid-cols-2 gap-3">
               <div className="rounded-2xl bg-blue-50/70 p-3">
                 <p className="text-xs font-medium text-slate-500">Anúncios</p>
-                <p className="mt-1 text-sm font-bold text-slate-950">Zero</p>
+                <p className="mt-1 text-sm font-bold text-blue-950">Zero</p>
               </div>
 
               <div className="rounded-2xl bg-blue-50/70 p-3">
                 <p className="text-xs font-medium text-slate-500">Relatórios</p>
-                <p className="mt-1 text-sm font-bold text-slate-950">
+                <p className="mt-1 text-sm font-bold text-blue-950">
                   Por matéria
                 </p>
               </div>
@@ -209,7 +209,7 @@ const ProDashboard = ({ student }) => {
               </span>
             </div>
 
-            <p className="mt-5 text-3xl font-bold tracking-tight text-slate-950 2xl:text-4xl">
+            <p className="mt-5 text-3xl font-bold tracking-tight text-blue-950 2xl:text-4xl">
               {value}
             </p>
 
@@ -228,7 +228,7 @@ const ProDashboard = ({ student }) => {
                 Desempenho
               </p>
 
-              <h2 className="mt-2 text-xl font-bold text-slate-950 md:text-2xl">
+              <h2 className="mt-2 text-xl font-bold text-blue-950 md:text-2xl">
                 Evolução por matéria
               </h2>
 
@@ -259,7 +259,7 @@ const ProDashboard = ({ student }) => {
                     </div>
 
                     <div>
-                      <h3 className="text-sm font-bold text-slate-950 md:text-base">
+                      <h3 className="text-sm font-bold text-blue-950 md:text-base">
                         {subject.name}
                       </h3>
 
@@ -294,7 +294,7 @@ const ProDashboard = ({ student }) => {
               <LineChart className="size-5" />
             </div>
 
-            <h3 className="mt-5 text-lg font-bold text-slate-950">
+            <h3 className="mt-5 text-lg font-bold text-blue-950">
               Leitura rápida
             </h3>
 
@@ -334,7 +334,7 @@ const ProDashboard = ({ student }) => {
               <CalendarDays className="size-5" />
             </div>
 
-            <h3 className="mt-5 text-lg font-bold text-slate-950">
+            <h3 className="mt-5 text-lg font-bold text-blue-950">
               Próximo simulado
             </h3>
 
@@ -362,7 +362,7 @@ const ProDashboard = ({ student }) => {
               Simulados
             </p>
 
-            <h2 className="mt-2 text-xl font-bold text-slate-950 md:text-2xl">
+            <h2 className="mt-2 text-xl font-bold text-blue-950 md:text-2xl">
               Continue de onde parou
             </h2>
           </div>
@@ -385,7 +385,7 @@ const ProDashboard = ({ student }) => {
                 <BookOpenCheck className="size-5" />
               </div>
 
-              <h3 className="mt-4 text-sm font-bold text-slate-950 md:text-base">
+              <h3 className="mt-4 text-sm font-bold text-blue-950 md:text-base">
                 {simulation.title}
               </h3>
 

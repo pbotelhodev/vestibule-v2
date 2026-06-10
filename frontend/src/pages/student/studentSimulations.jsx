@@ -1,29 +1,45 @@
 /* Tools */
 import { useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
+
 /* Components */
 import StudentSimulationsContent from "../../components/student/StudentSimulationsContent";
+import Loading from "../../components/ui/Loading";
 
 /* Import Service */
 import { getSimulations } from "../../services/simulations/serviceSimulations";
 
-
 const StudentSimulations = () => {
   /* State */
   const [simulations, setSimulations] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   /* Effects */
   useEffect(() => {
+    setLoading(true);
     const listSimulations = async () => {
-      const response = await getSimulations();
-      setSimulations(response);
+      try {
+        const response = await getSimulations();
+        setSimulations(response);
+        
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
     };
     listSimulations();
   }, []);
-  console.log(simulations)
+
   const { student } = useOutletContext();
 
-  return <StudentSimulationsContent student={student} simulations={simulations} />;
+  if (loading || !simulations) {
+    return <Loading />;
+  }
+
+  return (
+    <StudentSimulationsContent student={student} simulations={simulations} />
+  );
 };
 
 export default StudentSimulations;

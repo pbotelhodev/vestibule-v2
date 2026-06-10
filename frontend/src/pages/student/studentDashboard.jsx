@@ -15,7 +15,7 @@ import ProDashboard from "../../components/student/ProDashboard";
 const StudentDashboard = () => {
   const { student } = useOutletContext();
 
-  const currentPlan = student?.plan || "free";
+  const currentPlan = student?.planActive || "free";
 
   const dashboards = {
     free: <FreeDashboard student={student} />,

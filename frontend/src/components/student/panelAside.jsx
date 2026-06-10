@@ -102,9 +102,9 @@ const planLogos = {
 const PanelAside = ({ student }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const currentTheme = planThemes[student?.plan] || planThemes.free;
-  const currentPlan = planLabels[student?.plan] || planLabels.free;
-  const currentLogo = planLogos[student?.plan] || planLogos.free;
+  const currentTheme = planThemes[student?.planActive] || planThemes.free;
+  const currentPlan = planLabels[student?.planActive] || planLabels.free;
+  const currentLogo = planLogos[student?.planActive] || planLogos.free;
 
   const fullName = student?.name || "Aluno Vestibule";
   const nameParts = fullName.trim().split(" ");
@@ -164,7 +164,7 @@ const PanelAside = ({ student }) => {
       <aside
         onClick={handleAsideClick}
         className={[
-          "group fixed top-0 bottom-0 left-0 z-50 flex flex-col overflow-hidden border-r bg-white shadow-sm",
+          "group fixed top-0 bottom-0 left-0 z-40 flex flex-col overflow-hidden border-r bg-white shadow-sm",
           "transition-[width,transform] duration-300 ease-out will-change-[width,transform]",
           currentTheme.border,
 
@@ -229,7 +229,7 @@ const PanelAside = ({ student }) => {
                 closeAside();
               }}
               className={[
-                "ml-auto grid size-8 shrink-0 place-items-center rounded-2xl border text-slate-500 transition hover:bg-slate-50 hover:text-slate-800 xl:hidden",
+                "ml-auto grid size-8 shrink-0 place-items-center rounded-2xl border text-blue-400 transition hover:bg-slate-50 hover:text-slate-800 xl:hidden",
                 currentTheme.border,
               ].join(" ")}
               aria-label="Fechar menu lateral"
@@ -251,7 +251,7 @@ const PanelAside = ({ student }) => {
           >
             <div
               className={[
-                "grid size-11 shrink-0 place-items-center overflow-hidden rounded-xl text-sm font-bold shadow-sm",
+                "grid size-11 shrink-0  place-items-center overflow-hidden rounded-xl text-sm font-bold shadow-sm",
                 currentTheme.avatar,
               ].join(" ")}
             >
@@ -272,11 +272,11 @@ const PanelAside = ({ student }) => {
                 labelVisibility,
               ].join(" ")}
             >
-              <p className="truncate text-sm font-bold text-slate-950">
+              <p className="truncate text-sm font-bold text-blue-950">
                 {displayName}
               </p>
 
-              <p className="truncate text-xs font-medium text-slate-500">
+              <p className="truncate text-xs font-medium text-blue-400">
                 {student?.email || "aluno@vestibule.com"}
               </p>
             </div>
@@ -301,7 +301,7 @@ const PanelAside = ({ student }) => {
                   itemLayout,
                   isActive
                     ? `${currentTheme.active} shadow-sm`
-                    : `text-slate-500 ${currentTheme.hover}`,
+                    : `text-blue-400 ${currentTheme.hover}`,
                 ].join(" ")
               }
             >
@@ -352,7 +352,7 @@ const PanelAside = ({ student }) => {
                 labelVisibility,
               ].join(" ")}
             >
-              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">
+              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-blue-400">
                 Assinatura
               </p>
               <p
@@ -374,7 +374,7 @@ const PanelAside = ({ student }) => {
               handleExitUser();
             }}
             className={[
-              "flex h-12 w-full cursor-pointer items-center overflow-hidden rounded-2xl px-1.5 text-sm font-bold text-slate-400",
+              "flex h-12 w-full cursor-pointer items-center overflow-hidden rounded-2xl px-1.5 text-sm font-bold text-blue-400",
               "transition-[gap,background-color,color] duration-200 ease-out hover:bg-red-50 hover:text-red-500",
               itemLayout,
             ].join(" ")}

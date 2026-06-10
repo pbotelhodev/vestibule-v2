@@ -1,5 +1,8 @@
 /* Chamamos o service */
-const { listPublishedSimulations } = require("../services/simulations.service");
+const {
+  listPublishedSimulations,
+  getSimulationByPublicId,
+} = require("../services/simulations.service");
 
 /* Service da listagem de simulados */
 const listSimulations = async (req, res) => {
@@ -7,21 +10,40 @@ const listSimulations = async (req, res) => {
     const simulations = await listPublishedSimulations();
 
     return res.status(200).json({
-        message: "Requisição dos simulados - OK",
-        simulations,
+      simulations,
     });
   } catch (error) {
-    console.error("Erro ao buscar os simulados:", error);
     return res.status(500).json({
+      message: "Erro ao buscar simulados.",
+    });
+  }
+};
 
-        message: "Erro ao buscar simulados.",
-    })
+const getSimulation = async (req, res) => {
+  try {
+    const { publicId } = req.params;
+
+    const simulation = await getSimulationByPublicId(publicId);
+
+    if (!simulation) {
+      return res.status(404).json({
+        message: "Simulado não encontrado.",
+      });
+    }
+    return res.status(200).json({
+      simulation,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Erro ao buscar o simulado.",
+    });
   }
 };
 
 module.exports = {
-    listSimulations,
-}
+  listSimulations,
+  getSimulation,
+};
 /* 200 OK
 Requisição deu certo.
 Exemplo: buscar dados, login bem-sucedido.
