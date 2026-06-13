@@ -65,31 +65,72 @@ const planRank = {
 };
 
 const resultStatus = {
-  excellent: {
-    label: "Excelente desempenho",
-    description: "Você dominou boa parte do conteúdo deste simulado.",
+  outstanding: {
+    label: "Resultado de alto nível",
+    description:
+      "Você teve um desempenho muito acima da média. O conteúdo foi bem dominado e seu resultado mostra consistência.",
     icon: Trophy,
     box: "border-emerald-200 bg-emerald-50 text-emerald-700",
   },
-  good: {
-    label: "Bom desempenho",
-    description: "Você foi bem, mas ainda existem pontos claros para revisar.",
+
+  excellent: {
+    label: "Excelente desempenho",
+    description:
+      "Você demonstrou ótimo domínio do conteúdo. Ainda há pequenos pontos de revisão, mas sua base está muito forte.",
     icon: Medal,
+    box: "border-green-200 bg-green-50 text-green-700",
+  },
+
+  good: {
+    label: "Bom caminho",
+    description:
+      "Seu resultado foi positivo. Agora o foco deve ser revisar os erros e fortalecer os assuntos com menor desempenho.",
+    icon: CheckCircle2,
     box: "border-blue-100 bg-blue-50 text-blue-700",
   },
+
   attention: {
-    label: "Precisa de atenção",
+    label: "Atenção aos fundamentos",
     description:
-      "O resultado mostra que alguns fundamentos precisam ser reforçados.",
+      "O resultado mostra que alguns conteúdos importantes ainda precisam ser reforçados antes de avançar.",
     icon: AlertCircle,
     box: "border-amber-200 bg-amber-50 text-amber-700",
   },
+
+  critical: {
+    label: "Revisão necessária",
+    description:
+      "Este simulado indica dificuldades em pontos essenciais. Revise com calma, refaça as questões e priorize a base.",
+    icon: BookOpenCheck,
+    box: "border-rose-200 bg-rose-50 text-rose-700",
+  },
+};
+
+const dicMaterias = {
+  matematica: "Matemática",
+  portugues: "Português",
+  historia: "História",
+  geografia: "Geografia",
+  ciencias: "Ciências",
+  biologia: "Biologia",
+  quimica: "Química",
+  fisica: "Física",
+  ingles: "Inglês",
+  artes: "Artes",
+  linguas: "Linguagens",
+  literatura: "Literatura",
+  espanhol: "Espanhol",
+  geral: "Geral",
+  "ciencias-humanas": "Ciências Humanas",
+  "ciencias-natureza": "Ciências da Natureza",
 };
 
 const getResultStatus = (percentage) => {
-  if (percentage >= 85) return resultStatus.excellent;
+  if (percentage >= 90) return resultStatus.outstanding;
+  if (percentage >= 75) return resultStatus.excellent;
   if (percentage >= 60) return resultStatus.good;
-  return resultStatus.attention;
+  if (percentage >= 40) return resultStatus.attention;
+  return resultStatus.critical;
 };
 
 const getLetterLabel = (letter) => {
@@ -99,17 +140,30 @@ const getLetterLabel = (letter) => {
 const StudentSimulationResultContent = ({
   student,
   result,
+  correction,
+  submission,
   onBackToSimulations,
   onReviewSimulation,
 }) => {
-  const plan = student?.plan ?? "free";
-  const theme = planTheme[plan] ?? planTheme.free;
-  const rank = planRank[plan] ?? planRank.free;
-  const status = getResultStatus(result.percentage);
+  const finalResult = {
+    plan: student?.planActive || "free",
+    title: submission.title,
+    subject: dicMaterias[submission.subject.toLowerCase()] || "Geral",
+    totalQuestions: correction?.length || 0,
+    finishedAt: `${String(submission.finishedAt.day).padStart(2, "0")}/${String(submission.finishedAt.month).padStart(2, "0")}/${submission.finishedAt.year} às ${String(submission.finishedAt.hour).padStart(2, "0")}:${String(submission.finishedAt.minutes).padStart(2, "0")}`,totalAltTrue: correction.map((e) => e.isCorrect === true),
+  };
+  console.log(finalResult.totalAltTrue)
+  const percentage = (finalResult.totalAltTrue / finalResult.totalQuestions);
+  const status = getResultStatus(percentage);
   const StatusIcon = status.icon;
-
+  const theme = planTheme[finalResult.plan] ?? planTheme.free;
+  const rank = planRank[finalResult.plan] ?? planRank.free;
   const hasProAccess = rank >= planRank.pro;
   const hasPremiumAccess = rank >= planRank.premium;
+
+
+  console.log(correction);
+  console.log(submission);
 
   const weakSubjects = [...result.resultBySubject]
     .sort((a, b) => a.percentage - b.percentage)
@@ -128,16 +182,16 @@ const StudentSimulationResultContent = ({
             <button
               type="button"
               onClick={onBackToSimulations}
-              className="grid size-10 shrink-0 place-items-center rounded-full border border-slate-200 bg-white text-slate-500 transition hover:border-violet-100 hover:bg-violet-50 hover:text-violet-600 xl:size-9 2xl:size-10"
+              className="grid cursor-pointer size-10 shrink-0 place-items-center rounded-full border border-slate-200 bg-white text-slate-500 transition hover:border-violet-100 hover:bg-violet-50 hover:text-violet-600 xl:size-9 2xl:size-10"
               aria-label="Voltar para simulados"
             >
-              <ArrowLeft className="size-4" />
+              <ArrowLeft className="size-4 " />
             </button>
 
             <div className="min-w-0">
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="flex flex-wrap   items-center gap-2">
                 <h1 className="truncate text-base font-extrabold tracking-tight sm:text-lg xl:max-w-115 xl:text-base 2xl:max-w-190 2xl:text-lg">
-                  Resultado · {result.title}
+                  Resultado · {finalResult.title}
                 </h1>
 
                 <span
@@ -148,11 +202,11 @@ const StudentSimulationResultContent = ({
               </div>
 
               <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-bold text-slate-400 xl:text-[11px] 2xl:text-xs">
-                <span>{result.area}</span>
+                <span>{finalResult.subject}</span>
                 <span className="size-1 rounded-full bg-slate-300" />
-                <span>{result.totalQuestions} questões</span>
+                <span>{finalResult.totalQuestions} questões</span>
                 <span className="size-1 rounded-full bg-slate-300" />
-                <span>Finalizado {result.finishedAt}</span>
+                <span>Finalizado {finalResult.finishedAt}</span>
               </div>
             </div>
           </div>
@@ -160,11 +214,21 @@ const StudentSimulationResultContent = ({
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <button
               type="button"
+              disabled={!hasPremiumAccess}
               onClick={onReviewSimulation}
-              className={`inline-flex cursor-pointer items-center justify-center gap-2 rounded-full border px-4 py-2.5 text-xs font-extrabold shadow-sm transition 2xl:px-5 2xl:py-3 2xl:text-sm ${theme.lightButton}`}
+              title={
+                !hasPremiumAccess
+                  ? "Apenas o plano Premium permite refazer simulados concluídos."
+                  : undefined
+              }
+              className={`inline-flex ${hasPremiumAccess ? `cursor-pointer transition ${theme.lightButton}` : "cursor-not-allowed text-slate-400 bg-slate-50 border-slate-200 "} items-center justify-center gap-2 rounded-full border px-4 py-2.5 text-xs font-extrabold shadow-sm  2xl:px-5 2xl:py-3 2xl:text-sm `}
             >
-              <RotateCcw className="size-4" />
-              Refazer
+              {hasPremiumAccess ? (
+                <RotateCcw className="size-4" />
+              ) : (
+                <Lock className="size-4" />
+              )}
+              Refazer {!hasPremiumAccess ? "no Premium" : undefined}
             </button>
 
             <button
@@ -187,7 +251,7 @@ const StudentSimulationResultContent = ({
               <div className="mx-auto grid size-28 place-items-center rounded-full border-8 border-white bg-white shadow-sm xl:size-24 2xl:size-32">
                 <div>
                   <strong className="block text-4xl font-extrabold tracking-tight xl:text-3xl 2xl:text-5xl">
-                    {result.percentage}%
+                    {percentage}%
                   </strong>
                 </div>
               </div>
@@ -198,7 +262,7 @@ const StudentSimulationResultContent = ({
               <div className="mt-5 h-2 overflow-hidden rounded-full bg-white">
                 <div
                   className={`h-full rounded-full ${theme.progress}`}
-                  style={{ width: `${result.percentage}%` }}
+                  style={{ width: `${percentage}%` }}
                 />
               </div>
 

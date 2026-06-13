@@ -73,7 +73,78 @@ const getSimulationByPublicId = async (publicId) => {
   });
 };
 
+const correctResultSimulation = async (answers, publicId) => {
+  const data = await dataBase.simulation.findUnique({
+    where: { publicId },
+    select: {
+      publicId: true,
+      title: true,
+      subject: true,
+      originCode: true,
+      timePerQuestion: true,
+      questions: {
+        select: {
+          id: true,
+          statement: true,
+          topic: true,
+          subject: true,
+          order: true,
+          imageUrl: true,
+          imageAlt: true,
+          imageCaption: true,
+          alternatives: {
+            select: {
+              id: true,
+              order: true,
+              text: true,
+              isCorrect: true,
+              imageUrl: true,
+              imageAlt: true,
+            },
+            orderBy: {
+              order: "asc",
+            },
+          },
+        },
+        orderBy: {
+          order: "asc",
+        },
+      },
+    },
+  });
+
+  if (!data) {
+    throw new Error("Simulado não encontrado");
+  }
+
+  const correctedQuestions = data.questions.map((q) => {
+    const studentAnswers = answers.find((answer) => answer.questionId === q.id);
+    const correctAlt = q.alternatives.find((a) => a.isCorrect === true);
+    if (studentAnswers.selectedAlternativeId === correctAlt.id) {
+      return {
+        question: q.id,
+        studentAnswer: studentAnswers,
+        correctAlt: correctAlt.id,
+        statement: q.statement,
+        textAlt: correctAlt.text,
+        correct: true,
+      };
+    } else {
+      return {
+        question: q.id,
+        studentAnswer: studentAnswers,
+        correctAlt: correctAlt.id,
+        statement: q.statement,
+        textAlt: correctAlt.text,
+        correct: false,
+      };
+    }
+  });
+  return correctedQuestions;
+};
+
 module.exports = {
   listPublishedSimulations,
   getSimulationByPublicId,
+  correctResultSimulation,
 };

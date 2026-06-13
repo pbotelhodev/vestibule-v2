@@ -7,5 +7,10 @@ export const getSimulations = async () => {
 
 export const getSimulationByPublicId = async (publicId) => {
   const response = await api.get(`/student/simulations/${publicId}`);
-  return response.data.simulation
+  return response.data.simulation;
+};
+
+export const submitSimulationAnswers = async (publicId, answers) => {
+  const response = await api.post(`/student/simulations/${publicId}/submit`, {answers})
+  return response.data.result;
 };

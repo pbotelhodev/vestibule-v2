@@ -11,6 +11,7 @@ const allowedOrigins = [
   "https://vestibule-two.vercel.app",
   "http://localhost:5173",
   "http://localhost:3000",
+  "http://192.168.10.14:5173", 
 ];
 
 app.use(helmet());
@@ -34,6 +35,10 @@ app.use("/api/student/", simulationsRoutes)
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", service: "Backend vestibule ativo 🟢" });
+});
+
+app.listen(3333, "0.0.0.0", () => {
+  console.log("running on port 3333");
 });
 
 module.exports = app;

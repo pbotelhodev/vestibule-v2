@@ -14,7 +14,6 @@ import { getSimulationByPublicId } from "../../services/simulations/serviceSimul
 const StudentSimulationPage = () => {
   const [simulation, setSimulation] = useState(null);
   const [loading, setLoading] = useState(true);
-  //const [questions, setQuestions] = useState([]);
   const { simulationId } = useParams();
   const navigate = useNavigate();
   const outletContext = useOutletContext();
@@ -40,8 +39,10 @@ const StudentSimulationPage = () => {
     getSimulation();
   }, [simulationId]);
 
-  const handleFinishSimulation = () => {
-    navigate(`/student/simulados/${simulationId}/resultado`);
+  const handleFinishSimulation = (submission) => {
+    navigate(`/student/simulados/${simulationId}/resultado`, {
+      state: { submission },
+    });
   };
 
   if (loading || !simulation) {

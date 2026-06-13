@@ -18,8 +18,8 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { timePerQuestions } from "../../services/simulations/timePerQuestions";
 
+import { timePerQuestions } from "../../services/simulations/timePerQuestions";
 import { planTheme } from "../../services/simulations/planTheme";
 
 const alphabet = ["A", "B", "C", "D", "E"];
@@ -29,23 +29,67 @@ const StudentSimulationContent = ({
   simulation,
   onFinishSimulation,
 }) => {
-  /* Tools */
+
   const navigate = useNavigate();
 
-  /* States */
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [reviewQuestions, setReviewQuestions] = useState({});
-  const [isNavigatorOpen, setIsNavigatorOpen] = useState(false);
-  const [imageErrors, setImageErrors] = useState({});
   const [isSimulationStarted, setIsSimulationStarted] = useState(false);
   const [remainingSeconds, setRemainingSeconds] = useState(null);
+  const [isNavigatorOpen, setIsNavigatorOpen] = useState(false);
   const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
+  const [imageErrors, setImageErrors] = useState({});
 
   const questions = simulation?.questions ?? [];
   const currentQuestion = questions[currentQuestionIndex];
+
   const totalSimulationSeconds =
-    simulation.timePerQuestion * (questions.length || 1); //usar props de questions;
+    simulation.timePerQuestion * (questions.length || 1);
+
+  const plan = student?.planActive ?? "free";
+  const theme = planTheme[plan] ?? planTheme.free;
+
+  const timerSeconds = remainingSeconds ?? totalSimulationSeconds;
+
+  const hours = Math.floor(timerSeconds / 3600);
+  const minutes = Math.floor((timerSeconds % 3600) / 60);
+  const seconds = timerSeconds % 60;
+
+  const formattedTimer = `${String(hours).padStart(2, "0")}:${String(
+    minutes,
+  ).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+
+  const answeredCount = useMemo(() => {
+    return Object.keys(answers).length;
+  }, [answers]);
+
+  const allQuestionsAnswered =
+    questions.length > 0 && answeredCount === questions.length;
+
+  const reviewCount = useMemo(() => {
+    return Object.values(reviewQuestions).filter(Boolean).length;
+  }, [reviewQuestions]);
+
+  const progressPercentage = questions.length
+    ? Math.round((answeredCount / questions.length) * 100)
+    : 0;
+
+  const isFirstQuestion = currentQuestionIndex === 0;
+  const isLastQuestion = currentQuestionIndex === questions.length - 1;
+
+  const selectedAnswer = currentQuestion ? answers[currentQuestion.id] : null;
+
+  const isMarkedForReview = currentQuestion
+    ? reviewQuestions[currentQuestion.id]
+    : false;
+
+  const firstPendingQuestionIndex = questions.findIndex(
+    (question) => !answers[question.id],
+  );
+
+  const currentQuestionHasImage =
+    Boolean(currentQuestion?.imageUrl) && !imageErrors[currentQuestion?.id];
 
   useEffect(() => {
     if (!isSimulationStarted) return;
@@ -59,48 +103,6 @@ const StudentSimulationContent = ({
     return () => clearInterval(interval);
   }, [isSimulationStarted, remainingSeconds]);
 
-  const timerSeconds = remainingSeconds ?? totalSimulationSeconds;
-
-  const hours = Math.floor(timerSeconds / 3600);
-  const minutes = Math.floor((timerSeconds % 3600) / 60);
-  const seconds = timerSeconds % 60;
-
-  const formattedTimer = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-
-  /* variaveis e Memo*/
-  const answeredCount = useMemo(() => {
-    return Object.keys(answers).length;
-  }, [answers]);
-  const allQuestionsAnswered =
-    questions.length > 0 && answeredCount === questions.length;
-  const reviewCount = useMemo(() => {
-    return Object.values(reviewQuestions).filter(Boolean).length;
-  }, [reviewQuestions]);
-
-  const progressPercentage = questions.length
-    ? Math.round((answeredCount / questions.length) * 100)
-    : 0;
-  const plan = student?.planActive ?? "free";
-  const theme = planTheme[plan] ?? planTheme.free;
-
-  const isFirstQuestion = currentQuestionIndex === 0;
-  const isLastQuestion = currentQuestionIndex === questions.length - 1;
-  const selectedAnswer = currentQuestion ? answers[currentQuestion.id] : null;
-  const isMarkedForReview = currentQuestion
-    ? reviewQuestions[currentQuestion.id]
-    : false;
-
-  const firstPendingQuestionIndex = questions.findIndex(
-    (question) => !answers[question.id],
-  );
-  const currentQuestionHasImage =
-    Boolean(currentQuestion?.imageUrl) && !imageErrors[currentQuestion?.id];
-
-  /* Memos */
-
-  /* Effects */
-
-  /* Funções */
   const handleStartSimulation = () => {
     setRemainingSeconds(totalSimulationSeconds);
     setIsSimulationStarted(true);
@@ -126,6 +128,7 @@ const StudentSimulationContent = ({
 
   const handlePreviousQuestion = () => {
     if (!isSimulationStarted || isFirstQuestion) return;
+
     setCurrentQuestionIndex((currentIndex) => currentIndex - 1);
   };
 
@@ -149,9 +152,46 @@ const StudentSimulationContent = ({
     setIsNavigatorOpen(false);
   };
 
+  const handleImageError = (questionId) => {
+    setImageErrors((currentErrors) => ({
+      ...currentErrors,
+      [questionId]: true,
+    }));
+  };
+
   const handleFinish = () => {
     if (!isSimulationStarted || !allQuestionsAnswered) return;
-    onFinishSimulation?.();
+
+    const timeSpentSeconds =
+      totalSimulationSeconds - (remainingSeconds ?? totalSimulationSeconds);
+
+    const formattedAnswers = Object.entries(answers).map(
+      ([questionId, selectedAlternativeId]) => ({
+        questionId,
+        selectedAlternativeId,
+      }),
+    );
+    const data = new Date()
+
+    const submission = {
+      publicId: simulation.publicId,
+      title: simulation.title,
+      subject: simulation.subject,
+      totalQuestions: questions.length,
+      timePerQuestion: simulation.timePerQuestion,
+      totalSimulationSeconds,
+      timeSpentSeconds,
+      answers: formattedAnswers,
+      finishedAt: {
+        day: data.getDate(),
+        month: data.getMonth() + 1,
+        year: data.getFullYear(),
+        hour: data.getHours(),
+        minutes: data.getMinutes()
+      }
+    };
+
+    onFinishSimulation?.(submission);
   };
 
   const handleMainAction = () => {
@@ -166,13 +206,6 @@ const StudentSimulationContent = ({
     }
 
     handleNextQuestion();
-  };
-
-  const handleImageError = (questionId) => {
-    setImageErrors((currentErrors) => ({
-      ...currentErrors,
-      [questionId]: true,
-    }));
   };
 
   const mainActionLabel = !isSimulationStarted
@@ -376,13 +409,14 @@ const StudentSimulationContent = ({
           </div>
         </div>
       )}
+
       <header className="rounded-3xl border border-slate-200 bg-white/90 px-4 py-3 shadow-sm backdrop-blur-xl sm:px-5 xl:py-2.5 2xl:py-3">
         <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
           <div className="flex min-w-0 items-center gap-3">
             <button
               type="button"
               onClick={() => navigate("/student/simulados")}
-              className={`grid size-10 shrink-0 place-items-center rounded-full border border-slate-200 bg-white text-slate-500 transition xl:size-9 2xl:size-10 cursor-pointer ${theme.backButton}`}
+              className={`grid size-10 shrink-0 cursor-pointer place-items-center rounded-full border border-slate-200 bg-white text-slate-500 transition xl:size-9 2xl:size-10 ${theme.backButton}`}
               aria-label="Voltar para simulados"
             >
               <ArrowLeft className="size-4" />
@@ -457,7 +491,6 @@ const StudentSimulationContent = ({
         </div>
       </header>
 
-      {/* Nav mobile prev e next */}
       <div className="grid grid-cols-4 gap-2 xl:hidden">
         <button
           type="button"
@@ -467,6 +500,7 @@ const StudentSimulationContent = ({
           <Menu className="size-4" />
           Questões
         </button>
+
         <button
           type="button"
           onClick={() => {
@@ -478,6 +512,7 @@ const StudentSimulationContent = ({
           <FileQuestion className="size-4" />
           Ajuda
         </button>
+
         <button
           type="button"
           onClick={handlePreviousQuestion}
@@ -498,7 +533,6 @@ const StudentSimulationContent = ({
         </button>
       </div>
 
-      {/* Card das questões */}
       <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_300px] xl:gap-4 2xl:grid-cols-[minmax(0,1fr)_400px] 2xl:gap-5">
         <main className="min-w-0 rounded-4xl border border-slate-200 bg-white/90 p-4 shadow-sm backdrop-blur-xl sm:p-5 xl:p-5 2xl:p-8">
           {!isSimulationStarted ? (
@@ -586,7 +620,7 @@ const StudentSimulationContent = ({
                     <Play className="size-4" />
                   </button>
 
-                  <p className="text-xs font-semibold xl:hidden 2xl:flex text-slate-400">
+                  <p className="text-xs font-semibold text-slate-400 xl:hidden 2xl:flex">
                     As questões só aparecem depois que o simulado for iniciado.
                   </p>
                 </div>
@@ -707,7 +741,7 @@ const StudentSimulationContent = ({
                         key={alternative.id}
                         onClick={() => handleSelectAnswer(alternative.id)}
                         disabled={!isSimulationStarted}
-                        className={`group cursor-pointer flex w-full items-center gap-3 rounded-3xl border p-4 text-left transition disabled:cursor-not-allowed disabled:opacity-60 sm:p-5 xl:p-2.5 2xl:p-5 ${
+                        className={`group flex w-full cursor-pointer items-center gap-3 rounded-3xl border p-4 text-left transition disabled:cursor-not-allowed disabled:opacity-60 sm:p-5 xl:p-2.5 2xl:p-5 ${
                           isSelected
                             ? theme.selectedAlternative
                             : `border-slate-200 bg-white ${theme.hoverAlternative}`
@@ -773,8 +807,9 @@ const StudentSimulationContent = ({
               </div>
 
               <button
+                type="button"
                 onClick={() => setIsHelpModalOpen(true)}
-                className={`cursor-pointer grid size-10 place-items-center rounded-2xl 2xl:size-11 ${theme.iconBox}`}
+                className={`grid size-10 cursor-pointer place-items-center rounded-2xl 2xl:size-11 ${theme.iconBox}`}
               >
                 <FileQuestion className="size-4 2xl:size-5" />
               </button>
@@ -807,7 +842,7 @@ const StudentSimulationContent = ({
                     key={question.id}
                     onClick={() => handleSelectQuestion(index)}
                     disabled={!isSimulationStarted}
-                    className={`relative cursor-pointer grid size-10 place-items-center rounded-2xl border text-xs font-extrabold shadow-sm transition disabled:cursor-not-allowed disabled:opacity-50 2xl:size-11 2xl:text-sm ${
+                    className={`relative grid size-10 cursor-pointer place-items-center rounded-2xl border text-xs font-extrabold shadow-sm transition disabled:cursor-not-allowed disabled:opacity-50 2xl:size-11 2xl:text-sm ${
                       isCurrent
                         ? theme.activeQuestion
                         : isReview

@@ -2,6 +2,7 @@
 const {
   listPublishedSimulations,
   getSimulationByPublicId,
+  correctResultSimulation,
 } = require("../services/simulations.service");
 
 /* Service da listagem de simulados */
@@ -40,9 +41,22 @@ const getSimulation = async (req, res) => {
   }
 };
 
+const submitSimulationResult = async (req, res) => {
+  try{
+    const result = await correctResultSimulation(req.body.answers, req.params.publicId);
+
+    return res.status(200).json({result})
+  } catch(error){
+    return res.status(500).json({
+      message: `Erro ao corrigir o simulado: ${error}`
+    });
+  }
+}
+
 module.exports = {
   listSimulations,
   getSimulation,
+  submitSimulationResult
 };
 /* 200 OK
 Requisição deu certo.
