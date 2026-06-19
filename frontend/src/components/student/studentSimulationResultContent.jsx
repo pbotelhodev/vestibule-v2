@@ -133,27 +133,79 @@ const getResultStatus = (percentage) => {
   return resultStatus.critical;
 };
 
-const getLetterLabel = (letter) => {
-  return String(letter || "").toUpperCase();
-};
-
 const StudentSimulationResultContent = ({
   student,
-  result,
   correction,
-  submission,
+  summary,
   onBackToSimulations,
   onReviewSimulation,
 }) => {
+  const date = new Date(summary?.finishedAt);
   const finalResult = {
-    plan: student?.planActive || "free",
-    title: submission.title,
-    subject: dicMaterias[submission.subject.toLowerCase()] || "Geral",
+    plan: student?.planActive || "premium",
+    title: summary?.title,
+    subject: dicMaterias[summary?.subject.toLowerCase()] || "Geral",
     totalQuestions: correction?.length || 0,
-    finishedAt: `${String(submission.finishedAt.day).padStart(2, "0")}/${String(submission.finishedAt.month).padStart(2, "0")}/${submission.finishedAt.year} às ${String(submission.finishedAt.hour).padStart(2, "0")}:${String(submission.finishedAt.minutes).padStart(2, "0")}`,totalAltTrue: correction.map((e) => e.isCorrect === true),
+    finishedAt: `${String(date.getDate()).padStart(2, "0")}/${String(
+      date.getMonth() + 1,
+    ).padStart(2, "0")}/${date.getFullYear()} às ${String(
+      date.getHours(),
+    ).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`,
+    totalAltTrue: correction.filter((e) => e.correct === true).length,
+    timePerQuestions: summary?.timePerQuestion,
+    timeSpentSeconds: summary?.timeSpentSeconds,
+    totalSimulationSeconds: summary?.totalSimulationSeconds,
+    markedForReview: summary?.answers,
   };
-  console.log(finalResult.totalAltTrue)
-  const percentage = (finalResult.totalAltTrue / finalResult.totalQuestions);
+  const formatSecondsToTime = (seconds) => {
+    const totalSeconds = Math.max(0, Math.floor(seconds || 0));
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const remainingSeconds = totalSeconds % 60;
+    if (hours > 0) {
+      return `${hours}h ${minutes}min`;
+    }
+    if (minutes > 0 && remainingSeconds === 0) {
+      return `${minutes}min `;
+    }
+    if (minutes > 0) {
+      return `${minutes}min ${remainingSeconds}s`;
+    }
+    return `${remainingSeconds}s`;
+  };
+  const percentage =
+    (finalResult.totalAltTrue / finalResult.totalQuestions) * 100 || 0;
+  const score =
+    (finalResult.totalAltTrue / finalResult.totalQuestions) * 100 * 10 || 0;
+  const totalTime = formatSecondsToTime(finalResult.timeSpentSeconds);
+  const topics = correction.map((item) => ({
+    topic: item.topic,
+    correct: item.correct,
+  }));
+  const resultByTopic = {};
+  topics.forEach((item) => {
+    /* Se o topico não existir cria um novo */
+    if (!resultByTopic[item.topic]) {
+      resultByTopic[item.topic] = {
+        name: item.topic,
+        total: 0,
+        correct: 0,
+        percentage: 0,
+      };
+    }
+    /* Verifica se o topico já existe, se sim ele adiciona yuma unidade a contagem, se não cria um novo tópico */
+    if (resultByTopic[item.topic]) {
+      resultByTopic[item.topic].total += 1;
+      if (item.correct === true) {
+        resultByTopic[item.topic].correct += 1;
+      }
+    }
+    /* Caucula a porcentagem */
+    resultByTopic[item.topic].percentage =
+      (resultByTopic[item.topic].correct / resultByTopic[item.topic].total) *
+      100;
+  });
+  const arrayTopics = Object.values(resultByTopic);
   const status = getResultStatus(percentage);
   const StatusIcon = status.icon;
   const theme = planTheme[finalResult.plan] ?? planTheme.free;
@@ -161,15 +213,11 @@ const StudentSimulationResultContent = ({
   const hasProAccess = rank >= planRank.pro;
   const hasPremiumAccess = rank >= planRank.premium;
 
-
-  console.log(correction);
-  console.log(submission);
-
-  const weakSubjects = [...result.resultBySubject]
+  const weakSubjects = [...arrayTopics]
     .sort((a, b) => a.percentage - b.percentage)
     .slice(0, 2);
 
-  const strongSubjects = [...result.resultBySubject]
+  const strongSubjects = [...arrayTopics]
     .sort((a, b) => b.percentage - a.percentage)
     .slice(0, 2);
 
@@ -205,6 +253,12 @@ const StudentSimulationResultContent = ({
                 <span>{finalResult.subject}</span>
                 <span className="size-1 rounded-full bg-slate-300" />
                 <span>{finalResult.totalQuestions} questões</span>
+                <span className="size-1 rounded-full bg-slate-300" />
+                <span>
+                  {" "}
+                  Tempo de prova{" "}
+                  {formatSecondsToTime(finalResult.totalSimulationSeconds)}
+                </span>
                 <span className="size-1 rounded-full bg-slate-300" />
                 <span>Finalizado {finalResult.finishedAt}</span>
               </div>
@@ -247,11 +301,11 @@ const StudentSimulationResultContent = ({
       <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_340px] xl:gap-4 2xl:grid-cols-[minmax(0,1fr)_420px] 2xl:gap-5">
         <main className="min-w-0 rounded-4xl border border-slate-200 bg-white/90 p-4 shadow-sm backdrop-blur-xl sm:p-5 xl:p-5 2xl:p-8">
           <div className="grid gap-5 lg:grid-cols-[260px_minmax(0,1fr)] xl:grid-cols-[220px_minmax(0,1fr)] 2xl:grid-cols-[300px_minmax(0,1fr)]">
-            <div className="rounded-4xl border border-slate-200 bg-slate-50 p-5 text-center xl:p-4 2xl:p-6">
+            <div className="items-center justify-center rounded-4xl border border-slate-200 bg-slate-50 p-5 text-center xl:p-4 2xl:p-6">
               <div className="mx-auto grid size-28 place-items-center rounded-full border-8 border-white bg-white shadow-sm xl:size-24 2xl:size-32">
                 <div>
                   <strong className="block text-4xl font-extrabold tracking-tight xl:text-3xl 2xl:text-5xl">
-                    {percentage}%
+                    {percentage.toFixed(0)}%
                   </strong>
                 </div>
               </div>
@@ -284,8 +338,8 @@ const StudentSimulationResultContent = ({
                 </span>
 
                 <h2 className="mt-4 text-2xl font-extrabold tracking-tight sm:text-3xl xl:text-2xl 2xl:text-4xl">
-                  Você acertou {result.correctAnswers} de{" "}
-                  {result.totalQuestions} questões.
+                  Você acertou {finalResult.totalAltTrue} de{" "}
+                  {finalResult.totalQuestions} questões.
                 </h2>
 
                 <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-500 sm:text-base xl:text-sm 2xl:text-base">
@@ -302,7 +356,7 @@ const StudentSimulationResultContent = ({
                     Pontuação
                   </div>
                   <strong className="mt-2 block text-2xl font-extrabold xl:text-xl 2xl:text-3xl">
-                    {result.score}
+                    {score.toFixed(0)}
                   </strong>
                 </div>
 
@@ -312,7 +366,7 @@ const StudentSimulationResultContent = ({
                     Acertos
                   </div>
                   <strong className="mt-2 block text-2xl font-extrabold text-emerald-700 xl:text-xl 2xl:text-3xl">
-                    {result.correctAnswers}
+                    {finalResult.totalAltTrue}
                   </strong>
                 </div>
 
@@ -322,7 +376,7 @@ const StudentSimulationResultContent = ({
                     Erros
                   </div>
                   <strong className="mt-2 block text-2xl font-extrabold text-rose-700 xl:text-xl 2xl:text-3xl">
-                    {result.wrongAnswers}
+                    {finalResult.totalQuestions - finalResult.totalAltTrue}
                   </strong>
                 </div>
 
@@ -332,7 +386,7 @@ const StudentSimulationResultContent = ({
                     Tempo
                   </div>
                   <strong className="mt-2 block text-2xl font-extrabold xl:text-xl 2xl:text-3xl">
-                    {result.duration}
+                    {totalTime}
                   </strong>
                 </div>
               </div>
@@ -345,7 +399,7 @@ const StudentSimulationResultContent = ({
           <div className="flex items-start justify-between gap-4">
             <div>
               <span className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate-400 2xl:text-xs">
-                Próximo passo
+                O que devo estudar agora?
               </span>
               <h3 className="mt-1 text-lg font-extrabold 2xl:text-xl">
                 Foco de revisão
@@ -362,7 +416,7 @@ const StudentSimulationResultContent = ({
           <div className="mt-5 space-y-3 xl:mt-4">
             {weakSubjects.map((subject) => (
               <div
-                key={subject.id}
+                key={subject.name}
                 className="rounded-3xl border border-slate-200 bg-slate-50 p-4 xl:p-3 2xl:p-4"
               >
                 <div className="flex items-center justify-between gap-3">
@@ -382,101 +436,12 @@ const StudentSimulationResultContent = ({
                 </div>
 
                 <p className="mt-2 text-[10px] leading-5 text-slate-500">
-                  Revise esse assunto antes de iniciar o próximo simulado.
+                  Priorize este conteúdo na próxima revisão.
                 </p>
               </div>
             ))}
           </div>
         </aside>
-      </div>
-
-      {/* Plan blocks */}
-      <div className="grid gap-5 xl:grid-cols-3 xl:gap-4 2xl:gap-5">
-        <div className="rounded-4xl border border-slate-200 bg-white/90 p-4 shadow-sm backdrop-blur-xl sm:p-5 xl:p-4 2xl:p-6">
-          <div className="flex items-start gap-3">
-            <div className="grid size-11 shrink-0 place-items-center rounded-2xl bg-violet-50 text-violet-600">
-              <FileQuestion className="size-5" />
-            </div>
-
-            <div>
-              <h3 className="text-lg font-extrabold xl:text-base 2xl:text-xl">
-                Resultado básico
-              </h3>
-              <p className="mt-1 text-sm leading-6 text-slate-500 xl:text-xs xl:leading-5 2xl:text-sm 2xl:leading-6">
-                Disponível em todos os planos. Mostra acertos, erros, percentual
-                e revisão simples das questões.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div
-          className={`rounded-4xl border bg-white/90 p-4 shadow-sm backdrop-blur-xl sm:p-5 xl:p-4 2xl:p-6 ${
-            hasProAccess ? "border-blue-100" : "border-slate-200 opacity-80"
-          }`}
-        >
-          <div className="flex items-start gap-3">
-            <div
-              className={`grid size-11 shrink-0 place-items-center rounded-2xl ${
-                hasProAccess
-                  ? "bg-blue-50 text-blue-700"
-                  : "bg-slate-100 text-slate-400"
-              }`}
-            >
-              {hasProAccess ? (
-                <BarChart3 className="size-5" />
-              ) : (
-                <Lock className="size-5" />
-              )}
-            </div>
-
-            <div>
-              <h3 className="text-lg font-extrabold xl:text-base 2xl:text-xl">
-                Análise Pro
-              </h3>
-              <p className="mt-1 text-sm leading-6 text-slate-500 xl:text-xs xl:leading-5 2xl:text-sm 2xl:leading-6">
-                {hasProAccess
-                  ? "Você tem acesso à análise por assunto, pontos fracos e foco de revisão."
-                  : "No plano Pro, esta área libera desempenho por matéria e foco da semana."}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div
-          className={`rounded-4xl border bg-white/90 p-4 shadow-sm backdrop-blur-xl sm:p-5 xl:p-4 2xl:p-6 ${
-            hasPremiumAccess
-              ? "border-amber-200"
-              : "border-slate-200 opacity-80"
-          }`}
-        >
-          <div className="flex items-start gap-3">
-            <div
-              className={`grid size-11 shrink-0 place-items-center rounded-2xl ${
-                hasPremiumAccess
-                  ? "bg-amber-50 text-amber-600"
-                  : "bg-slate-100 text-slate-400"
-              }`}
-            >
-              {hasPremiumAccess ? (
-                <Crown className="size-5" />
-              ) : (
-                <Lock className="size-5" />
-              )}
-            </div>
-
-            <div>
-              <h3 className="text-lg font-extrabold xl:text-base 2xl:text-xl">
-                Inteligência Premium
-              </h3>
-              <p className="mt-1 text-sm leading-6 text-slate-500 xl:text-xs xl:leading-5 2xl:text-sm 2xl:leading-6">
-                {hasPremiumAccess
-                  ? "Recomendações inteligentes e trilha personalizada com base no seu desempenho."
-                  : "No Premium, o aluno recebe recomendações inteligentes e trilhas personalizadas."}
-              </p>
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Subject performance */}
@@ -501,9 +466,9 @@ const StudentSimulationResultContent = ({
         </div>
 
         <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3">
-          {result.resultBySubject.map((subject) => (
+          {arrayTopics.map((subject) => (
             <div
-              key={subject.id}
+              key={subject.name}
               className="rounded-3xl border border-slate-200 bg-slate-50 p-4 xl:p-3 2xl:p-4"
             >
               <div className="flex items-center justify-between gap-3">
@@ -547,17 +512,17 @@ const StudentSimulationResultContent = ({
           <div className="flex flex-wrap gap-2">
             <span className="inline-flex items-center gap-2 rounded-full border border-rose-100 bg-rose-50 px-3 py-2 text-xs font-extrabold text-rose-700">
               <XCircle className="size-4" />
-              {result.wrongAnswers} erros
+              {finalResult.totalQuestions - finalResult.totalAltTrue} erros
             </span>
           </div>
         </div>
 
-        <div className="mt-5 grid gap-3">
-          {result.questions
-            .filter((q) => q.isCorrect === false)
+        <div className="mt-5 grid md:grid-cols-2 gap-3">
+          {correction
+            .filter((q) => q.correct === false)
             .map((question) => (
               <article
-                key={question.id}
+                key={question.question}
                 className="rounded-3xl border border-slate-200 bg-slate-50 p-4 xl:p-3 2xl:p-4"
               >
                 <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
@@ -565,12 +530,12 @@ const StudentSimulationResultContent = ({
                     <div className="flex flex-wrap items-center gap-2">
                       <span
                         className={`inline-flex size-8 items-center justify-center rounded-2xl text-xs font-extrabold ${
-                          question.isCorrect
+                          question.correct
                             ? "bg-emerald-100 text-emerald-700"
                             : "bg-rose-100 text-rose-700"
                         }`}
                       >
-                        {question.number}
+                        {question.order}
                       </span>
 
                       <span className="rounded-full bg-white px-2.5 py-1 text-[11px] font-extrabold text-slate-500">
@@ -580,7 +545,7 @@ const StudentSimulationResultContent = ({
                       {question.markedForReview && (
                         <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[11px] font-extrabold text-amber-700">
                           <Flag className="size-3" />
-                          Marcada
+                          Marcada para revisão
                         </span>
                       )}
                     </div>
@@ -592,28 +557,27 @@ const StudentSimulationResultContent = ({
 
                   <div
                     className={`inline-flex w-fit shrink-0 items-center gap-2 rounded-full border px-3 py-2 text-xs font-extrabold ${
-                      question.isCorrect
+                      question.correct
                         ? "border-emerald-100 bg-emerald-50 text-emerald-700"
                         : "border-rose-100 bg-rose-50 text-rose-700"
                     }`}
                   >
-                    {question.isCorrect ? (
+                    {question.correct ? (
                       <CheckCircle2 className="size-4" />
                     ) : (
                       <XCircle className="size-4" />
                     )}
-                    {question.isCorrect ? "Correta" : "Incorreta"}
+                    {question.correct ? "Correta" : "Incorreta"}
                   </div>
                 </div>
 
-                <div className="mt-4 grid gap-3 md:grid-cols-2">
+                <div className="mt-4 grid gap-3">
                   <div className="rounded-2xl border border-slate-200 bg-white p-3">
                     <span className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-slate-400">
                       Sua resposta
                     </span>
                     <p className="mt-1 text-sm font-bold text-slate-700 xl:text-xs 2xl:text-sm">
-                      {getLetterLabel(question.selectedAlternative)} ·{" "}
-                      {question.selectedText}
+                      {question.studentAnswerText}
                     </p>
                   </div>
 
@@ -622,8 +586,7 @@ const StudentSimulationResultContent = ({
                       Resposta correta
                     </span>
                     <p className="mt-1 text-sm font-bold text-emerald-700 xl:text-xs 2xl:text-sm">
-                      {getLetterLabel(question.correctAlternative)} ·{" "}
-                      {question.correctText}
+                      {question.textAlt}
                     </p>
                   </div>
                 </div>

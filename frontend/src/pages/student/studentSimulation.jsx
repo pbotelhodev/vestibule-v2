@@ -41,7 +41,7 @@ const StudentSimulationPage = () => {
 
   const handleFinishSimulation = (submission) => {
     navigate(`/student/simulados/${simulationId}/resultado`, {
-      state: { submission },
+      state: { source: "fresh", submission },
     });
   };
 

@@ -43,7 +43,7 @@ const getSimulation = async (req, res) => {
 
 const submitSimulationResult = async (req, res) => {
   try{
-    const result = await correctResultSimulation(req.body.answers, req.params.publicId);
+    const result = await correctResultSimulation(req.body.submission, req.params.publicId, req.body.studentId);
 
     return res.status(200).json({result})
   } catch(error){

@@ -169,6 +169,7 @@ const StudentSimulationContent = ({
       ([questionId, selectedAlternativeId]) => ({
         questionId,
         selectedAlternativeId,
+        markedForReview: Boolean(reviewQuestions[questionId]),
       }),
     );
     const data = new Date()
