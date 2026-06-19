@@ -222,8 +222,8 @@ const correctResultSimulation = async (submission, publicId, studentId) => {
   });
 
   const deleteOldAnswers = await dataBase.studentSimulationAnswer.deleteMany({
-    where: {resultId: upsertData.id}
-  })
+    where: { resultId: upsertData.id },
+  });
 
   const answersToCreate = correctedQuestions.map((item) => {
     return {
@@ -243,17 +243,91 @@ const correctResultSimulation = async (submission, publicId, studentId) => {
   });
 
   const createMany = await dataBase.studentSimulationAnswer.createMany({
-    data: answersToCreate
-  })
-
-
-  console.log(answersToCreate.length);
-  console.log(answersToCreate[0]);
+    data: answersToCreate,
+  });
   return { summary: upsertData, correction: correctedQuestions };
 };
 
+const getSimulationData = async (publicId, studentId) => {
+  //Encontrar o as respostas do simulado pelo publicId e studentId
+  const dataResultSimulation = await dataBase.studentSimulationResult.findFirst(
+    {
+      where: { studentId, publicId },
+      select: {
+        id: true,
+        publicId: true,
+        title: true,
+        subject: true,
+        totalQuestions: true,
+        correctAnswers: true,
+        wrongAnswers: true,
+        percentage: true,
+        score: true,
+        timePerQuestion: true,
+        timeSpentSeconds: true,
+        totalSimulationSeconds: true,
+        finishedAt: true,
+      },
+    },
+  );
+
+  //Se não achar o resultado, retorna erro
+  if (!dataResultSimulation) {
+    throw new Error("Resultado do simulado não encontrado");
+  }
+
+  //Encontra as respostas do aluno corrigidas pelo id daquela resolução
+  const dataAnswersSimulation = await dataBase.studentSimulationAnswer.findMany(
+    {
+      where: { resultId: dataResultSimulation.id },
+      select: {
+        id: true,
+        correctAlternativeId: true,
+        correctAnswerText: true,
+        createdAt: true,
+        isCorrect: true,
+        markedForReview: true,
+        questionId: true,
+        questionOrder: true,
+        resultId: true,
+        selectedAlternativeId: true,
+        statement: true,
+        studentAnswerText: true,
+        subject: true,
+        topic: true,
+        updatedAt: true,
+      },
+      orderBy: {
+        questionOrder: "asc",
+      },
+    },
+  );
+
+  const correction = dataAnswersSimulation.map((answer) => {
+    return {
+      id: answer.id,
+      question: answer.questionId,
+      order: answer.questionOrder,
+      subject: answer.subject,
+      topic: answer.topic,
+      statement: answer.statement,
+      studentAnswer: answer.selectedAlternativeId,
+      studentAnswerText: answer.studentAnswerText,
+      correctAlt: answer.correctAlternativeId,
+      textAlt: answer.correctAnswerText,
+      correct: answer.isCorrect,
+      markedForReview: answer.markedForReview,
+      resultId: answer.resultId,
+      createdAt: answer.createdAt,
+      updatedAt: answer.updatedAt,
+    };
+  });
+
+  return { summary: dataResultSimulation, correction };
+};
 module.exports = {
   listPublishedSimulations,
   getSimulationByPublicId,
   correctResultSimulation,
+  getSimulationData,
 };
