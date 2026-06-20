@@ -17,7 +17,6 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { timePerQuestions } from "../../services/simulations/timePerQuestions";
-
 const areaIcons = {
   matematica: Calculator,
   linguas: Languages,
@@ -31,66 +30,11 @@ const areaIcons = {
   biologia: Microscope,
   fisica: Atom,
   quimica: FlaskConical,
-  "ciencias_humanas": Globe2,
-  "ciencias_natureza": Atom,
+  ciencias_humanas: Globe2,
+  ciencias_natureza: Atom,
+  "ciencias-humanas": Globe2,
+  "ciencias-natureza": Atom,
   geral: BookOpenCheck,
-};
-
-const planRank = {
-  free: 1,
-  pro: 2,
-  premium: 3,
-};
-
-const requiredPlanLabel = {
-  free: "Free",
-  pro: "Pro",
-  premium: "Premium",
-};
-
-const themeByPlan = {
-  free: {
-    border: "border-violet-100",
-    hoverBorder: "hover:border-violet-200",
-    hoverBg: "hover:bg-violet-50/30",
-    icon: "bg-violet-50 text-violet-600 ring-violet-100",
-    badge: "bg-violet-50 text-violet-700 ring-violet-100",
-    progressBg: "bg-violet-100",
-    progress: "bg-violet-600",
-    button: "bg-violet-600 hover:bg-violet-700",
-    topLine: "bg-violet-600",
-    softBg: "bg-violet-50/45",
-    infoBg: "bg-violet-50/60",
-    infoBorder: "border-violet-100",
-  },
-  pro: {
-    border: "border-blue-100",
-    hoverBorder: "hover:border-blue-200",
-    hoverBg: "hover:bg-blue-50/30",
-    icon: "bg-blue-50 text-blue-700 ring-blue-100",
-    badge: "bg-blue-50 text-blue-700 ring-blue-100",
-    progressBg: "bg-blue-100",
-    progress: "bg-blue-700",
-    button: "bg-blue-700 hover:bg-blue-800",
-    topLine: "bg-blue-700",
-    softBg: "bg-blue-50/45",
-    infoBg: "bg-blue-50/60",
-    infoBorder: "border-blue-100",
-  },
-  premium: {
-    border: "border-amber-200",
-    hoverBorder: "hover:border-amber-300",
-    hoverBg: "hover:bg-amber-50/30",
-    icon: "bg-amber-50 text-amber-600 ring-amber-100",
-    badge: "bg-amber-50 text-amber-700 ring-amber-100",
-    progressBg: "bg-amber-100",
-    progress: "bg-amber-500",
-    button: "bg-amber-500 hover:bg-amber-600",
-    topLine: "bg-amber-500",
-    softBg: "bg-amber-50/50",
-    infoBg: "bg-amber-50/65",
-    infoBorder: "border-amber-100",
-  },
 };
 const subjectLabel = {
   matematica: "Matemática",
@@ -105,32 +49,77 @@ const subjectLabel = {
   biologia: "Biologia",
   fisica: "Física",
   quimica: "Química",
-  "ciencias_humanas": "Ciências Humanas",
-  "ciencias_natureza": "Ciências da Natureza",
+  ciencias_humanas: "Ciências Humanas",
+  ciencias_natureza: "Ciências da Natureza",
+  "ciencias-humanas": "Ciências Humanas",
+  "ciencias-natureza": "Ciências da Natureza",
   geral: "Geral",
 };
-
+const subjectIconColor = {
+  matematica: "text-violet-600",
+  linguas: "text-sky-600",
+  portugues: "text-rose-600",
+  literatura: "text-fuchsia-600",
+  ingles: "text-cyan-600",
+  espanhol: "text-orange-600",
+  artes: "text-pink-600",
+  historia: "text-amber-600",
+  geografia: "text-emerald-600",
+  biologia: "text-lime-600",
+  fisica: "text-indigo-600",
+  quimica: "text-teal-600",
+  ciencias_humanas: "text-blue-600",
+  ciencias_natureza: "text-green-600",
+  "ciencias-humanas": "text-blue-600",
+  "ciencias-natureza": "text-green-600",
+  geral: "text-slate-500",
+};
+const planRank = { free: 1, pro: 2, premium: 3 };
+const requiredPlanLabel = { free: "Free", pro: "Pro", premium: "Premium" };
+const themeByPlan = {
+  free: {
+    cardHover: "hover:border-violet-200 hover:shadow-violet-950/10",
+    subjectText: "text-violet-600",
+    dot: "bg-violet-600",
+    button:
+      "bg-slate-950 text-white hover:bg-violet-600 hover:shadow-violet-600/25",
+  },
+  pro: {
+    cardHover: "hover:border-blue-200 hover:shadow-blue-950/10",
+    subjectText: "text-blue-700",
+    dot: "bg-blue-700",
+    button:
+      "bg-slate-950 text-white hover:bg-blue-700 hover:shadow-blue-700/25",
+  },
+  premium: {
+    cardHover: "hover:border-purple-300 hover:shadow-purple-950/15",
+    subjectText:
+      "bg-linear-to-r from-purple-800 via-blue-700 to-emerald-700 bg-clip-text text-transparent",
+    dot: "bg-linear-to-r from-purple-800 via-blue-700 to-emerald-700",
+    button:
+      "bg-slate-950 text-white hover:bg-linear-to-r hover:from-purple-800 hover:via-blue-700 hover:to-emerald-700 hover:shadow-purple-700/25",
+  },
+};
 const SimulationCard = ({ simulation, studentPlan }) => {
   const navigate = useNavigate();
-
-  const currentTheme = themeByPlan[studentPlan] || themeByPlan.free;
-  const requiredPlan = simulation.requiredPlan?.toLowerCase() || "free"
-  const subject = simulation.subject?.toLowerCase() || "geral"
-  const userPlanLevel = planRank[studentPlan] || 1;
-  const simulationPlanLevel =
-    planRank[requiredPlan] || 1;
-
+  const studentPlanKey = studentPlan?.toLowerCase() || "free";
+  const currentTheme = themeByPlan[studentPlanKey] || themeByPlan.free;
+  const requiredPlan = simulation.requiredPlan?.toLowerCase() || "free";
+  const subject = simulation.subject?.toLowerCase() || "geral";
+  const userPlanLevel = planRank[studentPlanKey] || 1;
+  const simulationPlanLevel = planRank[requiredPlan] || 1;
   const isLockedByPlan = userPlanLevel < simulationPlanLevel;
   const finalStatus = isLockedByPlan
     ? "locked"
-    : simulation.finalStatus || simulation.status || "available";
-
+    : simulation.alreadyDone === true
+      ? "done"
+      : "available";
   const statusConfig = {
     available: {
-      label: "Liberado",
+      label: "Novo",
       Icon: BookOpenCheck,
-      badge: currentTheme.badge,
-      buttonLabel: "Iniciar",
+      badge: "bg-slate-100 text-slate-600 ring-slate-200",
+      buttonLabel: "Começar",
     },
     progress: {
       label: "Em andamento",
@@ -141,176 +130,165 @@ const SimulationCard = ({ simulation, studentPlan }) => {
     done: {
       label: "Finalizado",
       Icon: CheckCircle2,
-      badge: "bg-emerald-50 text-emerald-600 ring-emerald-100",
+      badge: "bg-emerald-50 text-emerald-700 ring-emerald-100",
       buttonLabel: "Ver resultado",
     },
     locked: {
-      label: `Plano ${requiredPlanLabel[requiredPlan]}`,
+      label: `Plano ${requiredPlanLabel[requiredPlan] || "superior"}`,
       Icon: Lock,
-      badge: "bg-slate-100 text-slate-400 ring-slate-200",
+      badge: "bg-slate-100 text-slate-500 ring-slate-200",
       buttonLabel: "Bloqueado",
     },
   };
-  
   const currentStatus = statusConfig[finalStatus] || statusConfig.available;
   const AreaIcon = areaIcons[subject] || BookOpenCheck;
   const CardIcon = finalStatus === "locked" ? Lock : AreaIcon;
+  const iconColor =
+    finalStatus === "locked"
+      ? "text-slate-400"
+      : subjectIconColor[subject] || subjectIconColor.geral;
   const quantQuestions = simulation.questions?.length || 0;
-
+  const duration = timePerQuestions(simulation.timePerQuestion, quantQuestions);
+  const difficultyLabel = simulation.difficulty
   const handleAction = () => {
     if (finalStatus === "locked") return;
-
     if (finalStatus === "done") {
-      navigate(`/student/simulados/${simulation.publicId}/resultado`);
+      navigate(`/student/simulados/${simulation.publicId}/resultado`, {
+        state: { publicId: simulation.publicId },
+      });
       return;
     }
-
     navigate(`/student/simulados/${simulation.publicId}`);
   };
-  
-
   return (
     <article
       className={[
-        "group relative flex flex-col overflow-hidden rounded-3xl border bg-white p-5 shadow-sm transition md:rounded-4xl md:p-5 xl:p-4 2xl:p-6",
+        "group relative flex min-h-77.5 flex-col overflow-hidden rounded-[1.7rem] border bg-white p-5 shadow-sm transition-all duration-300 xl:min-h-73 xl:p-4 2xl:min-h-80 2xl:rounded-4xl 2xl:p-5",
         finalStatus === "locked"
-          ? "border-slate-200 opacity-80"
-          : `${currentTheme.border} ${currentTheme.hoverBorder} ${currentTheme.hoverBg} hover:-translate-y-0.5 hover:shadow-md`,
+          ? "border-slate-200 opacity-75"
+          : `border-slate-200 hover:-translate-y-1 hover:shadow-xl ${currentTheme.cardHover}`,
       ].join(" ")}
     >
-      {/* Linha superior do plano */}
-      <div
-        className={[
-          "absolute inset-x-0 top-0 h-1",
-          finalStatus === "locked" ? "bg-slate-200" : currentTheme.topLine,
-        ].join(" ")}
-      />
-
-      {/* Fundo interno sutil */}
-      <div
-        className={[
-          "pointer-events-none absolute top-0 right-0 size-32 rounded-full blur-3xl transition group-hover:scale-110",
-          finalStatus === "locked" ? "bg-slate-100" : currentTheme.softBg,
-        ].join(" ")}
-      />
-
+      {" "}
+      <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-linear-to-r from-transparent via-slate-200 to-transparent" />{" "}
       <div className="relative z-10 flex flex-1 flex-col">
+        {" "}
         <div className="flex-1">
-          {/* Topo */}
+          {" "}
           <div className="flex items-start justify-between gap-4">
+            {" "}
             <div
               className={[
-                "grid size-12 shrink-0 place-items-center rounded-2xl shadow-sm ring-1",
-                finalStatus === "locked"
-                  ? "bg-slate-100 text-slate-400 ring-slate-200"
-                  : currentTheme.icon,
+                "grid size-10 shrink-0 place-items-center rounded-2xl transition-all duration-300 group-hover:scale-105 2xl:size-11",
+                iconColor,
               ].join(" ")}
             >
-              <CardIcon className="size-5" />
-            </div>
-
+              {" "}
+              <CardIcon className="size-5 xl:size-4.75 2xl:size-5" />{" "}
+            </div>{" "}
             <span
               className={[
-                "shrink-0 rounded-full px-3 py-1 text-xs font-bold ring-1",
+                "inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold ring-1 transition-all duration-300 xl:px-2.5 xl:text-[0.68rem] 2xl:px-3 2xl:text-xs",
                 currentStatus.badge,
               ].join(" ")}
             >
-              {currentStatus.label}
-            </span>
-          </div>
-
-          {/* Conteúdo */}
-          <div className="mt-5">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-slate-400">
-              {subjectLabel[subject]}
-            </p>
-
-            <h3 className="mt-2 text-lg font-bold leading-snug text-blue-950 xl:text-base 2xl:text-lg">
-              {simulation.title}
-            </h3>
-
-            <p className="mt-2 text-sm leading-6 text-slate-500 xl:text-xs xl:leading-5 2xl:text-sm 2xl:leading-6">
-              {simulation.description}
-            </p>
-          </div>
-        </div>
-
-        <div>
-          {/* Progresso */}
-          {finalStatus !== "locked" && simulation.progress > 0 && (
-            <div className="mt-5">
-              <div className="mb-2 flex justify-between text-xs font-bold text-slate-500">
-                <span>Progresso</span>
-                <span>{simulation.progress}%</span>
-              </div>
-
-              <div
+              {" "}
+              <currentStatus.Icon className="size-3.5 xl:size-3 2xl:size-3.5" />{" "}
+              {currentStatus.label}{" "}
+            </span>{" "}
+          </div>{" "}
+          <div className="mt-5 xl:mt-4 2xl:mt-5">
+            {" "}
+            <div className="flex items-center gap-2">
+              {" "}
+              <span
                 className={[
-                  "h-2 overflow-hidden rounded-full",
-                  currentTheme.progressBg,
+                  "size-1.5 shrink-0 rounded-full",
+                  finalStatus === "locked" ? "bg-slate-300" : currentTheme.dot,
+                ].join(" ")}
+              />{" "}
+              <p
+                className={[
+                  "line-clamp-1 text-xs font-extrabold uppercase tracking-[0.16em] xl:text-[0.68rem] 2xl:text-xs",
+                  finalStatus === "locked"
+                    ? "text-slate-400"
+                    : currentTheme.subjectText,
                 ].join(" ")}
               >
-                <div
-                  className={[
-                    "h-full rounded-full transition-all",
-                    currentTheme.progress,
-                  ].join(" ")}
-                  style={{ width: `${simulation.progress}%` }}
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Informações */}
-          <div className="mt-5 grid grid-cols-2 gap-3 xl:gap-2 2xl:gap-3">
-            <div
-              className={[
-                "rounded-2xl border p-3",
-                finalStatus === "locked"
-                  ? "border-slate-200 bg-slate-50"
-                  : `${currentTheme.infoBorder} ${currentTheme.infoBg}`,
-              ].join(" ")}
-            >
-              <p className="text-xs font-medium text-slate-500">Questões</p>
-              <p className="mt-1 text-sm font-bold text-blue-950">
-                {quantQuestions}
-              </p>
-            </div>
-
-            <div
-              className={[
-                "rounded-2xl border p-3",
-                finalStatus === "locked"
-                  ? "border-slate-200 bg-slate-50"
-                  : `${currentTheme.infoBorder} ${currentTheme.infoBg}`,
-              ].join(" ")}
-            >
-              <p className="text-xs font-medium text-slate-500">Duração</p>
-              <p className="mt-1 text-sm font-bold text-blue-950">
-                {timePerQuestions(simulation.timePerQuestion, quantQuestions)}
-              </p>
-            </div>
-          </div>
-
-          {/* Ação */}
+                {" "}
+                {simulation.originCode
+                  ? `${simulation.originCode.toUpperCase()} · ${subjectLabel[subject] || "Geral"}`
+                  : subjectLabel[subject] || "Geral"}{" "}
+              </p>{" "}
+            </div>{" "}
+            <h3 className="mt-2 line-clamp-2 text-[1.05rem] font-bold leading-snug text-slate-950 xl:text-[0.98rem] 2xl:text-lg">
+              {" "}
+              {simulation.title}{" "}
+            </h3>{" "}
+            <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-500 xl:text-xs xl:leading-5 2xl:text-sm 2xl:leading-6">
+              {" "}
+              {simulation.description}{" "}
+            </p>{" "}
+          </div>{" "}
+        </div>{" "}
+        <div className="mt-5 xl:mt-4 2xl:mt-5">
+          {" "}
+          <div className="grid grid-cols-3 gap-2.5 xl:gap-2 2xl:gap-2.5">
+            {" "}
+            <div className="rounded-2xl border border-slate-200 bg-slate-50/70 px-3 py-3 transition-all duration-300 xl:px-2.5 xl:py-2.5 2xl:px-3 2xl:py-3">
+              {" "}
+              <p className="text-[0.67rem] font-bold text-slate-500 2xl:text-xs">
+                {" "}
+                Questões{" "}
+              </p>{" "}
+              <p className="mt-1 text-base font-bold text-slate-950 xl:text-sm 2xl:text-base">
+                {" "}
+                {quantQuestions}{" "}
+              </p>{" "}
+            </div>{" "}
+            <div className="rounded-2xl border border-slate-200 bg-slate-50/70 px-3 py-3 transition-all duration-300 xl:px-2.5 xl:py-2.5 2xl:px-3 2xl:py-3">
+              {" "}
+              <p className="text-[0.67rem] font-bold text-slate-500 2xl:text-xs">
+                {" "}
+                Tempo{" "}
+              </p>{" "}
+              <p className="mt-1 text-base font-bold text-slate-950 xl:text-sm 2xl:text-base">
+                {" "}
+                {duration}{" "}
+              </p>{" "}
+            </div>{" "}
+            <div className="rounded-2xl border border-slate-200 bg-slate-50/70 px-3 py-3 transition-all duration-300 xl:px-2.5 xl:py-2.5 2xl:px-3 2xl:py-3">
+              {" "}
+              <p className="text-[0.67rem] font-bold text-slate-500 2xl:text-xs">
+                {" "}
+                Nível{" "}
+              </p>{" "}
+              <p className="mt-1 text-base font-bold text-slate-950 xl:text-sm 2xl:text-base">
+                {" "}
+                {difficultyLabel}{" "}
+              </p>{" "}
+            </div>{" "}
+          </div>{" "}
           <button
             type="button"
             onClick={handleAction}
-            disabled={finalStatus === "locked"}
+            aria-disabled={finalStatus === "locked"}
             className={[
-              "mt-5 inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-bold transition xl:px-4 xl:py-2.5 xl:text-xs 2xl:px-5 2xl:py-3 2xl:text-sm",
+              "mt-5 inline-flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-2xl px-5 text-sm font-bold transition-all duration-300 xl:mt-4 xl:h-10 xl:text-xs 2xl:mt-5 2xl:h-11 2xl:text-sm",
               finalStatus === "locked"
-                ? "cursor-not-allowed bg-slate-100 text-slate-400"
-                : `${currentTheme.button} text-white hover:-translate-y-0.5 hover:shadow-md`,
+                ? "bg-slate-100 text-slate-400"
+                : `${currentTheme.button} hover:-translate-y-0.5 hover:shadow-lg`,
             ].join(" ")}
           >
-            {currentStatus.buttonLabel}
-            {finalStatus !== "locked" && <ArrowRight className="size-4" />}
-          </button>
-        </div>
-      </div>
+            {" "}
+            {currentStatus.buttonLabel}{" "}
+            {finalStatus !== "locked" && (
+              <ArrowRight className="size-4 transition group-hover:translate-x-0.5 xl:size-3.5 2xl:size-4" />
+            )}{" "}
+          </button>{" "}
+        </div>{" "}
+      </div>{" "}
     </article>
   );
 };
-
 export default SimulationCard;

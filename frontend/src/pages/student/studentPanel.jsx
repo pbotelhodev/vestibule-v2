@@ -4,7 +4,7 @@ import PanelAside from "../../components/student/panelAside";
 
 const StudentPanel = () => {
   const student = {
-    id: "user_fake_id",
+    id: "1d22a020-1a65-4ae4-b22a-6a76efb327f6",
     authProvider: "LOCAL",
     avatarUrl: null,
     createdAt: new Date().toISOString(),

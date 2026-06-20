@@ -2,8 +2,8 @@
 const dataBase = require("../db/prisma");
 
 /* Função de leitura do banco de simulados  */
-const listPublishedSimulations = async () => {
-  return await dataBase.simulation.findMany({
+const listPublishedSimulations = async (studentId) => {
+  const allSimulations = await dataBase.simulation.findMany({
     where: {
       isPublished: true,
     },
@@ -18,11 +18,37 @@ const listPublishedSimulations = async () => {
       questions: true,
       isPublished: true,
       createdAt: true,
+
+      studentResults: {
+        where: { studentId },
+        select: { id: true },
+        take: 1,
+      },
     },
     orderBy: {
       createdAt: "desc",
     },
   });
+
+  const data = allSimulations.map((item) => {
+    const result = item.studentResults[0] || null;
+
+    return {
+      publicId: item.publicId,
+      title: item.title,
+      description: item.description,
+      subject: item.subject,
+      originCode: item.originCode,
+      requiredPlan: item.requiredPlan,
+      timePerQuestion: item.timePerQuestion,
+      questions: item.questions,
+      isPublished: item.isPublished,
+      createdAt: item.createdAt,
+      alreadyDone: Boolean(result),
+    };
+  });
+
+  return data;
 };
 
 /* Função de leitura do simulado pelo publicId */

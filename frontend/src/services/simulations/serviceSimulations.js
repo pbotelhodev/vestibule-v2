@@ -1,8 +1,9 @@
 import api from "../api";
 
 //Pega todos os simulados
-export const getSimulations = async () => {
-  const response = await api.get("/student/simulations");
+export const getSimulations = async (studentId) => {
+  const response = await api.get("/student/simulations", {params: {studentId}});
+  console.log(response.data.simulations)
   return response.data.simulations;
 };
 

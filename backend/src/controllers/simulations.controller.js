@@ -9,7 +9,7 @@ const {
 /* Service da listagem de simulados */
 const listSimulations = async (req, res) => {
   try {
-    const simulations = await listPublishedSimulations();
+    const simulations = await listPublishedSimulations(req.query.studentId);
 
     return res.status(200).json({
       simulations,
