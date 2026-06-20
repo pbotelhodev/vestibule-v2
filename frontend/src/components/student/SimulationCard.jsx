@@ -97,7 +97,7 @@ const themeByPlan = {
       "bg-linear-to-r from-purple-800 via-blue-700 to-emerald-700 bg-clip-text text-transparent",
     dot: "bg-linear-to-r from-purple-800 via-blue-700 to-emerald-700",
     button:
-      "bg-slate-950 text-white hover:bg-linear-to-r hover:from-purple-800 hover:via-blue-700 hover:to-emerald-700 hover:shadow-purple-700/25",
+      "bg-slate-950 text-white hover:bg-linear-to-r hover:from-purple-800 hover:via-blue-700 hover:to-emerald-500 hover:shadow-purple-700/25",
   },
 };
 const SimulationCard = ({ simulation, studentPlan }) => {
