@@ -18,10 +18,7 @@ const StudentSimulationPage = () => {
   const navigate = useNavigate();
   const outletContext = useOutletContext();
 
-  const student = outletContext?.student ?? {
-    name: "Aluno Vestibule",
-    planActive: "free",
-  };
+  const student = outletContext?.student;
 
   useEffect(() => {
     setLoading(true);

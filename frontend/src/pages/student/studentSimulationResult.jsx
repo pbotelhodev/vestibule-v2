@@ -1,4 +1,9 @@
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import {
+  useLocation,
+  useNavigate,
+  useOutletContext,
+  useParams,
+} from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 
 import {
@@ -10,14 +15,12 @@ import StudentSimulationResultContent from "../../components/student/studentSimu
 
 import Loading from "../../components/ui/Loading";
 
-const visualStudent = {
-  name: "Aluno Vestibule",
-  planActive: "premium",
-};
-
 const StudentSimulationResult = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const outletContext = useOutletContext();
+
+  const student = outletContext?.student;
   const { simulationId } = useParams();
 
   const submission = location.state?.submission;
@@ -179,7 +182,7 @@ const StudentSimulationResult = () => {
       {publicIdModal}
 
       <StudentSimulationResultContent
-        student={visualStudent}
+        student={student}
         correction={result?.correction || []}
         summary={result?.summary}
         onBackToSimulations={() => navigate("/student/simulados")}

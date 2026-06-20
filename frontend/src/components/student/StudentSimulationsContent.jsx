@@ -69,18 +69,18 @@ const planTheme = {
 
   premium: {
     label: "Plano Premium",
-    text: "bg-linear-to-r from-purple-800 via-blue-700 to-emerald-700 bg-clip-text text-transparent",
+    text: "bg-linear-to-r from-purple-800 via-blue-700 to-teal-500 bg-clip-text text-transparent",
     textStrong:
-      "bg-linear-to-r from-purple-800 via-blue-700 to-emerald-700 bg-clip-text text-transparent",
+      "bg-linear-to-r from-purple-800 via-blue-700 to-teal-500 bg-clip-text text-transparent",
     bg: "bg-white",
     border: "border-purple-200",
     button:
-      "bg-slate-950 text-white hover:bg-linear-to-r hover:from-purple-800 hover:via-blue-700 hover:to-emerald-700 hover:shadow-purple-700/25",
-    icon: "bg-linear-to-r from-purple-800 via-blue-700 to-emerald-700 text-white",
+      "bg-slate-950 text-white hover:bg-linear-to-r hover:from-purple-800 hover:via-blue-700 hover:to-teal-500 hover:shadow-purple-700/25",
+    icon: "bg-linear-to-r from-purple-800 via-blue-700 to-teal-500 text-white",
     searchIcon:
-      "bg-linear-to-r from-purple-800 via-blue-700 to-emerald-700 text-white",
+      "bg-linear-to-r from-purple-800 via-blue-700 to-teal-500 text-white",
     activeFilter:
-      "border-purple-200 bg-linear-to-r from-purple-800 via-blue-700 to-emerald-700 text-white shadow-purple-950/15",
+      "border-purple-200 bg-linear-to-r from-purple-800 via-blue-700 to-teal-500 text-white shadow-purple-950/15",
     filterHover: "hover:border-purple-300 hover:text-purple-800",
     dot: "bg-white",
   },
@@ -115,6 +115,8 @@ const StudentSimulationsContent = ({ student, simulations = [] }) => {
   const [activeFilter, setActiveFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
 
+  const currentFilter =
+    filters.find((filter) => filter.value === activeFilter) || filters[0];
   const currentPlan = student?.planActive?.toLowerCase() || "free";
   const theme = planTheme[currentPlan] || planTheme.free;
 
@@ -308,7 +310,10 @@ const StudentSimulationsContent = ({ student, simulations = [] }) => {
       <section>
         <div className="mb-4 flex items-center gap-2 text-sm font-bold text-slate-700">
           <Filter className="size-4 text-slate-400" />
-          {filteredSimulations.length} simulados encontrados
+          {filteredSimulations.length} simulados{" "}
+          {activeFilter === "all"
+            ? "encontrados"
+            : currentFilter.label.toLowerCase()}
         </div>
 
         {filteredSimulations.length > 0 ? (

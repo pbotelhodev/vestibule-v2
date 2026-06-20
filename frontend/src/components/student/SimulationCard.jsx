@@ -82,22 +82,22 @@ const themeByPlan = {
     subjectText: "text-violet-600",
     dot: "bg-violet-600",
     button:
-      "bg-slate-950 text-white hover:bg-violet-600 hover:shadow-violet-600/25",
+      "text-white bg-violet-600 shadow-violet-600/25",
   },
   pro: {
     cardHover: "hover:border-blue-200 hover:shadow-blue-950/10",
     subjectText: "text-blue-700",
     dot: "bg-blue-700",
     button:
-      "bg-slate-950 text-white hover:bg-blue-700 hover:shadow-blue-700/25",
+      "text-white bg-blue-700 shadow-blue-700/25",
   },
   premium: {
     cardHover: "hover:border-purple-300 hover:shadow-purple-950/15",
     subjectText:
-      "bg-linear-to-r from-purple-800 via-blue-700 to-emerald-700 bg-clip-text text-transparent",
-    dot: "bg-linear-to-r from-purple-800 via-blue-700 to-emerald-700",
+      "bg-linear-to-r from-purple-800 via-blue-700 to-teal-500 bg-clip-text text-transparent",
+    dot: "bg-linear-to-r from-purple-800 via-blue-700 to-teal-500",
     button:
-      "bg-slate-950 text-white hover:bg-linear-to-r hover:from-purple-800 hover:via-blue-700 hover:to-emerald-500 hover:shadow-purple-700/25",
+      "text-white bg-linear-to-r from-purple-800 via-blue-700 to-teal-500 shadow-purple-700/25",
   },
 };
 const SimulationCard = ({ simulation, studentPlan }) => {
@@ -166,7 +166,7 @@ const SimulationCard = ({ simulation, studentPlan }) => {
         "group relative flex min-h-77.5 flex-col overflow-hidden rounded-[1.7rem] border bg-white p-5 shadow-sm transition-all duration-300 xl:min-h-73 xl:p-4 2xl:min-h-80 2xl:rounded-4xl 2xl:p-5",
         finalStatus === "locked"
           ? "border-slate-200 opacity-75"
-          : `border-slate-200 hover:-translate-y-1 hover:shadow-xl ${currentTheme.cardHover}`,
+          : `border-slate-200 -translate-y-1 hover:shadow-xl ${currentTheme.cardHover}`,
       ].join(" ")}
     >
       {" "}
