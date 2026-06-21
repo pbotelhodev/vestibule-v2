@@ -7,7 +7,7 @@ const StudentPanel = () => {
     id: "1d22a020-1a65-4ae4-b22a-6a76efb327f6",
     authProvider: "LOCAL",
     avatarUrl: null,
-    createdAt: new Date().toISOString(),
+    createdAt: "2026-06-06T00:00:00.000Z",
     email: "pp@teste.com",
     emailVerifiedAt: null,
     googleId: null,
