@@ -13,9 +13,14 @@ import {
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
+import { planThemesAside } from "../../services/simulations/planTheme";
+
 import Logo from "../../assets/logo.png";
-import LogoBlue from "../../assets/logo-blue.png";
-import LogoAmber from "../../assets/logo-amber.png";
+import LogoPro from "../../assets/logo-blue.png";
+import LogoPremium from "../../assets/logo-premium.png";
+
+const PREMIUM_GRADIENT_ID = "premium-aside-gradient";
+const planThemes = planThemesAside;
 
 const navItems = [
   {
@@ -51,60 +56,23 @@ const planLabels = {
   premium: "Plano Premium",
 };
 
-const planThemes = {
-  free: {
-    active: "bg-violet-600 text-white",
-    hover: "hover:bg-violet-50 hover:text-violet-700",
-    iconBox: "bg-violet-50 text-violet-600",
-    avatar: "bg-violet-600 text-white",
-    border: "border-violet-100",
-    softBorder: "border-violet-200",
-    card: "from-violet-50 via-white to-blue-50",
-    text: "text-violet-600",
-    textStrong: "text-violet-700",
-    button: "bg-violet-600 hover:bg-violet-700",
-    mobileButton: "border-violet-100 text-violet-700 hover:bg-violet-50",
-  },
-  pro: {
-    active: "bg-blue-700 text-white",
-    hover: "hover:bg-blue-50 hover:text-blue-700",
-    iconBox: "bg-blue-50 text-blue-700",
-    avatar: "bg-blue-700 text-white",
-    border: "border-blue-100",
-    softBorder: "border-blue-200",
-    card: "from-blue-50 via-white to-violet-50",
-    text: "text-blue-700",
-    textStrong: "text-blue-800",
-    button: "bg-blue-700 hover:bg-blue-800",
-    mobileButton: "border-blue-100 text-blue-700 hover:bg-blue-50",
-  },
-  premium: {
-    active: "bg-amber-500 text-white",
-    hover: "hover:bg-amber-50 hover:text-amber-700",
-    iconBox: "bg-amber-50 text-amber-600",
-    avatar: "bg-amber-500 text-white",
-    border: "border-amber-200",
-    softBorder: "border-amber-300",
-    card: "from-amber-50 via-white to-violet-50",
-    text: "text-amber-600",
-    textStrong: "text-amber-700",
-    button: "bg-amber-500 hover:bg-amber-600",
-    mobileButton: "border-amber-200 text-amber-700 hover:bg-amber-50",
-  },
-};
-
 const planLogos = {
   free: Logo,
-  pro: LogoBlue,
-  premium: LogoAmber,
+  pro: LogoPro,
+  premium: LogoPremium,
 };
 
 const PanelAside = ({ student }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const currentTheme = planThemes[student?.planActive] || planThemes.free;
-  const currentPlan = planLabels[student?.planActive] || planLabels.free;
-  const currentLogo = planLogos[student?.planActive] || planLogos.free;
+  const currentPlanKey = student?.planActive?.toLowerCase() || "free";
+  const currentTheme = planThemes[currentPlanKey] || planThemes.free;
+  const currentPlan = planLabels[currentPlanKey] || planLabels.free;
+  const currentLogo = planLogos[currentPlanKey] || planLogos.free;
+
+  const iconStroke = currentTheme.gradientIcon
+    ? `url(#${PREMIUM_GRADIENT_ID})`
+    : "currentColor";
 
   const fullName = student?.name || "Aluno Vestibule";
   const nameParts = fullName.trim().split(" ");
@@ -134,24 +102,50 @@ const PanelAside = ({ student }) => {
     ? "w-40 opacity-100"
     : "w-0 opacity-0 xl:group-hover:w-40 xl:group-hover:opacity-100";
 
-  const itemLayout = isOpen ? "gap-3" : "gap-0 xl:group-hover:gap-3";
+  const itemLayout = isOpen
+    ? "justify-start gap-3"
+    : "justify-center gap-0 xl:group-hover:justify-start xl:group-hover:gap-3";
+
+  const headerLayout = isOpen
+    ? "justify-start gap-3"
+    : "justify-center gap-0 xl:group-hover:justify-start xl:group-hover:gap-3";
 
   return (
     <>
-      {/* Botão mobile */}
+      {currentTheme.gradientIcon && (
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          className="pointer-events-none absolute size-0"
+        >
+          <defs>
+            <linearGradient
+              id={PREMIUM_GRADIENT_ID}
+              x1="0%"
+              y1="0%"
+              x2="100%"
+              y2="0%"
+            >
+              <stop offset="0%" stopColor="#6b21a8" />
+              <stop offset="50%" stopColor="#1d4ed8" />
+              <stop offset="100%" stopColor="#14b8a6" />
+            </linearGradient>
+          </defs>
+        </svg>
+      )}
+
       <button
         type="button"
         onClick={openAside}
         className={[
-          "fixed top-4 left-4 z-40 grid size-12 place-items-center rounded-2xl border bg-white shadow-sm transition md:hidden",
+          "fixed top-4 left-4 z-40 grid size-12 place-items-center rounded-2xl border bg-white shadow-sm shadow-slate-950/5 transition hover:-translate-y-0.5 md:hidden",
           currentTheme.mobileButton,
         ].join(" ")}
         aria-label="Abrir menu lateral"
       >
-        <Menu className="size-5" />
+        <Menu className={["size-5", currentTheme.iconText].join(" ")} />
       </button>
 
-      {/* Overlay mobile/tablet quando aberto */}
       {isOpen && (
         <button
           type="button"
@@ -164,36 +158,26 @@ const PanelAside = ({ student }) => {
       <aside
         onClick={handleAsideClick}
         className={[
-          "group fixed top-0 bottom-0 left-0 z-40 flex flex-col overflow-hidden border-r bg-white shadow-sm",
+          "group fixed top-0 bottom-0 left-0 z-40 flex flex-col overflow-hidden border-r bg-white/95 shadow-sm shadow-slate-950/5 backdrop-blur-xl",
           "transition-[width,transform] duration-300 ease-out will-change-[width,transform]",
           currentTheme.border,
-
-          /*
-            Mobile < 768px:
-            fechado sai da tela
-            aberto entra como drawer
-          */
           isOpen ? "translate-x-0 w-64" : "-translate-x-full w-64",
-
-          /*
-            Tablet >= 768px:
-            fechado fica compacto na lateral
-            aberto expande por clique
-          */
           isOpen ? "md:translate-x-0 md:w-55" : "md:translate-x-0 md:w-20.5",
-
-          /*
-            Desktop >= 1280px:
-            não trava aberto por clique
-            abre apenas no hover
-          */
           "xl:w-20.5 xl:hover:w-55",
         ].join(" ")}
       >
-        {/* Logo */}
-        <div className="flex h-20 shrink-0 items-center px-3">
-          <div className="flex min-w-0 items-center gap-3">
-            <div className="grid size-12 shrink-0 place-items-center overflow-hidden rounded-2xl">
+        <div className="pointer-events-none absolute inset-x-3 top-0 h-px bg-linear-to-r from-transparent via-slate-200 to-transparent" />
+        <div className="pointer-events-none absolute -top-20 left-4 size-32 rounded-full bg-violet-100/50 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 right-2 size-36 rounded-full bg-blue-100/50 blur-3xl" />
+
+        <div className="relative z-10 flex h-20 shrink-0 items-center px-3">
+          <div
+            className={[
+              "flex min-w-0 flex-1 items-center transition-[gap] duration-200 ease-out",
+              headerLayout,
+            ].join(" ")}
+          >
+            <div className="grid size-12 shrink-0 place-items-center overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm shadow-slate-950/5">
               <img
                 src={currentLogo}
                 alt="Vestibule"
@@ -210,9 +194,10 @@ const PanelAside = ({ student }) => {
               <p className="truncate text-sm font-bold text-slate-950">
                 Vestibule
               </p>
+
               <p
                 className={[
-                  "truncate text-xs font-medium",
+                  "truncate text-xs font-semibold",
                   currentTheme.text,
                 ].join(" ")}
               >
@@ -229,7 +214,7 @@ const PanelAside = ({ student }) => {
                 closeAside();
               }}
               className={[
-                "ml-auto grid size-8 shrink-0 place-items-center rounded-2xl border text-blue-400 transition hover:bg-slate-50 hover:text-slate-800 xl:hidden",
+                "ml-auto grid size-8 shrink-0 place-items-center rounded-2xl border bg-white text-slate-400 transition hover:bg-slate-50 hover:text-slate-800 xl:hidden",
                 currentTheme.border,
               ].join(" ")}
               aria-label="Fechar menu lateral"
@@ -239,19 +224,19 @@ const PanelAside = ({ student }) => {
           )}
         </div>
 
-        {/* Perfil */}
-        <div className="shrink-0 px-3">
+        <div className="relative z-10 shrink-0 px-3">
           <div
             className={[
-              "flex h-14 w-full items-center overflow-hidden rounded-xl border bg-slate-50 px-1.5",
+              "flex h-14 w-full items-center overflow-hidden rounded-2xl border bg-white/85 px-1.5 shadow-sm shadow-slate-950/5 ring-1",
               "transition-[gap,background-color,border-color] duration-200 ease-out",
               currentTheme.border,
+              currentTheme.ring,
               itemLayout,
             ].join(" ")}
           >
             <div
               className={[
-                "grid size-11 shrink-0  place-items-center overflow-hidden rounded-xl text-sm font-bold shadow-sm",
+                "grid size-11 shrink-0 place-items-center overflow-hidden rounded-2xl text-sm font-bold shadow-sm",
                 currentTheme.avatar,
               ].join(" ")}
             >
@@ -272,19 +257,18 @@ const PanelAside = ({ student }) => {
                 labelVisibility,
               ].join(" ")}
             >
-              <p className="truncate text-sm font-bold text-blue-950">
+              <p className="truncate text-sm font-bold text-slate-950">
                 {displayName}
               </p>
 
-              <p className="truncate text-xs font-medium text-blue-400">
+              <p className="truncate text-xs font-medium text-slate-400">
                 {student?.email || "aluno@vestibule.com"}
               </p>
             </div>
           </div>
         </div>
 
-        {/* Navegação */}
-        <nav className="mt-6 flex flex-1 flex-col gap-1 px-3">
+        <nav className="relative z-10 mt-6 flex flex-1 flex-col gap-1 px-3">
           {navItems.map(({ label, path, Icon }) => (
             <NavLink
               key={path}
@@ -297,11 +281,11 @@ const PanelAside = ({ student }) => {
               className={({ isActive }) =>
                 [
                   "flex h-12 w-full items-center overflow-hidden rounded-2xl px-1.5 text-sm font-bold",
-                  "transition-[gap,background-color,color,box-shadow] duration-200 ease-out",
+                  "transition-[gap,background-color,color,box-shadow,transform] duration-200 ease-out hover:-translate-y-0.5",
                   itemLayout,
                   isActive
                     ? `${currentTheme.active} shadow-sm`
-                    : `text-blue-400 ${currentTheme.hover}`,
+                    : `text-slate-400 ${currentTheme.hover}`,
                 ].join(" ")
               }
             >
@@ -321,17 +305,15 @@ const PanelAside = ({ student }) => {
           ))}
         </nav>
 
-        {/* Rodapé */}
-        <div className="shrink-0 space-y-3 px-3 pb-4">
-          {/* Plano */}
+        <div className="relative z-10 shrink-0 space-y-3 px-3 pb-4">
           <button
             type="button"
             onClick={(event) => {
               event.stopPropagation();
             }}
             className={[
-              "flex h-14 w-full items-center overflow-hidden rounded-3xl border bg-linear-to-br px-1.5",
-              "transition-[gap,border-color,box-shadow] duration-200 ease-out hover:shadow-sm",
+              "flex h-14 w-full items-center overflow-hidden rounded-3xl border bg-linear-to-br px-1.5 shadow-sm shadow-slate-950/5",
+              "transition-[gap,border-color,box-shadow,transform] duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md",
               currentTheme.border,
               currentTheme.card,
               itemLayout,
@@ -339,11 +321,14 @@ const PanelAside = ({ student }) => {
           >
             <div
               className={[
-                "grid size-11 shrink-0 place-items-center rounded-2xl shadow-sm",
+                "grid size-11 shrink-0 place-items-center rounded-2xl border shadow-sm",
                 currentTheme.iconBox,
               ].join(" ")}
             >
-              <Crown className="size-5" />
+              <Crown
+                className={["size-5", currentTheme.iconText].join(" ")}
+                stroke={iconStroke}
+              />
             </div>
 
             <div
@@ -352,21 +337,30 @@ const PanelAside = ({ student }) => {
                 labelVisibility,
               ].join(" ")}
             >
-              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-blue-400">
+              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">
                 Assinatura
               </p>
-              <p
-                className={[
-                  "truncate text-xs font-bold",
-                  currentTheme.textStrong,
-                ].join(" ")}
-              >
-                {currentPlan}
-              </p>
+
+              <div className="flex items-center gap-2">
+                <span
+                  className={[
+                    "size-1.5 shrink-0 rounded-full",
+                    currentTheme.planDot,
+                  ].join(" ")}
+                />
+
+                <p
+                  className={[
+                    "truncate text-xs font-bold",
+                    currentTheme.textStrong,
+                  ].join(" ")}
+                >
+                  {currentPlan}
+                </p>
+              </div>
             </div>
           </button>
 
-          {/* Sair */}
           <button
             type="button"
             onClick={(event) => {
@@ -374,8 +368,8 @@ const PanelAside = ({ student }) => {
               handleExitUser();
             }}
             className={[
-              "flex h-12 w-full cursor-pointer items-center overflow-hidden rounded-2xl px-1.5 text-sm font-bold text-blue-400",
-              "transition-[gap,background-color,color] duration-200 ease-out hover:bg-red-50 hover:text-red-500",
+              "flex h-12 w-full cursor-pointer items-center overflow-hidden rounded-2xl px-1.5 text-sm font-bold text-slate-400",
+              "transition-[gap,background-color,color,transform] duration-200 ease-out hover:-translate-y-0.5 hover:bg-red-50 hover:text-red-500",
               itemLayout,
             ].join(" ")}
           >

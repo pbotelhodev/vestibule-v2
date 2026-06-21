@@ -37,17 +37,30 @@ const getResultStatus = (percentage) => {
   return resultStatus.critical;
 };
 
-const formatSecondsToTime = (seconds) => {
+const formatSecondsToTime = (seconds, type = "all") => {
   const totalSeconds = Math.max(0, Math.floor(seconds || 0));
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const remainingSeconds = totalSeconds % 60;
 
-  if (hours > 0) return `${hours}h ${minutes}min`;
-  if (minutes > 0 && remainingSeconds === 0) return `${minutes}min`;
-  if (minutes > 0) return `${minutes}min ${remainingSeconds}s`;
+  
+  if (type === "all") {
+    if (hours > 0) return `${hours} h ${minutes} min`;
+    if (minutes > 0 && remainingSeconds === 0) return `${minutes} min`;
+    if (minutes > 0) return `${minutes} min ${remainingSeconds} s`;
+    return `${remainingSeconds} s`;
+  }
 
-  return `${remainingSeconds}s`;
+  
+  if (type === "watch") {
+    const hh = String(hours).padStart(2, "0");
+    const mm = String(minutes).padStart(2, "0");
+    const ss = String(remainingSeconds).padStart(2, "0");
+
+    return `${hh}:${mm}:${ss}`;
+  }
+
+  return `${remainingSeconds} s`;
 };
 
 const formatSubject = (subject = "") => {
@@ -136,7 +149,7 @@ const StudentSimulationResultContent = ({
   const hasProAccess = rank >= planRank.pro;
   const hasPremiumAccess = rank >= planRank.premium;
   const totalQuestions = summary?.totalQuestions || correctionList.length || 0;
-  
+
   const iconStroke = theme.gradientIcon
     ? `url(#${PREMIUM_GRADIENT_ID})`
     : "currentColor";
@@ -213,7 +226,7 @@ const StudentSimulationResultContent = ({
     totalSimulationSeconds: summary?.totalSimulationSeconds,
   };
 
-  const totalTime = formatSecondsToTime(finalResult.timeSpentSeconds);
+  const totalTime = formatSecondsToTime(finalResult.timeSpentSeconds, "watch");
   const totalSimulationTime = formatSecondsToTime(
     finalResult.totalSimulationSeconds,
   );
@@ -317,7 +330,7 @@ const StudentSimulationResultContent = ({
                   : undefined
               }
               className={[
-                "inline-flex items-center justify-center gap-2 rounded-full border px-4 py-2.5 text-xs font-bold shadow-sm transition disabled:cursor-not-allowed disabled:border-slate-200 disabled:bg-slate-50 disabled:text-slate-400 2xl:px-5 2xl:py-3 2xl:text-sm",
+                "inline-flex items-center justify-center gap-2 rounded-full border px-4 py-2.5 text-xs font-bold shadow-sm transition disabled:cursor-not-allowed disabled:border-slate-200 hover:-translate-y-0.5 hover:shadow-lg disabled:bg-slate-50 disabled:text-slate-400 2xl:px-5 2xl:py-3 2xl:text-sm",
                 hasPremiumAccess ? `cursor-pointer ${theme.lightButton}` : "",
               ].join(" ")}
             >
@@ -461,7 +474,7 @@ const StudentSimulationResultContent = ({
                     Tempo
                   </div>
 
-                  <strong className="mt-2 block text-2xl font-bold text-slate-950 xl:text-xl 2xl:text-3xl">
+                  <strong className="mt-2 block text-2xl font-bold text-slate-950 xl:text-lg 2xl:text-2xl">
                     {totalTime}
                   </strong>
                 </div>
@@ -497,39 +510,48 @@ const StudentSimulationResultContent = ({
             </div>
 
             <div className="mt-5 space-y-3 xl:mt-4">
-              {weakSubjects.length > 0 ? (
-                weakSubjects.map((subject) => (
-                  <div
-                    key={subject.name}
-                    className="rounded-3xl border border-slate-200 bg-slate-50 p-4 xl:p-3 2xl:p-4"
-                  >
-                    <div className="flex items-center justify-between gap-3">
-                      <strong className="text-sm font-bold text-slate-700 xl:text-xs 2xl:text-sm">
-                        {subject.name}
-                      </strong>
+              {score !== 1000 ? (
+                weakSubjects.length > 0 ? (
+                  weakSubjects.map((subject) => (
+                    <div
+                      key={subject.name}
+                      className="rounded-3xl border border-slate-200 bg-slate-50 p-4 xl:p-3 2xl:p-4"
+                    >
+                      <div className="flex items-center justify-between gap-3">
+                        <strong className="text-sm font-bold text-slate-700 xl:text-xs 2xl:text-sm">
+                          {subject.name}
+                        </strong>
 
-                      <span className="rounded-full bg-white px-2.5 py-1 text-xs font-bold text-slate-500">
-                        {subject.correct}/{subject.total}
-                      </span>
+                        <span className="rounded-full bg-white px-2.5 py-1 text-xs font-bold text-slate-500">
+                          {subject.correct}/{subject.total}
+                        </span>
+                      </div>
+
+                      <div className="mt-3 h-2 overflow-hidden rounded-full bg-white">
+                        <div
+                          className={[
+                            "h-full rounded-full",
+                            theme.progress,
+                          ].join(" ")}
+                          style={{ width: `${subject.percentage}%` }}
+                        />
+                      </div>
+
+                      <p className="mt-2 text-xs leading-5 text-slate-500">
+                        Priorize este conteúdo na próxima revisão.
+                      </p>
                     </div>
-
-                    <div className="mt-3 h-2 overflow-hidden rounded-full bg-white">
-                      <div
-                        className={["h-full rounded-full", theme.progress].join(
-                          " ",
-                        )}
-                        style={{ width: `${subject.percentage}%` }}
-                      />
-                    </div>
-
-                    <p className="mt-2 text-xs leading-5 text-slate-500">
-                      Priorize este conteúdo na próxima revisão.
-                    </p>
+                  ))
+                ) : (
+                  <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-500">
+                    Ainda não há assuntos suficientes para gerar foco de
+                    revisão.
                   </div>
-                ))
+                )
               ) : (
                 <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-500">
-                  Ainda não há assuntos suficientes para gerar foco de revisão.
+                  Nenhum erro encontrado.
+                  <br /> Excelente resultado neste simulado.
                 </div>
               )}
             </div>
