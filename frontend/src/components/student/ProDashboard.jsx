@@ -7,10 +7,13 @@ import {
   CheckCircle2,
   Clock3,
   LineChart,
-  Trophy,
+  ShieldCheck,
   Target,
   TrendingUp,
+  Trophy,
 } from "lucide-react";
+
+import { useNavigate } from "react-router-dom";
 
 const stats = [
   {
@@ -60,7 +63,6 @@ const subjects = [
     percent: 64,
     status: "Precisa revisar",
   },
-  
 ];
 
 const simulations = [
@@ -86,25 +88,22 @@ const simulations = [
 
 const ProDashboard = ({ student }) => {
   const firstName = student?.name?.split(" ")?.[0] || "Aluno";
+  const navigate = useNavigate()
 
   return (
     <div className="space-y-5 md:space-y-6 xl:space-y-6 2xl:space-y-8">
       {/* Hero */}
-      <section className="relative overflow-hidden rounded-3xl border border-blue-100 bg-white p-5 shadow-sm md:rounded-4xl md:p-6 xl:p-8 2xl:p-10">
-        {/* Fundo branco sólido */}
+      <section className="relative overflow-hidden rounded-3xl border border-blue-100 bg-white p-4 shadow-sm md:rounded-4xl md:p-5 xl:p-6 2xl:p-7">
         <div className="absolute inset-0 bg-white" />
 
-        {/* Bolas grandes laterais sólidas */}
-        <div className="absolute -top-24 -right-20 size-64 rounded-full bg-blue-100/80 md:size-72 xl:size-80" />
-        <div className="absolute -bottom-28 -left-20 size-64 rounded-full bg-violet-100/70 md:size-72 xl:size-80" />
-        <div className="absolute top-1/2 right-1/4 size-44 -translate-y-1/2 rounded-full bg-amber-100/80 md:size-56" />
+        <div className="absolute -top-24 -right-20 size-56 rounded-full bg-blue-100/80 md:size-64 xl:size-72" />
+        <div className="absolute -bottom-28 -left-20 size-56 rounded-full bg-violet-100/70 md:size-64 xl:size-72" />
+        <div className="absolute top-1/2 right-1/4 size-36 -translate-y-1/2 rounded-full bg-amber-100/80 md:size-44" />
 
-        {/* Formas suaves */}
-        <div className="absolute top-10 right-16 hidden size-20 rounded-4xl border border-blue-100 bg-white/50 shadow-sm backdrop-blur-md md:block" />
-        <div className="absolute bottom-12 left-18 hidden size-24 rounded-full border border-violet-100 bg-white/50 shadow-sm backdrop-blur-md lg:block" />
-        <div className="absolute right-1/3 bottom-10 hidden size-16 rounded-4xl border border-amber-100 bg-white/50 shadow-sm backdrop-blur-md xl:block" />
+        <div className="absolute top-10 right-16 hidden size-16 rounded-4xl border border-blue-100 bg-white/50 shadow-sm backdrop-blur-md md:block" />
+        <div className="absolute bottom-12 left-18 hidden size-20 rounded-full border border-violet-100 bg-white/50 shadow-sm backdrop-blur-md lg:block" />
+        <div className="absolute right-1/3 bottom-10 hidden size-14 rounded-4xl border border-amber-100 bg-white/50 shadow-sm backdrop-blur-md xl:block" />
 
-        {/* Bolinhas flutuantes */}
         <div className="absolute top-12 left-14 size-2.5 rounded-full bg-blue-600/60" />
         <div className="absolute top-24 right-32 size-3 rounded-full bg-violet-500/50" />
         <div className="absolute top-1/2 right-16 size-2.5 rounded-full bg-amber-400/80" />
@@ -112,70 +111,70 @@ const ProDashboard = ({ student }) => {
         <div className="absolute right-1/3 bottom-16 size-2 rounded-full bg-violet-400/60" />
         <div className="absolute top-1/3 left-1/2 size-2 rounded-full bg-amber-400/70" />
 
-        <div className="relative z-10 grid gap-7 xl:grid-cols-[1fr_380px] xl:items-center 2xl:grid-cols-[1fr_460px] 2xl:gap-12">
+        <div className="relative z-10 grid gap-5 xl:grid-cols-[1fr_360px] xl:items-center 2xl:grid-cols-[1fr_420px] 2xl:gap-8">
           <div className="max-w-3xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-white/80 px-3 py-1.5 text-xs font-bold text-blue-700 shadow-sm backdrop-blur-md">
-              <Trophy className="size-4" />
+              <ShieldCheck className="size-4" />
               Plano Pro
             </span>
 
-            <h1 className="mt-5 text-3xl font-bold tracking-tight text-blue-950 md:text-4xl xl:max-w-2xl xl:text-4xl 2xl:text-6xl">
+            <h1 className="mt-4 text-2xl font-bold tracking-tight text-blue-950 md:text-3xl xl:max-w-2xl xl:text-4xl 2xl:text-5xl">
               Olá, {firstName}. Sua preparação agora tem mais ritmo.
             </h1>
 
-            <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-500 md:text-base md:leading-7 2xl:text-lg 2xl:leading-8">
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-500 md:text-base md:leading-7 2xl:text-base 2xl:leading-7">
               Estude sem anúncios, acesse mais simulados e acompanhe sua
               evolução por matéria com relatórios mais claros.
             </p>
 
-            <div className="mt-6 flex flex-col gap-3 md:flex-row md:items-center">
+            <div className="mt-5 flex flex-col gap-3 md:flex-row md:items-center">
               <button
                 type="button"
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-blue-700 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-800 hover:shadow-md"
+                onClick={() => navigate("/student/simulados")}
+                className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-blue-700 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-800 hover:shadow-md"
               >
-                Continuar simulado
+                Escolher simulado
                 <ArrowRight className="size-4" />
               </button>
 
               <button
                 type="button"
-                className="inline-flex items-center justify-center rounded-full border border-blue-100 bg-white/80 px-5 py-3 text-sm font-bold text-blue-700 shadow-sm backdrop-blur-md transition hover:-translate-y-0.5 hover:bg-blue-50 hover:shadow-md"
+                onClick={() => navigate("/student/desempenho")}
+                className="inline-flex cursor-pointer items-center justify-center rounded-full border border-blue-100 bg-white/80 px-5 py-2.5 text-sm font-bold text-blue-700 shadow-sm backdrop-blur-md transition hover:-translate-y-0.5 hover:bg-blue-50 hover:shadow-md"
               >
                 Ver desempenho
               </button>
             </div>
           </div>
 
-          {/* Card do plano */}
-          <aside className="rounded-3xl border border-blue-100 bg-white/80 p-4 shadow-sm backdrop-blur-md md:p-5 2xl:p-6">
+          <aside className="rounded-3xl border border-blue-100 bg-white/80 p-4 shadow-sm backdrop-blur-md 2xl:p-5">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-xs font-bold uppercase tracking-[0.2em] text-blue-500">
                   Seu plano
                 </p>
 
-                <h2 className="mt-2 text-2xl font-bold text-blue-950 2xl:text-3xl">
+                <h2 className="mt-1.5 text-2xl font-bold text-blue-950 2xl:text-3xl">
                   Pro
                 </h2>
               </div>
 
-              <div className="grid size-12 place-items-center rounded-2xl bg-blue-50 text-blue-700">
+              <div className="grid size-11 place-items-center rounded-2xl bg-blue-700 text-white shadow-sm">
                 <Trophy className="size-5" />
               </div>
             </div>
 
-            <div className="mt-5 rounded-2xl bg-blue-50/70 p-4">
-              <div className="mb-2 flex items-center justify-between text-xs font-bold text-slate-500">
-                <span>Evolução mensal</span>
-                <span>+21%</span>
-              </div>
+            <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl bg-blue-50/70 p-3">
+              <span className="text-xs font-bold text-slate-500">
+                Evolução mensal
+              </span>
 
-              <div className="h-2 overflow-hidden rounded-full bg-blue-100">
-                <div className="h-full w-[74%] rounded-full bg-blue-700" />
-              </div>
+              <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-blue-700 shadow-sm">
+                +21%
+              </span>
             </div>
 
-            <div className="mt-4 grid grid-cols-2 gap-3">
+            <div className="mt-3 grid grid-cols-2 gap-3">
               <div className="rounded-2xl bg-blue-50/70 p-3">
                 <p className="text-xs font-medium text-slate-500">Anúncios</p>
                 <p className="mt-1 text-sm font-bold text-blue-950">Zero</p>
@@ -197,7 +196,7 @@ const ProDashboard = ({ student }) => {
         {stats.map(({ label, value, helper, Icon }) => (
           <article
             key={label}
-            className="rounded-3xl border border-blue-100 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md 2xl:p-6"
+            className="rounded-3xl border border-blue-100 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-200 hover:bg-blue-50/30 hover:shadow-md 2xl:p-6"
           >
             <div className="flex items-center justify-between gap-3">
               <div className="grid size-11 place-items-center rounded-2xl bg-blue-50 text-blue-700">
@@ -220,7 +219,6 @@ const ProDashboard = ({ student }) => {
 
       {/* Conteúdo principal */}
       <section className="grid gap-5 xl:grid-cols-[1fr_380px] 2xl:grid-cols-[1fr_460px] 2xl:gap-8">
-        {/* Desempenho */}
         <div className="rounded-3xl border border-blue-100 bg-white p-5 shadow-sm md:rounded-4xl md:p-6 2xl:p-7">
           <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
             <div>
@@ -240,7 +238,7 @@ const ProDashboard = ({ student }) => {
 
             <button
               type="button"
-              className="inline-flex items-center justify-center rounded-full border border-blue-100 px-4 py-2.5 text-xs font-bold text-blue-700 transition hover:bg-blue-50"
+              className="inline-flex cursor-pointer items-center justify-center rounded-full border border-blue-100 px-4 py-2.5 text-xs font-bold text-blue-700 transition hover:bg-blue-50"
             >
               Relatório completo
             </button>
@@ -287,7 +285,6 @@ const ProDashboard = ({ student }) => {
           </div>
         </div>
 
-        {/* Lateral */}
         <aside className="space-y-5 md:space-y-6">
           <article className="rounded-3xl border border-blue-100 bg-white p-5 shadow-sm md:rounded-4xl 2xl:p-6">
             <div className="grid size-11 place-items-center rounded-2xl bg-blue-50 text-blue-700">
@@ -323,7 +320,7 @@ const ProDashboard = ({ student }) => {
 
             <button
               type="button"
-              className="mt-5 inline-flex w-full items-center justify-center rounded-full bg-white px-4 py-2.5 text-xs font-bold text-blue-700 transition hover:bg-blue-50 md:w-auto"
+              className="mt-5 inline-flex w-full cursor-pointer items-center justify-center rounded-full bg-white px-4 py-2.5 text-xs font-bold text-blue-700 transition hover:bg-blue-50 md:w-auto"
             >
               Explorar recursos
             </button>
@@ -345,7 +342,7 @@ const ProDashboard = ({ student }) => {
 
             <button
               type="button"
-              className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-blue-700 px-4 py-2.5 text-xs font-bold text-white transition hover:bg-blue-800 md:w-auto"
+              className="mt-5 inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-blue-700 px-4 py-2.5 text-xs font-bold text-white transition hover:bg-blue-800 md:w-auto"
             >
               Continuar
               <ArrowRight className="size-4" />
@@ -363,13 +360,14 @@ const ProDashboard = ({ student }) => {
             </p>
 
             <h2 className="mt-2 text-xl font-bold text-blue-950 md:text-2xl">
-              Continue de onde parou
+              Continue estudando
             </h2>
           </div>
 
           <button
             type="button"
-            className="inline-flex items-center justify-center rounded-full border border-blue-100 px-4 py-2.5 text-xs font-bold text-blue-700 transition hover:bg-blue-50"
+            onClick={() => navigate("/student/simulados")}
+            className="inline-flex cursor-pointer items-center justify-center rounded-full border border-blue-100 px-4 py-2.5 text-xs font-bold text-blue-700 transition hover:bg-blue-50"
           >
             Ver todos
           </button>
@@ -400,7 +398,7 @@ const ProDashboard = ({ student }) => {
 
                 <button
                   type="button"
-                  className="grid size-9 place-items-center rounded-full bg-blue-700 text-white transition hover:bg-blue-800"
+                  className="grid size-9 cursor-pointer place-items-center rounded-full bg-blue-700 text-white transition hover:bg-blue-800"
                 >
                   <ArrowRight className="size-4" />
                 </button>

@@ -1,21 +1,21 @@
 /* eslint-disable no-unused-vars */
 import {
   ArrowRight,
-  BarChart3,
   BookOpenCheck,
   Brain,
-  CalendarDays,
   CheckCircle2,
   Crown,
   FileText,
   GraduationCap,
   Medal,
-  Sparkles,
   Target,
   Trophy,
   WandSparkles,
   Zap,
 } from "lucide-react";
+
+const PREMIUM_ICON_GRADIENT_ID = "premium-dashboard-icon-gradient";
+const premiumIconStroke = `url(#${PREMIUM_ICON_GRADIENT_ID})`;
 
 const stats = [
   {
@@ -84,7 +84,7 @@ const simulations = [
   {
     title: "ENEM Premium — Simulado completo",
     description: "Modelo completo com análise por área e relatório avançado.",
-    status: "Continuar",
+    status: "Escolher",
     progress: 81,
   },
   {
@@ -101,54 +101,89 @@ const simulations = [
   },
 ];
 
+const PremiumIconBox = ({
+  Icon,
+  className = "size-11",
+  iconClassName = "size-5",
+}) => {
+  return (
+    <div
+      className={[
+        "grid place-items-center rounded-2xl border border-purple-200 bg-white shadow-sm shadow-purple-950/5",
+        className,
+      ].join(" ")}
+    >
+      <Icon className={iconClassName} stroke={premiumIconStroke} />
+    </div>
+  );
+};
+
 const PremiumDashboard = ({ student }) => {
   const firstName = student?.name?.split(" ")?.[0] || "Aluno";
 
   return (
     <div className="space-y-5 md:space-y-6 xl:space-y-6 2xl:space-y-8">
+      <svg
+        aria-hidden="true"
+        focusable="false"
+        className="pointer-events-none absolute size-0"
+      >
+        <defs>
+          <linearGradient
+            id={PREMIUM_ICON_GRADIENT_ID}
+            x1="0%"
+            y1="0%"
+            x2="100%"
+            y2="0%"
+          >
+            <stop offset="0%" stopColor="#6b21a8" />
+            <stop offset="50%" stopColor="#1d4ed8" />
+            <stop offset="100%" stopColor="#14b8a6" />
+          </linearGradient>
+        </defs>
+      </svg>
+
       {/* Hero */}
-      <section className="relative overflow-hidden rounded-3xl border border-amber-200 bg-white p-5 shadow-sm md:rounded-4xl md:p-6 xl:p-8 2xl:p-10">
-        {/* Fundo branco sólido */}
+      <section className="relative overflow-hidden rounded-3xl border border-purple-200 bg-white p-4 shadow-sm md:rounded-4xl md:p-5 xl:p-6 2xl:p-7">
         <div className="absolute inset-0 bg-white" />
 
-        {/* Bolas grandes laterais sólidas */}
-        <div className="absolute -top-24 -right-20 size-64 rounded-full bg-amber-100/90 md:size-72 xl:size-80" />
-        <div className="absolute -bottom-28 -left-20 size-64 rounded-full bg-violet-100/75 md:size-72 xl:size-80" />
-        <div className="absolute top-1/2 right-1/4 size-44 -translate-y-1/2 rounded-full bg-blue-100/75 md:size-56" />
+        <div className="absolute -top-24 -right-20 size-56 rounded-full bg-purple-100/80 md:size-64 xl:size-72" />
+        <div className="absolute -bottom-28 -left-20 size-56 rounded-full bg-blue-100/70 md:size-64 xl:size-72" />
+        <div className="absolute top-1/2 right-1/4 size-36 -translate-y-1/2 rounded-full bg-teal-100/80 md:size-44" />
 
-        {/* Formas suaves */}
-        <div className="absolute top-10 right-16 hidden size-20 rounded-4xl border border-amber-100 bg-white/55 shadow-sm backdrop-blur-md md:block" />
-        <div className="absolute bottom-12 left-18 hidden size-24 rounded-full border border-violet-100 bg-white/55 shadow-sm backdrop-blur-md lg:block" />
-        <div className="absolute right-1/3 bottom-10 hidden size-16 rounded-4xl border border-blue-100 bg-white/55 shadow-sm backdrop-blur-md xl:block" />
+        <div className="absolute top-10 right-16 hidden size-16 rounded-4xl border border-purple-100 bg-white/50 shadow-sm backdrop-blur-md md:block" />
+        <div className="absolute bottom-12 left-18 hidden size-20 rounded-full border border-blue-100 bg-white/50 shadow-sm backdrop-blur-md lg:block" />
+        <div className="absolute right-1/3 bottom-10 hidden size-14 rounded-4xl border border-teal-100 bg-white/50 shadow-sm backdrop-blur-md xl:block" />
 
-        {/* Bolinhas flutuantes */}
-        <div className="absolute top-12 left-14 size-2.5 rounded-full bg-amber-400/80" />
-        <div className="absolute top-24 right-32 size-3 rounded-full bg-violet-500/55" />
-        <div className="absolute top-1/2 right-16 size-2.5 rounded-full bg-blue-500/55" />
-        <div className="absolute bottom-20 left-24 size-3 rounded-full bg-amber-500/70" />
-        <div className="absolute right-1/3 bottom-16 size-2 rounded-full bg-violet-400/60" />
-        <div className="absolute top-1/3 left-1/2 size-2 rounded-full bg-blue-400/65" />
+        <div className="absolute top-12 left-14 size-2.5 rounded-full bg-purple-700/60" />
+        <div className="absolute top-24 right-32 size-3 rounded-full bg-blue-600/50" />
+        <div className="absolute top-1/2 right-16 size-2.5 rounded-full bg-teal-500/70" />
+        <div className="absolute bottom-20 left-24 size-3 rounded-full bg-blue-500/60" />
+        <div className="absolute right-1/3 bottom-16 size-2 rounded-full bg-purple-500/60" />
+        <div className="absolute top-1/3 left-1/2 size-2 rounded-full bg-teal-400/70" />
 
-        <div className="relative z-10 grid gap-7 xl:grid-cols-[1fr_380px] xl:items-center 2xl:grid-cols-[1fr_460px] 2xl:gap-12">
+        <div className="relative z-10 grid gap-5 xl:grid-cols-[1fr_360px] xl:items-center 2xl:grid-cols-[1fr_420px] 2xl:gap-8">
           <div className="max-w-3xl">
-            <span className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-white/80 px-3 py-1.5 text-xs font-bold text-amber-600 shadow-sm backdrop-blur-md">
-              <Crown className="size-4" />
-              Plano Premium
+            <span className="inline-flex items-center gap-2 rounded-full border border-purple-200 bg-white/80 px-3 py-1.5 text-xs font-bold shadow-sm backdrop-blur-md">
+              <Crown className="size-4" stroke={premiumIconStroke} />
+              <span className="bg-linear-to-r from-purple-800 via-blue-700 to-teal-500 bg-clip-text text-transparent">
+                Plano Premium
+              </span>
             </span>
 
-            <h1 className="mt-5 text-3xl font-bold tracking-tight text-blue-950 md:text-4xl xl:max-w-2xl xl:text-4xl 2xl:text-6xl">
+            <h1 className="mt-4 text-2xl font-bold tracking-tight text-blue-950 md:text-3xl xl:max-w-2xl xl:text-4xl 2xl:text-5xl">
               Olá, {firstName}. Sua preparação agora é estratégica.
             </h1>
 
-            <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-500 md:text-base md:leading-7 2xl:text-lg 2xl:leading-8">
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-500 md:text-base md:leading-7 2xl:text-base 2xl:leading-7">
               Acesse análises avançadas, recomendações inteligentes, trilhas
               personalizadas e uma experiência preparada para redação com IA.
             </p>
 
-            <div className="mt-6 flex flex-col gap-3 md:flex-row md:items-center">
+            <div className="mt-5 flex flex-col gap-3 md:flex-row md:items-center">
               <button
                 type="button"
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-amber-500 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-amber-600 hover:shadow-md"
+                className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-linear-to-r from-purple-800 via-blue-700 to-teal-500 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md hover:shadow-purple-700/25"
               >
                 Ver análise premium
                 <ArrowRight className="size-4" />
@@ -156,51 +191,51 @@ const PremiumDashboard = ({ student }) => {
 
               <button
                 type="button"
-                className="inline-flex items-center justify-center rounded-full border border-amber-200 bg-white/80 px-5 py-3 text-sm font-bold text-amber-700 shadow-sm backdrop-blur-md transition hover:-translate-y-0.5 hover:bg-amber-50 hover:shadow-md"
+                className="inline-flex cursor-pointer items-center justify-center rounded-full border border-purple-200 bg-white/80 px-5 py-2.5 text-sm font-bold shadow-sm backdrop-blur-md transition hover:-translate-y-0.5 hover:bg-purple-50 hover:shadow-md"
               >
-                Acessar trilhas
+                <span className="bg-linear-to-r from-purple-800 via-blue-700 to-teal-500 bg-clip-text text-transparent">
+                  Acessar trilhas
+                </span>
               </button>
             </div>
           </div>
 
-          {/* Card do plano */}
-          <aside className="rounded-3xl border border-amber-200 bg-white/80 p-4 shadow-sm backdrop-blur-md md:p-5 2xl:p-6">
+          <aside className="rounded-3xl border border-purple-200 bg-white/80 p-4 shadow-sm backdrop-blur-md 2xl:p-5">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-500">
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-purple-500">
                   Seu plano
                 </p>
 
-                <h2 className="mt-2 text-2xl font-bold text-blue-950 2xl:text-3xl">
+                <h2 className="mt-1.5 bg-linear-to-r from-purple-800 via-blue-700 to-teal-500 bg-clip-text text-2xl font-bold text-transparent 2xl:text-3xl">
                   Premium
                 </h2>
               </div>
 
-              <div className="grid size-12 place-items-center rounded-2xl bg-amber-50 text-amber-600">
-                <Crown className="size-5" />
-              </div>
+              <PremiumIconBox Icon={Crown} />
             </div>
 
-            <div className="mt-5 rounded-2xl bg-amber-50/80 p-4">
-              <div className="mb-2 flex items-center justify-between text-xs font-bold text-slate-500">
-                <span>Análise avançada</span>
-                <span>Ativa</span>
-              </div>
+            <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl bg-purple-50/70 p-3">
+              <span className="text-xs font-bold text-slate-500">
+                Análise avançada
+              </span>
 
-              <div className="h-2 overflow-hidden rounded-full bg-amber-100">
-                <div className="h-full w-[88%] rounded-full bg-amber-500" />
-              </div>
+              <span className="rounded-full bg-white px-3 py-1 text-xs font-bold shadow-sm">
+                <span className="bg-linear-to-r from-purple-800 via-blue-700 to-teal-500 bg-clip-text text-transparent">
+                  Ativa
+                </span>
+              </span>
             </div>
 
-            <div className="mt-4 grid grid-cols-2 gap-3">
-              <div className="rounded-2xl bg-amber-50/80 p-3">
+            <div className="mt-3 grid grid-cols-2 gap-3">
+              <div className="rounded-2xl bg-purple-50/70 p-3">
                 <p className="text-xs font-medium text-slate-500">IA</p>
                 <p className="mt-1 text-sm font-bold text-blue-950">
                   Recomendações
                 </p>
               </div>
 
-              <div className="rounded-2xl bg-violet-50/70 p-3">
+              <div className="rounded-2xl bg-blue-50/70 p-3">
                 <p className="text-xs font-medium text-slate-500">Redação</p>
                 <p className="mt-1 text-sm font-bold text-blue-950">
                   Correção IA
@@ -216,15 +251,15 @@ const PremiumDashboard = ({ student }) => {
         {stats.map(({ label, value, helper, Icon }) => (
           <article
             key={label}
-            className="rounded-3xl border border-amber-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-amber-300 hover:shadow-md 2xl:p-6"
+            className="rounded-3xl border border-purple-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-purple-300 hover:bg-purple-50/30 hover:shadow-md 2xl:p-6"
           >
             <div className="flex items-center justify-between gap-3">
-              <div className="grid size-11 place-items-center rounded-2xl bg-amber-50 text-amber-600">
-                <Icon className="size-5" />
-              </div>
+              <PremiumIconBox Icon={Icon} />
 
-              <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-bold text-amber-700">
-                {helper}
+              <span className="rounded-full bg-purple-50 px-3 py-1 text-xs font-bold">
+                <span className="bg-linear-to-r from-purple-800 via-blue-700 to-teal-500 bg-clip-text text-transparent">
+                  {helper}
+                </span>
               </span>
             </div>
 
@@ -239,11 +274,10 @@ const PremiumDashboard = ({ student }) => {
 
       {/* Conteúdo principal */}
       <section className="grid gap-5 xl:grid-cols-[1fr_380px] 2xl:grid-cols-[1fr_460px] 2xl:gap-8">
-        {/* Análise avançada */}
-        <div className="rounded-3xl border border-amber-200 bg-white p-5 shadow-sm md:rounded-4xl md:p-6 2xl:p-7">
+        <div className="rounded-3xl border border-purple-200 bg-white p-5 shadow-sm md:rounded-4xl md:p-6 2xl:p-7">
           <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-600">
+              <p className="bg-linear-to-r from-purple-800 via-blue-700 to-teal-500 bg-clip-text text-xs font-bold uppercase tracking-[0.2em] text-transparent">
                 Inteligência premium
               </p>
 
@@ -259,9 +293,11 @@ const PremiumDashboard = ({ student }) => {
 
             <button
               type="button"
-              className="inline-flex items-center justify-center rounded-full border border-amber-200 px-4 py-2.5 text-xs font-bold text-amber-700 transition hover:bg-amber-50"
+              className="inline-flex cursor-pointer items-center justify-center rounded-full border border-purple-200 px-4 py-2.5 text-xs font-bold transition hover:bg-purple-50"
             >
-              Ver relatório premium
+              <span className="bg-linear-to-r from-purple-800 via-blue-700 to-teal-500 bg-clip-text text-transparent">
+                Ver relatório premium
+              </span>
             </button>
           </div>
 
@@ -269,13 +305,11 @@ const PremiumDashboard = ({ student }) => {
             {advancedInsights.map((item) => (
               <article
                 key={item.title}
-                className="rounded-3xl border border-amber-200 bg-white p-4 transition hover:border-amber-300 hover:bg-amber-50/40 md:p-5"
+                className="rounded-3xl border border-purple-200 bg-white p-4 transition hover:border-purple-300 hover:bg-purple-50/40 md:p-5"
               >
                 <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="grid size-11 shrink-0 place-items-center rounded-2xl bg-amber-50 text-amber-600">
-                      <Brain className="size-5" />
-                    </div>
+                    <PremiumIconBox Icon={Brain} />
 
                     <div>
                       <h3 className="text-sm font-bold text-blue-950 md:text-base">
@@ -288,15 +322,17 @@ const PremiumDashboard = ({ student }) => {
                     </div>
                   </div>
 
-                  <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-bold text-amber-700">
-                    {item.percent}%
+                  <span className="rounded-full bg-purple-50 px-3 py-1 text-xs font-bold">
+                    <span className="bg-linear-to-r from-purple-800 via-blue-700 to-teal-500 bg-clip-text text-transparent">
+                      {item.percent}%
+                    </span>
                   </span>
                 </div>
 
                 <div className="mt-4">
-                  <div className="h-2 overflow-hidden rounded-full bg-amber-100">
+                  <div className="h-2 overflow-hidden rounded-full bg-purple-100">
                     <div
-                      className="h-full rounded-full bg-amber-500"
+                      className="h-full rounded-full bg-linear-to-r from-purple-800 via-blue-700 to-teal-500"
                       style={{ width: `${item.percent}%` }}
                     />
                   </div>
@@ -308,10 +344,8 @@ const PremiumDashboard = ({ student }) => {
 
         {/* Lateral */}
         <aside className="space-y-5 md:space-y-6">
-          <article className="rounded-3xl border border-amber-200 bg-white p-5 shadow-sm md:rounded-4xl 2xl:p-6">
-            <div className="grid size-11 place-items-center rounded-2xl bg-amber-50 text-amber-600">
-              <WandSparkles className="size-5" />
-            </div>
+          <article className="rounded-3xl border border-purple-200 bg-white p-5 shadow-sm md:rounded-4xl 2xl:p-6">
+            <PremiumIconBox Icon={WandSparkles} />
 
             <h3 className="mt-5 text-lg font-bold text-blue-950">
               Próxima recomendação
@@ -322,13 +356,13 @@ const PremiumDashboard = ({ student }) => {
               Esse é o ponto com maior potencial de ganho.
             </p>
 
-            <div className="mt-5 flex items-center gap-2 rounded-2xl bg-amber-50/80 p-3 text-sm font-bold text-slate-700">
-              <Zap className="size-4 text-amber-600" />
+            <div className="mt-5 flex items-center gap-2 rounded-2xl bg-purple-50/80 p-3 text-sm font-bold text-slate-700">
+              <Zap className="size-4" stroke={premiumIconStroke} />
               Prioridade alta esta semana
             </div>
           </article>
 
-          <article className="rounded-3xl border border-amber-200 bg-linear-to-br from-amber-400 via-amber-500 to-orange-500 p-5 text-white shadow-sm md:rounded-4xl 2xl:p-6">
+          <article className="rounded-3xl border border-purple-200 bg-linear-to-r from-purple-800 via-blue-700 to-teal-500 p-5 text-white shadow-sm md:rounded-4xl 2xl:p-6">
             <div className="grid size-11 place-items-center rounded-2xl bg-white/20">
               <Crown className="size-5" />
             </div>
@@ -342,16 +376,16 @@ const PremiumDashboard = ({ student }) => {
 
             <button
               type="button"
-              className="mt-5 inline-flex w-full items-center justify-center rounded-full bg-white px-4 py-2.5 text-xs font-bold text-amber-700 transition hover:bg-amber-50 md:w-auto"
+              className="mt-5 inline-flex w-full cursor-pointer items-center justify-center rounded-full bg-white px-4 py-2.5 text-xs font-bold transition hover:bg-purple-50 md:w-auto"
             >
-              Explorar premium
+              <span className="bg-linear-to-r from-purple-800 via-blue-700 to-teal-500 bg-clip-text text-transparent">
+                Explorar premium
+              </span>
             </button>
           </article>
 
-          <article className="rounded-3xl border border-violet-100 bg-white p-5 shadow-sm md:rounded-4xl 2xl:p-6">
-            <div className="grid size-11 place-items-center rounded-2xl bg-violet-50 text-violet-600">
-              <FileText className="size-5" />
-            </div>
+          <article className="rounded-3xl border border-blue-100 bg-white p-5 shadow-sm md:rounded-4xl 2xl:p-6">
+            <PremiumIconBox Icon={FileText} />
 
             <h3 className="mt-5 text-lg font-bold text-blue-950">
               Redação com IA
@@ -364,7 +398,7 @@ const PremiumDashboard = ({ student }) => {
 
             <button
               type="button"
-              className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-violet-600 px-4 py-2.5 text-xs font-bold text-white transition hover:bg-violet-700 md:w-auto"
+              className="mt-5 inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-linear-to-r from-purple-800 via-blue-700 to-teal-500 px-4 py-2.5 text-xs font-bold text-white transition hover:shadow-md hover:shadow-purple-700/25 md:w-auto"
             >
               Abrir redações
               <ArrowRight className="size-4" />
@@ -374,10 +408,10 @@ const PremiumDashboard = ({ student }) => {
       </section>
 
       {/* Recursos premium */}
-      <section className="rounded-3xl border border-amber-200 bg-white p-5 shadow-sm md:rounded-4xl md:p-6 2xl:p-7">
+      <section className="rounded-3xl border border-purple-200 bg-white p-5 shadow-sm md:rounded-4xl md:p-6 2xl:p-7">
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-600">
+            <p className="bg-linear-to-r from-purple-800 via-blue-700 to-teal-500 bg-clip-text text-xs font-bold uppercase tracking-[0.2em] text-transparent">
               Recursos premium
             </p>
 
@@ -388,9 +422,11 @@ const PremiumDashboard = ({ student }) => {
 
           <button
             type="button"
-            className="inline-flex items-center justify-center rounded-full border border-amber-200 px-4 py-2.5 text-xs font-bold text-amber-700 transition hover:bg-amber-50"
+            className="inline-flex cursor-pointer items-center justify-center rounded-full border border-purple-200 px-4 py-2.5 text-xs font-bold transition hover:bg-purple-50"
           >
-            Ver recursos
+            <span className="bg-linear-to-r from-purple-800 via-blue-700 to-teal-500 bg-clip-text text-transparent">
+              Ver recursos
+            </span>
           </button>
         </div>
 
@@ -398,11 +434,9 @@ const PremiumDashboard = ({ student }) => {
           {premiumFeatures.map(({ title, description, Icon }) => (
             <article
               key={title}
-              className="rounded-3xl border border-amber-200 bg-white p-4 transition hover:border-amber-300 hover:bg-amber-50/40 md:p-5"
+              className="rounded-3xl border border-purple-200 bg-white p-4 transition hover:border-purple-300 hover:bg-purple-50/40 md:p-5"
             >
-              <div className="grid size-11 place-items-center rounded-2xl bg-amber-50 text-amber-600">
-                <Icon className="size-5" />
-              </div>
+              <PremiumIconBox Icon={Icon} />
 
               <h3 className="mt-4 text-sm font-bold text-blue-950 md:text-base">
                 {title}
@@ -417,10 +451,10 @@ const PremiumDashboard = ({ student }) => {
       </section>
 
       {/* Simulados e trilhas */}
-      <section className="rounded-3xl border border-amber-200 bg-white p-5 shadow-sm md:rounded-4xl md:p-6 2xl:p-7">
+      <section className="rounded-3xl border border-purple-200 bg-white p-5 shadow-sm md:rounded-4xl md:p-6 2xl:p-7">
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-600">
+            <p className="bg-linear-to-r from-purple-800 via-blue-700 to-teal-500 bg-clip-text text-xs font-bold uppercase tracking-[0.2em] text-transparent">
               Próximas ações
             </p>
 
@@ -431,9 +465,11 @@ const PremiumDashboard = ({ student }) => {
 
           <button
             type="button"
-            className="inline-flex items-center justify-center rounded-full border border-amber-200 px-4 py-2.5 text-xs font-bold text-amber-700 transition hover:bg-amber-50"
+            className="inline-flex cursor-pointer items-center justify-center rounded-full border border-purple-200 px-4 py-2.5 text-xs font-bold transition hover:bg-purple-50"
           >
-            Ver tudo
+            <span className="bg-linear-to-r from-purple-800 via-blue-700 to-teal-500 bg-clip-text text-transparent">
+              Ver tudo
+            </span>
           </button>
         </div>
 
@@ -441,11 +477,9 @@ const PremiumDashboard = ({ student }) => {
           {simulations.map((simulation) => (
             <article
               key={simulation.title}
-              className="rounded-3xl border border-amber-200 bg-white p-4 transition hover:border-amber-300 hover:bg-amber-50/40 md:p-5"
+              className="rounded-3xl border border-purple-200 bg-white p-4 transition hover:border-purple-300 hover:bg-purple-50/40 md:p-5"
             >
-              <div className="grid size-11 place-items-center rounded-2xl bg-amber-50 text-amber-600">
-                <Medal className="size-5" />
-              </div>
+              <PremiumIconBox Icon={Medal} />
 
               <h3 className="mt-4 text-sm font-bold text-blue-950 md:text-base">
                 {simulation.title}
@@ -456,13 +490,15 @@ const PremiumDashboard = ({ student }) => {
               </p>
 
               <div className="mt-4 flex items-center justify-between gap-3">
-                <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-bold text-amber-700">
-                  {simulation.status}
+                <span className="rounded-full bg-purple-50 px-3 py-1 text-xs font-bold">
+                  <span className="bg-linear-to-r from-purple-800 via-blue-700 to-teal-500 bg-clip-text text-transparent">
+                    {simulation.status}
+                  </span>
                 </span>
 
                 <button
                   type="button"
-                  className="grid size-9 place-items-center rounded-full bg-amber-500 text-white transition hover:bg-amber-600"
+                  className="grid size-9 cursor-pointer place-items-center rounded-full bg-linear-to-r from-purple-800 via-blue-700 to-teal-500 text-white transition hover:shadow-md hover:shadow-purple-700/25"
                 >
                   <ArrowRight className="size-4" />
                 </button>
@@ -470,9 +506,9 @@ const PremiumDashboard = ({ student }) => {
 
               {simulation.progress > 0 && (
                 <div className="mt-4">
-                  <div className="h-2 overflow-hidden rounded-full bg-amber-100">
+                  <div className="h-2 overflow-hidden rounded-full bg-purple-100">
                     <div
-                      className="h-full rounded-full bg-amber-500"
+                      className="h-full rounded-full bg-linear-to-r from-purple-800 via-blue-700 to-teal-500"
                       style={{ width: `${simulation.progress}%` }}
                     />
                   </div>
