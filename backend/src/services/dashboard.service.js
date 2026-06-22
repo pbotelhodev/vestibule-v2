@@ -27,15 +27,19 @@ const listStudentResults = async (studentId) => {
   });
 
   /* === Total de simulados === */
-  const totalSimulations = studentResults.length;
+  const totalSimulations = studentResults?.length ?? 0;
 
   /* === Taxa média de acertos ===  */
-  const txMediaAcerto = studentResults.map((sim) => sim.percentage);
+  const txMediaAcerto = studentResults?.map((sim) => sim.percentage) ?? [];
   const totalMedia = txMediaAcerto.reduce((tot, act) => tot + act, 0);
-  const averageHitRate = (totalMedia / txMediaAcerto.length).toFixed(0);
+  const averageHitRate =
+    txMediaAcerto.length > 0
+      ? (totalMedia / txMediaAcerto.length).toFixed(0)
+      : 0;
 
   /* === Tempo estudado */
-  const allTimesSpents = studentResults.map((sim) => sim.timeSpentSeconds);
+  const allTimesSpents =
+    studentResults?.map((sim) => sim.timeSpentSeconds) ?? [];
   const totalTimeSpent = allTimesSpents.reduce((tot, act) => tot + act, 0);
   const timeSpent = (seconds = 0) => {
     const totalSeconds = Number(seconds) || 0;
@@ -53,11 +57,45 @@ const listStudentResults = async (studentId) => {
     }
     return `${hours}h ${minutes}min`;
   };
+  const timeStudy = timeSpent(totalTimeSpent);
 
-  const timeStudy = timeSpent(totalTimeSpent)
+  /*  === Função que pega o plano do estudante  */
+  /* Função para saber qual plano o usuário está */
+  const planStudent = await dataBase.user.findFirst({
+    where: {
+      id: studentId,
+    },
+    select: { activePlan: true },
+  });
+  const verifyPlan = (plan) => {
+    if (plan === "FREE") {
+      return ["FREE"];
+    } else if (plan === "PRO") {
+      return ["FREE", "PRO"];
+    } else {
+      return ["FREE", "PRO", "PREMIUM"];
+    }
+  };
+  const allSimulations = await dataBase.simulation.findMany({
+    where: {
+      requiredPlan: {
+        in: verifyPlan(planStudent?.activePlan ?? "FREE"),
+      },
+    },
+    take: 6,
+    select: {
+      title: true,
+      description: true,
+      requiredPlan: true,
+    },
+  });
 
+  /* Retorno para o frontend */
   const allData = {
+    totalSimulations,
+    averageHitRate,
     timeStudy,
+    allSimulations,
   };
 
   return allData;

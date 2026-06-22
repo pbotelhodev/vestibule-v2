@@ -30,6 +30,12 @@ enum StudentType {
   INSTITUTIONAL
 }
 
+enum UserPlan {
+  FREE
+  PRO
+  PREMIUM
+}
+
 /**
  * Schemas db
  */
@@ -44,6 +50,7 @@ model User {
   email           String       @unique
   passwordHash    String?      @map("password_hash")
   role            UserRole     @default(STUDENT)
+  activePlan      UserPlan     @default(FREE) @map("active_plan")
   status          UserStatus   @default(ACTIVE)
   authProvider    AuthProvider @default(LOCAL) @map("auth_provider")
   googleId        String?      @unique @map("google_id")
@@ -89,11 +96,19 @@ enum RequiredPlan {
   PREMIUM
 }
 
+enum Difficulty {
+  EASY
+  MODERATE
+  DIFFICULT
+  EXPERT
+}
+
 model Simulation {
   id              String            @id @default(uuid())
   publicId        String            @unique @map("public_id")
   title           String
   description     String
+  difficulty      Difficulty        @default(EASY)
   subject         SimulationSubject
   originCode      String            @default("vest") @map("origin_code")
   requiredPlan    RequiredPlan      @default(FREE) @map("required_plan")
@@ -154,71 +169,71 @@ model Alternative {
   @@map("alternatives")
 }
 
-  model StudentSimulationResult {
-    id String @id @default(uuid())
-    studentId    String @map("student_id")
-    simulationId String @map("simulation_id")
-    publicId String            @map("public_id")
-    title    String
-    subject  SimulationSubject
-    totalQuestions Int   @map("total_questions")
-    correctAnswers Int   @map("correct_answers")
-    wrongAnswers   Int   @map("wrong_answers")
-    percentage     Float
-    score          Float
-    timePerQuestion        Int? @map("time_per_question")
-    timeSpentSeconds       Int  @map("time_spent_seconds")
-    totalSimulationSeconds Int  @map("total_simulation_seconds")
-    finishedAt DateTime @map("finished_at")
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
-    student    User       @relation(fields: [studentId], references: [id], onDelete: Cascade)
-    simulation Simulation @relation(fields: [simulationId], references: [id], onDelete: Cascade)
+model StudentSimulationResult {
+  id                     String            @id @default(uuid())
+  studentId              String            @map("student_id")
+  simulationId           String            @map("simulation_id")
+  publicId               String            @map("public_id")
+  title                  String
+  subject                SimulationSubject
+  totalQuestions         Int               @map("total_questions")
+  correctAnswers         Int               @map("correct_answers")
+  wrongAnswers           Int               @map("wrong_answers")
+  percentage             Float
+  score                  Float
+  timePerQuestion        Int?              @map("time_per_question")
+  timeSpentSeconds       Int               @map("time_spent_seconds")
+  totalSimulationSeconds Int               @map("total_simulation_seconds")
+  finishedAt             DateTime          @map("finished_at")
+  createdAt              DateTime          @default(now()) @map("created_at")
+  updatedAt              DateTime          @updatedAt @map("updated_at")
+  student                User              @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  simulation             Simulation        @relation(fields: [simulationId], references: [id], onDelete: Cascade)
 
-    answers StudentSimulationAnswer[]
+  answers StudentSimulationAnswer[]
 
-    @@unique([studentId, simulationId], map: "student_simulation_result_unique")
-    @@index([studentId])
-    @@index([simulationId])
-    @@index([publicId])
-    @@map("student_simulation_results")
-  }
+  @@unique([studentId, simulationId], map: "student_simulation_result_unique")
+  @@index([studentId])
+  @@index([simulationId])
+  @@index([publicId])
+  @@map("student_simulation_results")
+}
 
-  model StudentSimulationAnswer {
-    id String @id @default(uuid())
+model StudentSimulationAnswer {
+  id String @id @default(uuid())
 
-    resultId String @map("result_id")
+  resultId String @map("result_id")
 
-    questionId            String? @map("question_id")
-    selectedAlternativeId String? @map("selected_alternative_id")
-    correctAlternativeId  String? @map("correct_alternative_id")
-    questionOrder Int               @map("question_order")
-    subject       SimulationSubject
-    topic         String?
-    statement     String
-    studentAnswerText String? @map("student_answer_text")
-    correctAnswerText String? @map("correct_answer_text")
-    studentAnswerOrder Int? @map("student_answer_order")
-    correctAnswerOrder Int? @map("correct_answer_order")
-    isCorrect       Boolean @default(false) @map("is_correct")
-    markedForReview Boolean @default(false) @map("marked_for_review")
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
+  questionId            String?           @map("question_id")
+  selectedAlternativeId String?           @map("selected_alternative_id")
+  correctAlternativeId  String?           @map("correct_alternative_id")
+  questionOrder         Int               @map("question_order")
+  subject               SimulationSubject
+  topic                 String?
+  statement             String
+  studentAnswerText     String?           @map("student_answer_text")
+  correctAnswerText     String?           @map("correct_answer_text")
+  studentAnswerOrder    Int?              @map("student_answer_order")
+  correctAnswerOrder    Int?              @map("correct_answer_order")
+  isCorrect             Boolean           @default(false) @map("is_correct")
+  markedForReview       Boolean           @default(false) @map("marked_for_review")
+  createdAt             DateTime          @default(now()) @map("created_at")
+  updatedAt             DateTime          @updatedAt @map("updated_at")
 
-    result StudentSimulationResult @relation(fields: [resultId], references: [id], onDelete: Cascade)
+  result StudentSimulationResult @relation(fields: [resultId], references: [id], onDelete: Cascade)
 
-    question Question? @relation(fields: [questionId], references: [id], onDelete: SetNull)
+  question Question? @relation(fields: [questionId], references: [id], onDelete: SetNull)
 
-    selectedAlternative Alternative? @relation("SelectedAlternativeOnStudentAnswer", fields: [selectedAlternativeId], references: [id], onDelete: SetNull)
+  selectedAlternative Alternative? @relation("SelectedAlternativeOnStudentAnswer", fields: [selectedAlternativeId], references: [id], onDelete: SetNull)
 
-    correctAlternative Alternative? @relation("CorrectAlternativeOnStudentAnswer", fields: [correctAlternativeId], references: [id], onDelete: SetNull)
+  correctAlternative Alternative? @relation("CorrectAlternativeOnStudentAnswer", fields: [correctAlternativeId], references: [id], onDelete: SetNull)
 
-    @@index([resultId])
-    @@index([questionId])
-    @@index([selectedAlternativeId])
-    @@index([correctAlternativeId])
-    @@map("student_simulation_answers")
-  }
+  @@index([resultId])
+  @@index([questionId])
+  @@index([selectedAlternativeId])
+  @@index([correctAlternativeId])
+  @@map("student_simulation_answers")
+}
 
 /**
  * npx prisma validate      → confere se o schema está válido
