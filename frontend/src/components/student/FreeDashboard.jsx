@@ -13,49 +13,29 @@ import {
   Zap,
 } from "lucide-react";
 
-const stats = [
-  {
-    label: "Simulados feitos",
-    value: "03",
-    helper: "Neste mês",
-    Icon: BookOpenCheck,
-  },
-  {
-    label: "Taxa de acerto",
-    value: "68%",
-    helper: "Média geral",
-    Icon: Target,
-  },
-  {
-    label: "Tempo estudado",
-    value: "12h",
-    helper: "Últimos 7 dias",
-    Icon: Clock3,
-  },
-];
+import { data, useNavigate } from "react-router-dom";
 
-const freeSimulations = [
-  {
-    title: "ENEM — Matemática básica",
-    description: "Questões essenciais para treinar fundamentos.",
-    status: "Liberado",
-  },
-  {
-    title: "ENEM — Linguagens inicial",
-    description: "Interpretação, gêneros textuais e leitura.",
-    status: "Liberado",
-  },
-  {
-    title: "Ciências da Natureza",
-    description: "Disponível no plano Pro.",
-    status: "Bloqueado",
-    locked: true,
-  },
-];
-
-const FreeDashboard = ({ student }) => {
+const FreeDashboard = ({ data, student }) => {
   const firstName = student?.name?.split(" ")?.[0] || "Aluno";
+  const navigate = useNavigate();
 
+  const avarage = (data = 0) => {
+    if (data < 20) {
+      return "Necessário revisão";
+    } else if (data < 40) {
+      return "Abaixo da média geral";
+    } else if (data < 60) {
+      return "Desempenho regular";
+    } else if (data < 70) {
+      return "Dentro da média";
+    } else if (data < 80) {
+      return "Bom desempenho";
+    } else if (data < 90) {
+      return "Ótimo aproveitamento";
+    } else if (data < 100) {
+      return "Desempenho excelente!";
+    }
+  };
   return (
     <div className="space-y-5 md:space-y-6 xl:space-y-6 2xl:space-y-8">
       <section className="relative overflow-hidden rounded-[1.75rem] border border-violet-100 bg-white/95 p-4 shadow-sm backdrop-blur-xl sm:rounded-4xl sm:p-5 md:p-6 xl:p-6 2xl:p-7">
@@ -90,6 +70,7 @@ const FreeDashboard = ({ student }) => {
             <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
               <button
                 type="button"
+                onClick={() => navigate(`/student/simulados`)}
                 className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-violet-600 px-5 py-3 text-sm font-bold text-white shadow-sm shadow-violet-600/20 transition hover:-translate-y-0.5 hover:bg-violet-700 hover:shadow-lg hover:shadow-violet-600/25"
               >
                 Começar simulado grátis
@@ -98,6 +79,7 @@ const FreeDashboard = ({ student }) => {
 
               <button
                 type="button"
+                onClick={() => window.open(`/planos`, "_blank")}
                 className="inline-flex cursor-pointer items-center justify-center rounded-full border border-violet-100 bg-white/85 px-5 py-3 text-sm font-bold text-violet-700 shadow-sm backdrop-blur-md transition hover:-translate-y-0.5 hover:bg-violet-50 hover:shadow-md"
               >
                 Comparar planos
@@ -155,29 +137,67 @@ const FreeDashboard = ({ student }) => {
         </div>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {stats.map(({ label, value, helper, Icon }) => (
-          <article
-            key={label}
-            className="group rounded-3xl border border-violet-100 bg-white/95 p-4 shadow-sm shadow-violet-950/5 transition hover:-translate-y-0.5 hover:border-violet-200 hover:shadow-md sm:rounded-3xl sm:p-5 2xl:p-6"
-          >
-            <div className="flex items-center justify-between gap-3">
-              <div className="grid size-11 place-items-center rounded-2xl border border-violet-100 bg-violet-50 text-violet-600 transition group-hover:bg-violet-600 group-hover:text-white">
-                <Icon className="size-5" />
-              </div>
-
-              <span className="rounded-full border border-violet-100 bg-violet-50 px-3 py-1 text-xs font-bold text-violet-600">
-                {helper}
-              </span>
+      <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {/* Card 1 */}
+        <article className="group rounded-3xl border border-violet-100 bg-white/95 p-4 shadow-sm shadow-violet-950/5 transition hover:-translate-y-0.5 hover:border-violet-200 hover:shadow-md sm:rounded-3xl sm:p-5 2xl:p-6">
+          <div className="flex items-center justify-between gap-3">
+            <div className="grid size-11 place-items-center rounded-2xl border border-violet-100 bg-violet-50 text-violet-600 transition group-hover:bg-violet-600 group-hover:text-white">
+              <BookOpenCheck className="size-5" />
             </div>
 
-            <p className="mt-5 text-3xl font-bold tracking-tight text-blue-950 2xl:text-4xl">
-              {value}
-            </p>
+            <span className="rounded-full border border-violet-100 bg-violet-50 px-3 py-1 text-xs font-bold text-violet-600">
+              Neste mês
+            </span>
+          </div>
 
-            <p className="mt-1 text-sm font-medium text-slate-500">{label}</p>
-          </article>
-        ))}
+          <p className="mt-5 text-3xl font-bold tracking-tight text-blue-950 2xl:text-4xl">
+            {data?.totalSimulations}
+          </p>
+
+          <p className="mt-1 text-sm font-medium text-slate-500">
+            Simulados feitos
+          </p>
+        </article>
+        {/* Card 2 */}
+        <article className="group rounded-3xl border border-violet-100 bg-white/95 p-4 shadow-sm shadow-violet-950/5 transition hover:-translate-y-0.5 hover:border-violet-200 hover:shadow-md sm:rounded-3xl sm:p-5 2xl:p-6">
+          <div className="flex items-center justify-between gap-3">
+            <div className="grid size-11 place-items-center rounded-2xl border border-violet-100 bg-violet-50 text-violet-600 transition group-hover:bg-violet-600 group-hover:text-white">
+              <Target className="size-5" />
+            </div>
+
+            <span className="rounded-full border border-violet-100 bg-violet-50 px-3 py-1 text-xs font-bold text-violet-600">
+              {avarage(90 /* data?.averageHitRate */)}
+            </span>
+          </div>
+
+          <p className="mt-5 text-3xl font-bold tracking-tight text-blue-950 2xl:text-4xl">
+            {data?.averageHitRate}%
+          </p>
+
+          <p className="mt-1 text-sm font-medium text-slate-500">
+            Taxa de acertos
+          </p>
+        </article>
+        {/* Card 3 */}
+        <article className="group rounded-3xl border border-violet-100 bg-white/95 p-4 shadow-sm shadow-violet-950/5 transition hover:-translate-y-0.5 hover:border-violet-200 hover:shadow-md sm:rounded-3xl sm:p-5 2xl:p-6">
+          <div className="flex items-center justify-between gap-3">
+            <div className="grid size-11 place-items-center rounded-2xl border border-violet-100 bg-violet-50 text-violet-600 transition group-hover:bg-violet-600 group-hover:text-white">
+              <Clock3 className="size-5" />
+            </div>
+
+            <span className="rounded-full border border-violet-100 bg-violet-50 px-3 py-1 text-xs font-bold text-violet-600">
+              Últimos 7 dias
+            </span>
+          </div>
+
+          <p className="mt-5 text-3xl font-bold tracking-tight text-blue-950 2xl:text-4xl">
+            {data?.timeStudy}
+          </p>
+
+          <p className="mt-1 text-sm font-medium text-slate-500">
+            Tempo estudado
+          </p>
+        </article>
       </section>
 
       <section className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_22rem] 2xl:grid-cols-[minmax(0,1fr)_28rem] 2xl:gap-8 min-[2200px]:grid-cols-[minmax(0,1fr)_32rem]">
@@ -200,6 +220,7 @@ const FreeDashboard = ({ student }) => {
 
             <button
               type="button"
+              onClick={() => navigate(`/student/simulados`)}
               className="inline-flex w-fit cursor-pointer items-center justify-center rounded-full border border-violet-100 bg-white px-4 py-2.5 text-xs font-bold text-violet-600 shadow-sm transition hover:bg-violet-50"
             >
               Ver todos
@@ -207,7 +228,7 @@ const FreeDashboard = ({ student }) => {
           </div>
 
           <div className="mt-6 space-y-3">
-            {freeSimulations.map((simulation) => (
+            {data?.allSimulations.map((simulation) => (
               <article
                 key={simulation.title}
                 className={[
@@ -217,56 +238,33 @@ const FreeDashboard = ({ student }) => {
                     : "border-violet-100 bg-white hover:-translate-y-0.5 hover:border-violet-200 hover:bg-violet-50/30 hover:shadow-md",
                 ].join(" ")}
               >
-                <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                  <div className="flex items-start gap-3">
-                    <div
-                      className={[
-                        "grid size-11 shrink-0 place-items-center rounded-2xl border shadow-sm",
-                        simulation.locked
-                          ? "border-slate-200 bg-white text-slate-400"
-                          : "border-violet-100 bg-violet-50 text-violet-600",
-                      ].join(" ")}
-                    >
-                      {simulation.locked ? (
-                        <Lock className="size-5" />
-                      ) : (
-                        <BookOpenCheck className="size-5" />
-                      )}
+                <div className="flex flex-col gap-4 borderrounded-3xl p-4 lg:flex-row lg:items-center lg:justify-between">
+                  {/* Bloco da Esquerda: Ícone + Textos */}
+                  <div className="flex items-start gap-3 min-w-0">
+                    <div className="grid size-11 shrink-0 place-items-center rounded-2xl border border-violet-100 bg-violet-50 text-violet-600 shadow-sm">
+                      <BookOpenCheck className="size-5" />
                     </div>
 
-                    <div className="min-w-0">
-                      <h3 className="text-sm font-bold text-blue-950 md:text-base">
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-sm font-bold text-blue-950 md:text-base truncate">
                         {simulation.title}
                       </h3>
-
-                      <p className="mt-1 text-xs leading-5 text-slate-500 md:text-sm md:leading-6">
+                      <p className="mt-1 text-xs leading-5 text-slate-500 md:text-sm md:leading-6 line-clamp-2">
                         {simulation.description}
                       </p>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between gap-3 lg:justify-end">
-                    <span
-                      className={[
-                        "rounded-full border px-3 py-1 text-xs font-bold",
-                        simulation.locked
-                          ? "border-slate-200 bg-white text-slate-400"
-                          : "border-violet-100 bg-violet-50 text-violet-600",
-                      ].join(" ")}
-                    >
-                      {simulation.status}
-                    </span>
-
+                  {/* Bloco da Direita: Botão de Ação */}
+                  <div className="flex items-center justify-end shrink-0 self-end lg:self-center">
                     <button
                       type="button"
-                      className={[
-                        "grid size-9 place-items-center rounded-full transition",
-                        simulation.locked
-                          ? "cursor-not-allowed bg-slate-100 text-slate-400"
-                          : "cursor-pointer bg-violet-600 text-white hover:bg-violet-700",
-                      ].join(" ")}
+                      onClick={() =>
+                        navigate(`/student/simulados/${simulation.publicId}`)
+                      }
+                      className="grid size-10 place-items-center rounded-full bg-violet-600 text-white transition hover:bg-violet-700 cursor-pointer shadow-sm hover:scale-105 active:scale-95"
                     >
-                      <ArrowRight className="size-4" />
+                      <ArrowRight className="size-5" />
                     </button>
                   </div>
                 </div>
@@ -332,6 +330,7 @@ const FreeDashboard = ({ student }) => {
 
               <button
                 type="button"
+                onClick={() => window.open(`/planos`, "_blank")}
                 className="mt-5 inline-flex w-full cursor-pointer items-center justify-center rounded-full bg-white px-4 py-2.5 text-xs font-bold text-violet-700 shadow-sm transition hover:-translate-y-0.5 hover:bg-violet-50 md:w-auto"
               >
                 Ver planos

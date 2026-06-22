@@ -47,15 +47,15 @@ const listStudentResults = async (studentId) => {
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     if (hours === 0 && minutes === 0) {
-      return "0min";
+      return "0 min";
     }
     if (hours === 0) {
-      return `${minutes}min`;
+      return `${minutes} min`;
     }
     if (minutes === 0) {
       return `${hours}h`;
     }
-    return `${hours}h ${minutes}min`;
+    return `${hours}h ${minutes} min`;
   };
   const timeStudy = timeSpent(totalTimeSpent);
 
@@ -87,6 +87,8 @@ const listStudentResults = async (studentId) => {
       title: true,
       description: true,
       requiredPlan: true,
+      publicId: true,
+      subject: true
     },
   });
 

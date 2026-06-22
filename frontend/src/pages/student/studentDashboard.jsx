@@ -33,9 +33,9 @@ const StudentDashboard = () => {
   const currentPlan = student?.planActive || "free";
 
   const dashboards = {
-    free: <FreeDashboard data={data} />,
-    pro: <ProDashboard data={data} />,
-    premium: <PremiumDashboard data={data} />,
+    free: <FreeDashboard data={data} student={student} />,
+    pro: <ProDashboard data={data} student={student} />,
+    premium: <PremiumDashboard data={data} student={student} />,
   };
 
   return dashboards[currentPlan] || dashboards.free;
