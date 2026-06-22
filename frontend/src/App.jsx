@@ -16,7 +16,8 @@ import StudentSimulations from "./pages/student/studentSimulations";
 import StudentSimulationResult from "./pages/student/studentSimulationResult";
 import StudentPerformance from "./pages/student/studentPerformance";
 import StudentProfile from "./pages/student/studentProfile";
-import StudentSettings from "./pages/student/studentSettings";
+import StudentRanking from "./pages/student/studentRanking.jsx";
+import StudentTrail from "./pages/student/studentTrail.jsx";
 /* Teacher */
 
 /* Admin */
@@ -48,7 +49,8 @@ export default function App() {
         />
         <Route path="desempenho" element={<StudentPerformance />} />
         <Route path="perfil" element={<StudentProfile />} />
-        <Route path="configuracoes" element={<StudentSettings />} />
+        <Route path="ranking" element={<StudentRanking />} />
+        <Route path="trilhas" element={<StudentTrail />} />
       </Route>
 
       {/* Teacher */}

@@ -6,7 +6,8 @@ import {
   LayoutDashboard,
   LogOut,
   Menu,
-  Settings,
+  Route as RouteIcon,
+  Trophy,
   UserRound,
   X,
 } from "lucide-react";
@@ -20,33 +21,51 @@ import LogoPro from "../../assets/logo-blue.png";
 import LogoPremium from "../../assets/logo-premium.png";
 
 const PREMIUM_GRADIENT_ID = "premium-aside-gradient";
+
 const planThemes = planThemesAside;
+
+const planRank = {
+  free: 1,
+  pro: 2,
+  premium: 3,
+};
 
 const navItems = [
   {
     label: "Painel",
     path: "/student/dashboard",
     Icon: LayoutDashboard,
+    minPlan: 1,
   },
   {
     label: "Simulados",
     path: "/student/simulados",
     Icon: BookOpenCheck,
+    minPlan: 1,
   },
   {
     label: "Desempenho",
     path: "/student/desempenho",
     Icon: BarChart3,
+    minPlan: 1,
+  },
+  {
+    label: "Ranking",
+    path: "/student/ranking",
+    Icon: Trophy,
+    minPlan: 1,
+  },
+  {
+    label: "Trilhas",
+    path: "/student/trilhas",
+    Icon: RouteIcon,
+    minPlan: 3,
   },
   {
     label: "Meu perfil",
     path: "/student/perfil",
     Icon: UserRound,
-  },
-  {
-    label: "Configurações",
-    path: "/student/configuracoes",
-    Icon: Settings,
+    minPlan: 1,
   },
 ];
 
@@ -62,6 +81,16 @@ const planLogos = {
   premium: LogoPremium,
 };
 
+const getVisibleNavItems = (items, currentPlanKey) => {
+  const currentRank = planRank[currentPlanKey] ?? planRank.free;
+
+  return items.filter((item) => {
+    const requiredRank = item.minPlan ?? planRank.free;
+
+    return currentRank >= requiredRank;
+  });
+};
+
 const PanelAside = ({ student }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -69,6 +98,8 @@ const PanelAside = ({ student }) => {
   const currentTheme = planThemes[currentPlanKey] || planThemes.free;
   const currentPlan = planLabels[currentPlanKey] || planLabels.free;
   const currentLogo = planLogos[currentPlanKey] || planLogos.free;
+
+  const visibleNavItems = getVisibleNavItems(navItems, currentPlanKey);
 
   const iconStroke = currentTheme.gradientIcon
     ? `url(#${PREMIUM_GRADIENT_ID})`
@@ -269,7 +300,7 @@ const PanelAside = ({ student }) => {
         </div>
 
         <nav className="relative z-10 mt-6 flex flex-1 flex-col gap-1 px-3">
-          {navItems.map(({ label, path, Icon }) => (
+          {visibleNavItems.map(({ label, path, Icon }) => (
             <NavLink
               key={path}
               to={path}
@@ -280,7 +311,7 @@ const PanelAside = ({ student }) => {
               }}
               className={({ isActive }) =>
                 [
-                  "flex h-12 w-full items-center overflow-hidden rounded-2xl px-1.5 text-sm font-bold",
+                  "flex h-11 w-full items-center overflow-hidden rounded-2xl px-1.5 text-sm font-bold",
                   "transition-[gap,background-color,color,box-shadow,transform] duration-200 ease-out hover:-translate-y-0.5",
                   itemLayout,
                   isActive
@@ -290,7 +321,7 @@ const PanelAside = ({ student }) => {
               }
             >
               <span className="grid size-11 shrink-0 place-items-center">
-                <Icon className="size-5" />
+                <Icon className="size-5"  />
               </span>
 
               <span
