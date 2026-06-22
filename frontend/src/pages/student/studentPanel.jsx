@@ -21,7 +21,7 @@ const StudentPanel = () => {
     studentType: "INDIVIDUAL",
     updatedAt: new Date().toISOString(),
     /* Inserir no db essa coluna */
-    planActive: "premium",
+    planActive: "free",
   };
 
   return (

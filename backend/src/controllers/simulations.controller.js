@@ -6,7 +6,7 @@ const {
   getSimulationData,
 } = require("../services/simulations.service");
 
-/* Service da listagem de simulados */
+/* Controller da listagem de simulados */
 const listSimulations = async (req, res) => {
   try {
     const simulations = await listPublishedSimulations(req.query.studentId);
@@ -21,6 +21,7 @@ const listSimulations = async (req, res) => {
   }
 };
 
+/* Controller que pega o simulado pelo publicId */
 const getSimulation = async (req, res) => {
   try {
     const { publicId } = req.params;
@@ -42,6 +43,7 @@ const getSimulation = async (req, res) => {
   }
 };
 
+/* Controller que envia os dados e retorna corrigido */
 const submitSimulationResult = async (req, res) => {
   try {
     const result = await correctResultSimulation(

@@ -99,6 +99,7 @@ const getSimulationByPublicId = async (publicId) => {
   });
 };
 
+/* Funcão que corrige a prova e guarda */
 const correctResultSimulation = async (submission, publicId, studentId) => {
   const data = await dataBase.simulation.findUnique({
     where: { publicId },
@@ -274,6 +275,7 @@ const correctResultSimulation = async (submission, publicId, studentId) => {
   return { summary: upsertData, correction: correctedQuestions };
 };
 
+/* Função que coleta os dados já corrigidos para página de resultados */
 const getSimulationData = async (publicId, studentId) => {
   //Encontrar o as respostas do simulado pelo publicId e studentId
   const dataResultSimulation = await dataBase.studentSimulationResult.findFirst(
