@@ -15,27 +15,12 @@ import {
 
 import { data, useNavigate } from "react-router-dom";
 
+import { avarage } from "../../services/dashboard/servicesDash";
+
 const FreeDashboard = ({ data, student }) => {
   const firstName = student?.name?.split(" ")?.[0] || "Aluno";
   const navigate = useNavigate();
 
-  const avarage = (data = 0) => {
-    if (data < 20) {
-      return "Necessário revisão";
-    } else if (data < 40) {
-      return "Abaixo da média geral";
-    } else if (data < 60) {
-      return "Desempenho regular";
-    } else if (data < 70) {
-      return "Dentro da média";
-    } else if (data < 80) {
-      return "Bom desempenho";
-    } else if (data < 90) {
-      return "Ótimo aproveitamento";
-    } else if (data < 100) {
-      return "Desempenho excelente!";
-    }
-  };
   return (
     <div className="space-y-5 md:space-y-6 xl:space-y-6 2xl:space-y-8">
       <section className="relative overflow-hidden rounded-[1.75rem] border border-violet-100 bg-white/95 p-4 shadow-sm backdrop-blur-xl sm:rounded-4xl sm:p-5 md:p-6 xl:p-6 2xl:p-7">
@@ -166,7 +151,7 @@ const FreeDashboard = ({ data, student }) => {
             </div>
 
             <span className="rounded-full border border-violet-100 bg-violet-50 px-3 py-1 text-xs font-bold text-violet-600">
-              {avarage(90 /* data?.averageHitRate */)}
+              {avarage(data?.averageHitRate)}
             </span>
           </div>
 

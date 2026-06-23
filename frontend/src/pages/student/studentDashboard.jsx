@@ -20,15 +20,15 @@ const StudentDashboard = () => {
     const dashboardData = async () => {
       try {
         const response = await getStudentResults(student.id);
-        setData(response)
+        setData(response);
         console.log(response);
-        return 
+        return;
       } catch (error) {
         console.error(error);
       }
     };
     dashboardData();
-  }, []);
+  }, [student.id]);
 
   const currentPlan = student?.planActive || "free";
 

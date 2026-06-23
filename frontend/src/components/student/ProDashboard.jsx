@@ -9,86 +9,50 @@ import {
   LineChart,
   ShieldCheck,
   Target,
+  TrendingDown,
   TrendingUp,
   Trophy,
 } from "lucide-react";
 
 import { useNavigate } from "react-router-dom";
 
-const stats = [
-  {
-    label: "Simulados feitos",
-    value: "18",
-    helper: "Neste mês",
-    Icon: BookOpenCheck,
-  },
-  {
-    label: "Taxa de acerto",
-    value: "74%",
-    helper: "Média geral",
-    Icon: Target,
-  },
-  {
-    label: "Tempo estudado",
-    value: "26h",
-    helper: "Últimos 7 dias",
-    Icon: Clock3,
-  },
-  {
-    label: "Evolução",
-    value: "+21%",
-    helper: "Último mês",
-    Icon: TrendingUp,
-  },
-];
+import { avarage } from "../../services/dashboard/servicesDash";
 
-const subjects = [
+const fallbackSubjects = [
   {
     name: "Linguagens",
-    percent: 81,
-    status: "Melhor matéria",
+    percent: 0,
+    status: "Aguardando dados",
   },
   {
     name: "Matemática",
-    percent: 72,
-    status: "Em evolução",
+    percent: 0,
+    status: "Aguardando dados",
   },
   {
     name: "Humanas",
-    percent: 76,
-    status: "Boa média",
+    percent: 0,
+    status: "Aguardando dados",
   },
   {
     name: "Natureza",
-    percent: 64,
-    status: "Precisa revisar",
+    percent: 0,
+    status: "Aguardando dados",
   },
 ];
 
-const simulations = [
-  {
-    title: "ENEM — Matemática e suas Tecnologias",
-    description: "Simulado com foco em resolução, gráficos e funções.",
-    status: "Continuar",
-    progress: 72,
-  },
-  {
-    title: "ENEM — Linguagens completo",
-    description: "Interpretação, gramática, literatura e gêneros textuais.",
-    status: "Finalizado",
-    progress: 100,
-  },
-  {
-    title: "Ciências Humanas — Revisão geral",
-    description: "História, geografia, filosofia e sociologia.",
-    status: "Disponível",
-    progress: 0,
-  },
-];
-
-const ProDashboard = ({ student }) => {
+const ProDashboard = ({ data, student }) => {
   const firstName = student?.name?.split(" ")?.[0] || "Aluno";
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
+  const totalSimulations = data?.totalSimulations ?? 0;
+  const averageHitRate = data?.averageHitRate ?? 0;
+  const timeStudy = data?.timeStudy ?? "0 min";
+  const allSimulations = data?.allSimulations ?? [];
+  const subjects = data?.bySubject?.length ? data.bySubject : fallbackSubjects;
+
+  const trendTendence = data?.trending?.tendence ?? "+";
+  const trendProjection = data?.trending?.projection ?? "0%";
 
   return (
     <div className="space-y-5 md:space-y-6 xl:space-y-6 2xl:space-y-8">
@@ -170,7 +134,7 @@ const ProDashboard = ({ student }) => {
               </span>
 
               <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-blue-700 shadow-sm">
-                +21%
+                {trendProjection}
               </span>
             </div>
 
@@ -193,28 +157,91 @@ const ProDashboard = ({ student }) => {
 
       {/* Stats */}
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {stats.map(({ label, value, helper, Icon }) => (
-          <article
-            key={label}
-            className="rounded-3xl border border-blue-100 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-200 hover:bg-blue-50/30 hover:shadow-md 2xl:p-6"
-          >
-            <div className="flex items-center justify-between gap-3">
-              <div className="grid size-11 place-items-center rounded-2xl bg-blue-50 text-blue-700">
-                <Icon className="size-5" />
-              </div>
-
-              <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700">
-                {helper}
-              </span>
+        {/* Card 1 */}
+        <article className="group rounded-3xl border border-blue-100 bg-white/95 p-4 shadow-sm shadow-blue-950/5 transition hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md sm:rounded-3xl sm:p-5 2xl:p-6">
+          <div className="flex items-center justify-between gap-3">
+            <div className="grid size-11 place-items-center rounded-2xl border border-blue-100 bg-blue-50 text-blue-700 transition group-hover:bg-blue-700 group-hover:text-white">
+              <BookOpenCheck className="size-5" />
             </div>
 
-            <p className="mt-5 text-3xl font-bold tracking-tight text-blue-950 2xl:text-4xl">
-              {value}
-            </p>
+            <span className="rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700">
+              Neste mês
+            </span>
+          </div>
 
-            <p className="mt-1 text-sm font-medium text-slate-500">{label}</p>
-          </article>
-        ))}
+          <p className="mt-5 text-3xl font-bold tracking-tight text-blue-950 2xl:text-4xl">
+            {totalSimulations}
+          </p>
+
+          <p className="mt-1 text-sm font-medium text-slate-500">
+            Simulados feitos
+          </p>
+        </article>
+
+        {/* Card 2 */}
+        <article className="group rounded-3xl border border-blue-100 bg-white/95 p-4 shadow-sm shadow-blue-950/5 transition hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md sm:rounded-3xl sm:p-5 2xl:p-6">
+          <div className="flex items-center justify-between gap-3">
+            <div className="grid size-11 place-items-center rounded-2xl border border-blue-100 bg-blue-50 text-blue-700 transition group-hover:bg-blue-700 group-hover:text-white">
+              <Target className="size-5" />
+            </div>
+
+            <span className="rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700">
+              {avarage(averageHitRate)}
+            </span>
+          </div>
+
+          <p className="mt-5 text-3xl font-bold tracking-tight text-blue-950 2xl:text-4xl">
+            {averageHitRate}%
+          </p>
+
+          <p className="mt-1 text-sm font-medium text-slate-500">
+            Taxa de acertos
+          </p>
+        </article>
+
+        {/* Card 3 */}
+        <article className="group rounded-3xl border border-blue-100 bg-white/95 p-4 shadow-sm shadow-blue-950/5 transition hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md sm:rounded-3xl sm:p-5 2xl:p-6">
+          <div className="flex items-center justify-between gap-3">
+            <div className="grid size-11 place-items-center rounded-2xl border border-blue-100 bg-blue-50 text-blue-700 transition group-hover:bg-blue-700 group-hover:text-white">
+              <Clock3 className="size-5" />
+            </div>
+
+            <span className="rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700">
+              Últimos 7 dias
+            </span>
+          </div>
+
+          <p className="mt-5 text-3xl font-bold tracking-tight text-blue-950 2xl:text-4xl">
+            {timeStudy}
+          </p>
+
+          <p className="mt-1 text-sm font-medium text-slate-500">
+            Tempo estudado
+          </p>
+        </article>
+
+        {/* Card 4 */}
+        <article className="group rounded-3xl border border-blue-100 bg-white/95 p-4 shadow-sm shadow-blue-950/5 transition hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md sm:rounded-3xl sm:p-5 2xl:p-6">
+          <div className="flex items-center justify-between gap-3">
+            <div className="grid size-11 place-items-center rounded-2xl border border-blue-100 bg-blue-50 text-blue-700 transition group-hover:bg-blue-700 group-hover:text-white">
+              {trendTendence === "+" ? (
+                <TrendingUp className="size-5" />
+              ) : (
+                <TrendingDown className="size-5" />
+              )}
+            </div>
+
+            <span className="rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700">
+              Último mês
+            </span>
+          </div>
+
+          <p className="mt-5 text-3xl font-bold tracking-tight text-blue-950 2xl:text-4xl">
+            {trendProjection}
+          </p>
+
+          <p className="mt-1 text-sm font-medium text-slate-500">Evolução</p>
+        </article>
       </section>
 
       {/* Conteúdo principal */}
@@ -238,6 +265,7 @@ const ProDashboard = ({ student }) => {
 
             <button
               type="button"
+              onClick={() => navigate("/student/desempenho")}
               className="inline-flex cursor-pointer items-center justify-center rounded-full border border-blue-100 px-4 py-2.5 text-xs font-bold text-blue-700 transition hover:bg-blue-50"
             >
               Relatório completo
@@ -296,13 +324,17 @@ const ProDashboard = ({ student }) => {
             </h3>
 
             <p className="mt-2 text-sm leading-6 text-slate-500">
-              Seu desempenho está subindo em Linguagens e Humanas. Natureza
-              merece uma revisão mais focada nesta semana.
+              Acompanhe sua evolução por matéria e use seus simulados recentes
+              para identificar onde revisar primeiro.
             </p>
 
             <div className="mt-5 flex items-center gap-2 rounded-2xl bg-blue-50/70 p-3 text-sm font-bold text-slate-700">
-              <TrendingUp className="size-4 text-blue-700" />
-              +21% de evolução mensal
+              {trendTendence === "+" ? (
+                <TrendingUp className="size-4 text-blue-700" />
+              ) : (
+                <TrendingDown className="size-4 text-blue-700" />
+              )}
+              {trendProjection} de evolução mensal
             </div>
           </article>
 
@@ -320,6 +352,7 @@ const ProDashboard = ({ student }) => {
 
             <button
               type="button"
+              onClick={() => navigate("/student/desempenho")}
               className="mt-5 inline-flex w-full cursor-pointer items-center justify-center rounded-full bg-white px-4 py-2.5 text-xs font-bold text-blue-700 transition hover:bg-blue-50 md:w-auto"
             >
               Explorar recursos
@@ -336,15 +369,15 @@ const ProDashboard = ({ student }) => {
             </h3>
 
             <p className="mt-2 text-sm leading-6 text-slate-500">
-              Continue pelo simulado de Matemática para atualizar sua análise de
-              desempenho.
+              Escolha um novo simulado para atualizar sua análise de desempenho.
             </p>
 
             <button
               type="button"
+              onClick={() => navigate("/student/simulados")}
               className="mt-5 inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-blue-700 px-4 py-2.5 text-xs font-bold text-white transition hover:bg-blue-800 md:w-auto"
             >
-              Continuar
+              Escolher simulado
               <ArrowRight className="size-4" />
             </button>
           </article>
@@ -374,48 +407,52 @@ const ProDashboard = ({ student }) => {
         </div>
 
         <div className="mt-6 grid gap-3 lg:grid-cols-3">
-          {simulations.map((simulation) => (
-            <article
-              key={simulation.title}
-              className="rounded-3xl border border-blue-100 bg-white p-4 transition hover:border-blue-200 hover:bg-blue-50/40 md:p-5"
-            >
-              <div className="grid size-11 place-items-center rounded-2xl bg-blue-50 text-blue-700">
-                <BookOpenCheck className="size-5" />
-              </div>
+          {allSimulations.length > 0 ? (
+            allSimulations.map((simulation) => (
+              <article
+                key={simulation.publicId}
+                className="rounded-3xl border border-blue-100 bg-white p-4 transition hover:border-blue-200 hover:bg-blue-50/40 md:p-5"
+              >
+                <div className="grid size-11 place-items-center rounded-2xl bg-blue-50 text-blue-700">
+                  <BookOpenCheck className="size-5" />
+                </div>
 
-              <h3 className="mt-4 text-sm font-bold text-blue-950 md:text-base">
-                {simulation.title}
-              </h3>
+                <h3 className="mt-4 line-clamp-2 text-sm font-bold text-blue-950 md:text-base">
+                  {simulation.title}
+                </h3>
 
-              <p className="mt-2 text-xs leading-5 text-slate-500 md:text-sm">
-                {simulation.description}
+                <p className="mt-2 line-clamp-2 text-xs leading-5 text-slate-500 md:text-sm">
+                  {simulation.description}
+                </p>
+
+                <div className="mt-4 flex items-center justify-between gap-3">
+                  <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700">
+                    {simulation.requiredPlan}
+                  </span>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      navigate(`/student/simulados/${simulation.publicId}`)
+                    }
+                    className="grid size-9 cursor-pointer place-items-center rounded-full bg-blue-700 text-white transition hover:bg-blue-800"
+                  >
+                    <ArrowRight className="size-4" />
+                  </button>
+                </div>
+              </article>
+            ))
+          ) : (
+            <article className="rounded-3xl border border-blue-100 bg-blue-50/40 p-5 lg:col-span-3">
+              <p className="text-sm font-bold text-blue-950">
+                Nenhum simulado disponível no momento.
               </p>
 
-              <div className="mt-4 flex items-center justify-between gap-3">
-                <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700">
-                  {simulation.status}
-                </span>
-
-                <button
-                  type="button"
-                  className="grid size-9 cursor-pointer place-items-center rounded-full bg-blue-700 text-white transition hover:bg-blue-800"
-                >
-                  <ArrowRight className="size-4" />
-                </button>
-              </div>
-
-              {simulation.progress > 0 && (
-                <div className="mt-4">
-                  <div className="h-2 overflow-hidden rounded-full bg-blue-100">
-                    <div
-                      className="h-full rounded-full bg-blue-700"
-                      style={{ width: `${simulation.progress}%` }}
-                    />
-                  </div>
-                </div>
-              )}
+              <p className="mt-1 text-xs leading-5 text-slate-500">
+                Quando novos simulados forem publicados, eles aparecerão aqui.
+              </p>
             </article>
-          ))}
+          )}
         </div>
       </section>
     </div>
