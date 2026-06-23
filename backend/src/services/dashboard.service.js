@@ -46,7 +46,7 @@ const listStudentResults = async (studentId) => {
       ? (totalMedia / txMediaAcerto.length).toFixed(0)
       : 0;
 
-  /* === Tempo estudado */
+  /* === Tempo estudado === */
   const sevenDays = new Date();
   sevenDays.setDate(sevenDays.getDate() - 7);
 
@@ -167,13 +167,70 @@ const listStudentResults = async (studentId) => {
     mediaEvolution >= 0 ? `+${mediaEvolution}%` : `${mediaEvolution}%`;
   const tendence = mediaEvolution >= 0 ? `+` : `-`;
 
+  /* === Média de acerto por matéria === */
+
+  // Dicionário para corrigir acentos e padronizar a escrita das 14 matérias
+  const corrigirMaterias = {
+    matematica: "Matemática",
+    linguas: "Linguas",
+    "ciencias_humanas": "Ciências Humanas",
+    "ciencias_natureza": "Ciências da Natureza",
+    historia: "História",
+    geografia: "Geografia",
+    filosofia: "Filosofia",
+    sociologia: "Sociologia",
+    biologia: "Biologia",
+    quimica: "Química",
+    fisica: "Física",
+    literatura: "Literatura",
+    artes: "Artes",
+    redacao: "Redação",
+  };
+
+  const totalPorMateria = studentResults.reduce((acc, sim) => {
+    if (!sim.subject || sim.percentage === undefined) return acc;
+
+    // 1. Padroniza o termo do banco para minúsculo e sem espaços nas pontas
+    const termoBanco = sim.subject.trim().toLowerCase();
+
+    // 2. Procura no dicionário. Se achar, usa o nome acentuado.
+    // Se não achar (Fallback), apenas deixa a primeira letra maiúscula.
+    const subject =
+      corrigirMaterias[termoBanco] ||
+      termoBanco.charAt(0).toUpperCase() + termoBanco.slice(1);
+
+    // Se for a primeira vez que a matéria aparece, cria a estrutura inicial
+    if (!acc[subject]) {
+      acc[subject] = { somaPorcentagem: 0, quantity: 0 };
+    }
+
+    // Soma a porcentagem atual e adiciona +1 na contagem
+    acc[subject].somaPorcentagem += sim.percentage;
+    acc[subject].quantity += 1;
+
+    return acc;
+  }, {});
+
+  // Agora transformamos o objeto acima em um formato perfeito para o Frontend mapear
+  const subjectsPerformance = Object.keys(totalPorMateria).map((subject) => {
+    const dados = totalPorMateria[subject];
+    const media = (dados.somaPorcentagem / dados.quantity).toFixed(0);
+
+    return {
+      name: subject,
+      percent: Number(media),
+      totalSimulations: dados.quantity,
+    };
+  });
+
   /* ===== Retorno para o frontend ====== */
   const allData = {
     totalSimulations,
-    averageHitRate,
+    averageHitRate: Number(averageHitRate),
     timeStudy,
     allSimulations,
     trending: { projection, tendence },
+    subjectsPerformance,
   };
 
   return allData;

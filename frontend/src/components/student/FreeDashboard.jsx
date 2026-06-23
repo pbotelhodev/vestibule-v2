@@ -15,7 +15,7 @@ import {
 
 import { data, useNavigate } from "react-router-dom";
 
-import { avarage } from "../../services/dashboard/servicesDash";
+import { average } from "../../services/dashboard/servicesDash";
 
 const FreeDashboard = ({ data, student }) => {
   const firstName = student?.name?.split(" ")?.[0] || "Aluno";
@@ -151,7 +151,7 @@ const FreeDashboard = ({ data, student }) => {
             </div>
 
             <span className="rounded-full border border-violet-100 bg-violet-50 px-3 py-1 text-xs font-bold text-violet-600">
-              {avarage(data?.averageHitRate)}
+              {average(data?.averageHitRate)}
             </span>
           </div>
 

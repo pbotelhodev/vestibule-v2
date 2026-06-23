@@ -21,7 +21,6 @@ const StudentDashboard = () => {
       try {
         const response = await getStudentResults(student.id);
         setData(response);
-        console.log(response);
         return;
       } catch (error) {
         console.error(error);
