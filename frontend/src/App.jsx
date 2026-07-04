@@ -11,13 +11,15 @@ import Plans from "./pages/Plans";
 /* Student */
 import StudentPanel from "./pages/student/studentPanel";
 import StudentDashboard from "./pages/student/studentDashboard";
+import StudentRelatorio from "./pages/student/studentRelatorio";
 import StudentSimulation from "./pages/student/studentSimulation";
 import StudentSimulations from "./pages/student/studentSimulations";
 import StudentSimulationResult from "./pages/student/studentSimulationResult";
 import StudentPerformance from "./pages/student/studentPerformance";
 import StudentProfile from "./pages/student/studentProfile";
-import StudentRanking from "./pages/student/studentRanking.jsx";
-import StudentTrail from "./pages/student/studentTrail.jsx";
+import StudentRanking from "./pages/student/studentRanking";
+import StudentTrail from "./pages/student/studentTrail";
+
 /* Teacher */
 
 /* Admin */
@@ -39,8 +41,11 @@ export default function App() {
       {/* Student */}
       <Route path="/student" element={<StudentPanel />}>
         <Route index element={<Navigate to="/student/dashboard" replace />} />
-        <Route path="dashboard" element={<StudentDashboard />} />{" "}
-        {/* Acessa o Dashboard do aluno */}
+
+        <Route path="dashboard" element={<StudentDashboard />}>
+          <Route path="relatorio" element={<StudentRelatorio />} />
+        </Route>
+
         <Route path="simulados" element={<StudentSimulations />} />
         <Route path="simulados/:simulationId" element={<StudentSimulation />} />
         <Route

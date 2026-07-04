@@ -181,3 +181,27 @@ export const getFastRead = (metrics) => {
     },
   ];
 };
+
+export const subjectLabels = {
+  matematica: "Matemática",
+  linguas: "Linguagens",
+  portugues: "Português",
+  literatura: "Literatura",
+  ingles: "Inglês",
+  espanhol: "Espanhol",
+  artes: "Artes",
+  historia: "História",
+  geografia: "Geografia",
+  filosofia: "Filosofia",
+  sociologia: "Sociologia",
+  biologia: "Biologia",
+  quimica: "Química",
+  fisica: "Física",
+  redacao: "Redação",
+  "ciencias-humanas": "Ciências Humanas",
+  ciencias_humanas: "Ciências Humanas",
+  "ciencias-natureza": "Ciências da Natureza",
+  ciencias_natureza: "Ciências da Natureza",
+  geral: "Geral",
+};
+

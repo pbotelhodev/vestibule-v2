@@ -1,4 +1,12 @@
-import { BookOpenCheck, Brain, Sparkles, Target, Timer, TrendingDown, TrendingUp } from "lucide-react";
+import {
+  BookOpenCheck,
+  Brain,
+  Sparkles,
+  Target,
+  Timer,
+  TrendingDown,
+  TrendingUp,
+} from "lucide-react";
 
 export const planRank = {
   free: 1,
@@ -118,42 +126,6 @@ export const subjects = [
     color: "bg-slate-800",
     textColor: "text-slate-700",
   },
-  {
-    name: "Física",
-    percent: 59,
-    status: "Precisa revisar",
-    color: "bg-slate-800",
-    textColor: "text-slate-700",
-  },
-  {
-    name: "Física",
-    percent: 59,
-    status: "Precisa revisar",
-    color: "bg-slate-800",
-    textColor: "text-slate-700",
-  },
-  {
-    name: "Física",
-    percent: 59,
-    status: "Precisa revisar",
-    color: "bg-slate-800",
-    textColor: "text-slate-700",
-  },
-  {
-    name: "Física",
-    percent: 59,
-    status: "Precisa revisar",
-    color: "bg-slate-800",
-    textColor: "text-slate-700",
-  },
-  {
-    name: "Física",
-    percent: 59,
-    status: "Precisa revisar",
-    color: "bg-slate-800",
-    textColor: "text-slate-700",
-  },
-  
 ];
 
 export const history = [
@@ -192,5 +164,32 @@ export const premiumInsights = [
     title: "Meta sugerida",
     description: "Buscar acerto geral acima de 80% nos próximos simulados.",
     Icon: Brain,
+  },
+];
+
+export const fallbackSubjects = [
+  {
+    name: "Linguagens",
+    percent: 0,
+    totalSimulations: 0,
+    status: "Aguardando dados",
+  },
+  {
+    name: "Matemática",
+    percent: 0,
+    totalSimulations: 0,
+    status: "Aguardando dados",
+  },
+  {
+    name: "Humanas",
+    percent: 0,
+    totalSimulations: 0,
+    status: "Aguardando dados",
+  },
+  {
+    name: "Natureza",
+    percent: 0,
+    totalSimulations: 0,
+    status: "Aguardando dados",
   },
 ];

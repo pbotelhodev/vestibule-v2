@@ -20,6 +20,8 @@ const StudentDashboard = () => {
     const dashboardData = async () => {
       try {
         const response = await getStudentResults(student.id);
+        +
+        
         setData(response);
         return;
       } catch (error) {

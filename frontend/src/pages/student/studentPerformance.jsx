@@ -1,18 +1,10 @@
-/* eslint-disable no-unused-vars */
 import {
-  ArrowRight,
   BarChart3,
-  BookOpenCheck,
-  Brain,
   CheckCircle2,
   Crown,
   LineChart,
   Lock,
   Medal,
-  Sparkles,
-  Target,
-  Timer,
-  TrendingDown,
   TrendingUp,
 } from "lucide-react";
 import { useOutletContext } from "react-router-dom";
@@ -20,16 +12,18 @@ import { useOutletContext } from "react-router-dom";
 const PREMIUM_GRADIENT_ID = "performance-premium-gradient";
 const premiumIconStroke = `url(#${PREMIUM_GRADIENT_ID})`;
 
+import { getStudentResults } from "../../services/dashboard/callDashboard";
+
 import {
   planRank,
   planThemes,
-  stats,
-  subjects,
   history,
   premiumInsights,
+  fallbackSubjects,
 } from "../../services/performace/servicesPerformace";
-import { act } from "react";
+import { useState, useEffect, useMemo } from "react";
 
+// eslint-disable-next-line no-unused-vars
 const PerformanceIconBox = ({ Icon, theme }) => {
   return (
     <div
@@ -49,6 +43,8 @@ const PerformanceIconBox = ({ Icon, theme }) => {
 const StudentPerformance = () => {
   const { student } = useOutletContext();
 
+  const [dataSimulations, setDataSimulations] = useState(null);
+
   const currentPlan = student?.planActive?.toLowerCase() || "free";
   const theme = planThemes[currentPlan] ?? planThemes.free;
   const rank = planRank[currentPlan] ?? planRank.free;
@@ -56,8 +52,58 @@ const StudentPerformance = () => {
   const hasProAccess = rank >= planRank.pro;
   const hasPremiumAccess = rank >= planRank.premium;
 
-  const metaStudent = 750;
-  const actuallyMeta = 670;
+  const metaStudent = 900;
+  const actuallyScore = dataSimulations?.averageHitRate * 10 || 0;
+  const percentage = dataSimulations?.averageHitRate || 0;
+  const studentId = student?.id;
+
+  const bestSubject =
+    dataSimulations?.subjectsPerformance?.reduce((best, subject) => {
+      if (!best || subject.percent > best.percent) {
+        return subject;
+      }
+      return best;
+    }, null) || 0;
+
+  const worstSubject =
+    dataSimulations?.subjectsPerformance?.reduce((worst, subject) => {
+      if (!worst || subject.percent < worst.percent) {
+        return subject;
+      }
+      return worst;
+    }, null) || 0;
+
+  const verifyNextGoal = (score) => {
+    if (score >= 95) return "Mantenha esse desempenho!";
+    if (score >= 80) return "Manter o acerto geral acima de 95%";
+    if (score >= 60) return "Superar a média de acerto geral de 80%";
+    if (score >= 40) return "Subir a média de acerto geral acima de 60%";
+    return "Subir a média de acerto geral para 40%";
+  };
+
+  const subjects = useMemo(() => {
+    const rawSubjects = Array.isArray(dataSimulations?.subjectsPerformance)
+      ? dataSimulations?.subjectsPerformance
+      : [];
+    if (rawSubjects.length === 0) {
+      return fallbackSubjects;
+    }
+    return rawSubjects;
+  }, [dataSimulations]);
+
+  //Puxa os dados dos resultados de simulados do usuário logado.
+  useEffect(() => {
+    if (!studentId) return;
+    const dashboardData = async () => {
+      try {
+        const response = await getStudentResults(studentId);
+        setDataSimulations(response);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    dashboardData();
+  }, [studentId]);
 
   return (
     <section className="relative mx-auto flex w-full max-w-450 flex-col gap-4 px-3 py-3 sm:px-5 sm:py-4 lg:px-6 xl:gap-5 xl:px-6 xl:py-5 2xl:px-8 2xl:py-7 min-[2200px]:max-w-495 min-[2200px]:px-10">
@@ -100,47 +146,75 @@ const StudentPerformance = () => {
 
             <span
               className={[
-                "inline-flex w-fit items-center gap-2 rounded-full px-3 py-2 text-xs font-bold",
+                "inline-flex w-auto whitespace-nowrap items-center gap-2 rounded-full px-3 py-2 text-[10px] font-bold",
                 theme.softBg,
                 theme.textStrong,
               ].join(" ")}
             >
               <BarChart3 className="size-4" />
-              Geral 76%
+              {percentage || 0}% Geral
+              {/* Média geral do usuário vindo do backend ou averageHitRate */}
             </span>
           </div>
 
           <div className="mt-6 max-h-72 space-y-5 overflow-y-auto overscroll-contain pr-2 sm:max-h-80 xl:max-h-88 2xl:max-h-96 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-200 [&::-webkit-scrollbar-track]:bg-transparent">
-            {subjects.map((subject) => (
-              <div key={subject.name}>
-                <div className="mb-2 flex items-center justify-between gap-3">
-                  <div>
-                    <strong className="text-sm font-bold text-blue-950">
-                      {subject.name}
-                    </strong>
+            {subjects.map((subject) => {
+              const percent = Number(subject.percent) || 0;
+              const safePercent = Math.min(Math.max(percent, 0), 100);
+              const colorPercent =
+                safePercent >= 90
+                  ? "bg-green-600"
+                  : safePercent >= 75
+                    ? "bg-blue-600"
+                    : safePercent >= 60
+                      ? "bg-orange-500"
+                      : safePercent >= 40
+                        ? "bg-yellow-500"
+                        : "bg-red-500";
+              const colorText =
+                safePercent >= 90
+                  ? "text-green-600"
+                  : safePercent >= 75
+                    ? "text-blue-600"
+                    : safePercent >= 60
+                      ? "text-orange-600"
+                      : safePercent >= 40
+                        ? "text-yellow-600"
+                        : "text-red-600";
 
-                    <p className="mt-0.5 text-xs font-medium text-slate-400">
-                      {subject.status}
-                    </p>
+              return (
+                <div key={subject.name}>
+                  <div className="mb-2 flex items-center justify-between gap-3">
+                    <div>
+                      <strong className="text-sm font-bold text-blue-950">
+                        {subject.name}
+                      </strong>
+
+                      <p className="mt-0.5 text-xs font-medium text-slate-400">
+                        {subject.totalSimulations === 1
+                          ? `${subject.totalSimulations} simulado`
+                          : `${subject.totalSimulations} simulados`}
+                      </p>
+                    </div>
+
+                    <span
+                      className={["text-sm font-bold", colorText].join(" ")}
+                    >
+                      {safePercent}%
+                    </span>
                   </div>
 
-                  <span
-                    className={["text-sm font-bold", subject.textColor].join(
-                      " ",
-                    )}
-                  >
-                    {subject.percent}%
-                  </span>
+                  <div className="h-2.5 overflow-hidden rounded-full bg-slate-100">
+                    <div
+                      className={["h-full rounded-full", colorPercent].join(
+                        " ",
+                      )}
+                      style={{ width: `${safePercent}%` }}
+                    />
+                  </div>
                 </div>
-
-                <div className="h-2.5 overflow-hidden rounded-full bg-slate-100">
-                  <div
-                    className={["h-full rounded-full", subject.color].join(" ")}
-                    style={{ width: `${subject.percent}%` }}
-                  />
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </article>
 
@@ -168,7 +242,9 @@ const StudentPerformance = () => {
                 </p>
 
                 <p className="mt-1 text-xs font-semibold text-blue-700">
-                  Biologia · 86%
+                  {bestSubject?.name
+                    ? `${bestSubject.name} · ${bestSubject.percent}%`
+                    : "Nenhum resultado ainda"}
                 </p>
               </div>
 
@@ -178,7 +254,9 @@ const StudentPerformance = () => {
                 </p>
 
                 <p className="mt-1 text-xs font-semibold text-slate-500">
-                  Física · 59%
+                  {worstSubject?.name
+                    ? `${worstSubject.name} · ${worstSubject.percent}%`
+                    : "Nenhum resultado ainda"}
                 </p>
               </div>
 
@@ -196,7 +274,8 @@ const StudentPerformance = () => {
                     theme.textStrong,
                   ].join(" ")}
                 >
-                  Acerto geral acima de 80%
+                  {verifyNextGoal(dataSimulations?.averageHitRate) ||
+                    "Nenhum resultado ainda"}
                 </p>
               </div>
             </div>
@@ -210,7 +289,7 @@ const StudentPerformance = () => {
                 </p>
 
                 <strong className="mt-2 flex items-end gap-2 text-4xl font-bold tracking-tight text-white sm:text-5xl xl:text-5xl 2xl:text-6xl min-[2200px]:text-7xl">
-                  <span>{actuallyMeta}</span>
+                  <span>{actuallyScore}</span>
 
                   <span className="pb-1 text-lg font-bold tracking-normal text-white/35 sm:text-xl xl:text-xl 2xl:pb-1.5 2xl:text-2xl min-[2200px]:text-3xl">
                     / {metaStudent}
@@ -218,7 +297,7 @@ const StudentPerformance = () => {
                 </strong>
 
                 <p className="mt-1 text-sm font-semibold text-white/60">
-                  pontos estimados
+                  pontos estimados para a meta
                 </p>
               </div>
 
@@ -234,7 +313,7 @@ const StudentPerformance = () => {
                   theme.gradient ? theme.progress : "bg-white",
                 ].join(" ")}
                 style={{
-                  width: `${metaStudent ? Math.min((actuallyMeta / metaStudent) * 100, 100) : 0}%`,
+                  width: `${metaStudent ? Math.min((actuallyScore / metaStudent) * 100, 100) : 0}%`,
                 }}
               />
             </div>

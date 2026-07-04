@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   ArrowRight,
   BarChart3,
@@ -13,13 +12,23 @@ import {
   Zap,
 } from "lucide-react";
 
-import { data, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { average } from "../../services/dashboard/servicesDash";
 
 const FreeDashboard = ({ data, student }) => {
-  const firstName = student?.name?.split(" ")?.[0] || "Aluno";
   const navigate = useNavigate();
+
+  const firstName = student?.name?.split(" ")?.[0] || "Aluno";
+
+  const allSimulations = Array.isArray(data?.allSimulations)
+    ? data.allSimulations
+    : [];
+
+  const totalSimulations = Number(data?.totalSimulations) || 0;
+  const averageHitRate = Number(data?.averageHitRate) || 0;
+  const timeStudy = data?.timeStudy || "0 min";
+  const releasedSimulationsCount = allSimulations.length;
 
   return (
     <div className="space-y-5 md:space-y-6 xl:space-y-6 2xl:space-y-8">
@@ -55,7 +64,7 @@ const FreeDashboard = ({ data, student }) => {
             <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
               <button
                 type="button"
-                onClick={() => navigate(`/student/simulados`)}
+                onClick={() => navigate("/student/simulados")}
                 className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-violet-600 px-5 py-3 text-sm font-bold text-white shadow-sm shadow-violet-600/20 transition hover:-translate-y-0.5 hover:bg-violet-700 hover:shadow-lg hover:shadow-violet-600/25"
               >
                 Começar simulado grátis
@@ -64,7 +73,7 @@ const FreeDashboard = ({ data, student }) => {
 
               <button
                 type="button"
-                onClick={() => window.open(`/planos`, "_blank")}
+                onClick={() => window.open("/planos", "_blank")}
                 className="inline-flex cursor-pointer items-center justify-center rounded-full border border-violet-100 bg-white/85 px-5 py-3 text-sm font-bold text-violet-700 shadow-sm backdrop-blur-md transition hover:-translate-y-0.5 hover:bg-violet-50 hover:shadow-md"
               >
                 Comparar planos
@@ -95,7 +104,9 @@ const FreeDashboard = ({ data, student }) => {
                   Simulados liberados
                 </span>
 
-                <strong className="text-xs font-bold text-violet-700">2</strong>
+                <strong className="text-xs font-bold text-violet-700">
+                  {String(releasedSimulationsCount).padStart(2, "0")}
+                </strong>
               </div>
 
               <div className="flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white/80 px-3 py-2.5">
@@ -123,7 +134,6 @@ const FreeDashboard = ({ data, student }) => {
       </section>
 
       <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {/* Card 1 */}
         <article className="group rounded-3xl border border-violet-100 bg-white/95 p-4 shadow-sm shadow-violet-950/5 transition hover:-translate-y-0.5 hover:border-violet-200 hover:shadow-md sm:rounded-3xl sm:p-5 2xl:p-6">
           <div className="flex items-center justify-between gap-3">
             <div className="grid size-11 place-items-center rounded-2xl border border-violet-100 bg-violet-50 text-violet-600 transition group-hover:bg-violet-600 group-hover:text-white">
@@ -136,14 +146,14 @@ const FreeDashboard = ({ data, student }) => {
           </div>
 
           <p className="mt-5 text-3xl font-bold tracking-tight text-blue-950 2xl:text-4xl">
-            {data?.totalSimulations}
+            {String(totalSimulations).padStart(2, "0")}
           </p>
 
           <p className="mt-1 text-sm font-medium text-slate-500">
             Simulados feitos
           </p>
         </article>
-        {/* Card 2 */}
+
         <article className="group rounded-3xl border border-violet-100 bg-white/95 p-4 shadow-sm shadow-violet-950/5 transition hover:-translate-y-0.5 hover:border-violet-200 hover:shadow-md sm:rounded-3xl sm:p-5 2xl:p-6">
           <div className="flex items-center justify-between gap-3">
             <div className="grid size-11 place-items-center rounded-2xl border border-violet-100 bg-violet-50 text-violet-600 transition group-hover:bg-violet-600 group-hover:text-white">
@@ -151,20 +161,20 @@ const FreeDashboard = ({ data, student }) => {
             </div>
 
             <span className="rounded-full border border-violet-100 bg-violet-50 px-3 py-1 text-xs font-bold text-violet-600">
-              {average(data?.averageHitRate)}
+              {average(averageHitRate)}
             </span>
           </div>
 
           <p className="mt-5 text-3xl font-bold tracking-tight text-blue-950 2xl:text-4xl">
-            {data?.averageHitRate}%
+            {averageHitRate}%
           </p>
 
           <p className="mt-1 text-sm font-medium text-slate-500">
             Taxa de acertos
           </p>
         </article>
-        {/* Card 3 */}
-        <article className="group rounded-3xl border border-violet-100 bg-white/95 p-4 shadow-sm shadow-violet-950/5 transition hover:-translate-y-0.5 hover:border-violet-200 hover:shadow-md sm:rounded-3xl sm:p-5 2xl:p-6">
+
+        <article className="group rounded-3xl border border-violet-100 bg-white/95 p-4 shadow-sm shadow-violet-950/5 transition hover:-translate-y-0.5 hover:border-violet-200 hover:shadow-md sm:rounded-3xl sm:p-5 2xl:p-6 md:col-span-2 lg:col-span-1">
           <div className="flex items-center justify-between gap-3">
             <div className="grid size-11 place-items-center rounded-2xl border border-violet-100 bg-violet-50 text-violet-600 transition group-hover:bg-violet-600 group-hover:text-white">
               <Clock3 className="size-5" />
@@ -176,7 +186,7 @@ const FreeDashboard = ({ data, student }) => {
           </div>
 
           <p className="mt-5 text-3xl font-bold tracking-tight text-blue-950 2xl:text-4xl">
-            {data?.timeStudy}
+            {timeStudy}
           </p>
 
           <p className="mt-1 text-sm font-medium text-slate-500">
@@ -205,57 +215,75 @@ const FreeDashboard = ({ data, student }) => {
 
             <button
               type="button"
-              onClick={() => navigate(`/student/simulados`)}
+              onClick={() => navigate("/student/simulados")}
               className="inline-flex w-fit cursor-pointer items-center justify-center rounded-full border border-violet-100 bg-white px-4 py-2.5 text-xs font-bold text-violet-600 shadow-sm transition hover:bg-violet-50"
             >
               Ver todos
             </button>
           </div>
 
-          <div className="mt-6 space-y-3">
-            {data?.allSimulations.map((simulation) => (
-              <article
-                key={simulation.title}
-                className={[
-                  "rounded-3xl border p-4 transition sm:rounded-3xl md:p-5",
-                  simulation.locked
-                    ? "border-slate-200 bg-slate-50/80"
-                    : "border-violet-100 bg-white hover:-translate-y-0.5 hover:border-violet-200 hover:bg-violet-50/30 hover:shadow-md",
-                ].join(" ")}
-              >
-                <div className="flex flex-col gap-4 borderrounded-3xl p-4 lg:flex-row lg:items-center lg:justify-between">
-                  {/* Bloco da Esquerda: Ícone + Textos */}
-                  <div className="flex items-start gap-3 min-w-0">
-                    <div className="grid size-11 shrink-0 place-items-center rounded-2xl border border-violet-100 bg-violet-50 text-violet-600 shadow-sm">
-                      <BookOpenCheck className="size-5" />
+          {allSimulations.length > 0 ? (
+            <div className="mt-6 space-y-3">
+              {allSimulations.map((simulation) => (
+                <article
+                  key={simulation.publicId || simulation.title}
+                  className={[
+                    "rounded-3xl border p-4 transition sm:rounded-3xl md:p-5",
+                    simulation.locked
+                      ? "border-slate-200 bg-slate-50/80"
+                      : "border-violet-100 bg-white hover:-translate-y-0.5 hover:border-violet-200 hover:bg-violet-50/30 hover:shadow-md",
+                  ].join(" ")}
+                >
+                  <div className="flex flex-col gap-4 rounded-3xl lg:flex-row lg:items-center lg:justify-between">
+                    <div className="flex min-w-0 items-start gap-3">
+                      <div className="grid size-11 shrink-0 place-items-center rounded-2xl border border-violet-100 bg-violet-50 text-violet-600 shadow-sm">
+                        <BookOpenCheck className="size-5" />
+                      </div>
+
+                      <div className="min-w-0 flex-1">
+                        <h3 className="truncate text-sm font-bold text-blue-950 md:text-base">
+                          {simulation.title || "Simulado"}
+                        </h3>
+
+                        <p className="mt-1 line-clamp-2 text-xs leading-5 text-slate-500 md:text-sm md:leading-6">
+                          {simulation.description ||
+                            "Simulado disponível para o seu plano."}
+                        </p>
+                      </div>
                     </div>
 
-                    <div className="min-w-0 flex-1">
-                      <h3 className="text-sm font-bold text-blue-950 md:text-base truncate">
-                        {simulation.title}
-                      </h3>
-                      <p className="mt-1 text-xs leading-5 text-slate-500 md:text-sm md:leading-6 line-clamp-2">
-                        {simulation.description}
-                      </p>
+                    <div className="flex shrink-0 items-center justify-end self-end lg:self-center">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          navigate(`/student/simulados/${simulation.publicId}`)
+                        }
+                        disabled={!simulation.publicId}
+                        className="grid size-10 cursor-pointer place-items-center rounded-full bg-violet-600 text-white shadow-sm transition hover:scale-105 hover:bg-violet-700 active:scale-95 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:hover:scale-100"
+                      >
+                        <ArrowRight className="size-5" />
+                      </button>
                     </div>
                   </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className="mt-6 rounded-3xl border border-dashed border-violet-200 bg-violet-50/40 p-5">
+              <div className="grid size-11 place-items-center rounded-2xl border border-violet-100 bg-white text-violet-600 shadow-sm">
+                <BookOpenCheck className="size-5" />
+              </div>
 
-                  {/* Bloco da Direita: Botão de Ação */}
-                  <div className="flex items-center justify-end shrink-0 self-end lg:self-center">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        navigate(`/student/simulados/${simulation.publicId}`)
-                      }
-                      className="grid size-10 place-items-center rounded-full bg-violet-600 text-white transition hover:bg-violet-700 cursor-pointer shadow-sm hover:scale-105 active:scale-95"
-                    >
-                      <ArrowRight className="size-5" />
-                    </button>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
+              <h3 className="mt-4 text-sm font-bold text-blue-950 md:text-base">
+                Nenhum simulado disponível agora
+              </h3>
+
+              <p className="mt-2 text-xs leading-5 text-slate-500 md:text-sm">
+                Quando houver simulados liberados para o plano Free, eles vão
+                aparecer aqui.
+              </p>
+            </div>
+          )}
         </div>
 
         <aside className="space-y-5 md:space-y-6">
@@ -315,7 +343,7 @@ const FreeDashboard = ({ data, student }) => {
 
               <button
                 type="button"
-                onClick={() => window.open(`/planos`, "_blank")}
+                onClick={() => window.open("/planos", "_blank")}
                 className="mt-5 inline-flex w-full cursor-pointer items-center justify-center rounded-full bg-white px-4 py-2.5 text-xs font-bold text-violet-700 shadow-sm transition hover:-translate-y-0.5 hover:bg-violet-50 md:w-auto"
               >
                 Ver planos
