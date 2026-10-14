@@ -3,7 +3,12 @@ import LogoImg from "../../assets/logo.png";
 const Logo = () => {
   const navigate = useNavigate();
   return (
-    <div onClick={() => {navigate("/")}} className="flex cursor-pointer items-center gap-2">
+    <div
+      onClick={() => {
+        navigate("/");
+      }}
+      className="flex cursor-pointer items-center gap-2"
+    >
       <img src={LogoImg} alt="Vestibule" className="h-10 w-auto" />
 
       <div className="flex flex-col gap-0 justify-center">
@@ -12,7 +17,7 @@ const Logo = () => {
         </h2>
 
         <p className="m-0 text-[9px] leading-none uppercase tracking-[0.2em] text-blue-700">
-          Student SaaS
+          Preparação inteligente
         </p>
       </div>
     </div>

@@ -1,8 +1,8 @@
 import { ArrowLeft, Home } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
-import logo from "../assets/logo.png";
-import { usePageTitle } from "../hooks/usePageTitle";
+import logo from "../../assets/logo.png";
+import { usePageTitle } from "../../hooks/usePageTitle";
 
 const ErrorPage = () => {
   const navigate = useNavigate();

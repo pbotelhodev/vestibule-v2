@@ -1,87 +1,84 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* Imports Tools */
-import { ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { usePageTitle } from "../hooks/usePageTitle";
 
-/* imports components */
-import Loading from "../components/ui/Loading";
-import Alert from "../components/ui/Alert";
+/* import componets */
+import Logo from "../../components/ui/Logo";
+import Loading from "../../components/ui/Loading";
+import Alert from "../../components/ui/Alert";
 
-/* import assets */
-import Logo from "../components/ui/Logo";
+/* import services */
+import { registerStudent } from "../../services/authServices";
+import { usePageTitle } from "../../hooks/usePageTitle";
 
-/* Imports services */
-import { loginStudent } from "../services/authServices";
-
-const LoginPage = () => {
-  /* Navigate */
+const RegisterPage = () => {
+  /* navigate */
   const navigate = useNavigate();
+  const location = useLocation();
+  const initialData = location.state?.infosLogin || {};
+  const alertState = location.state?.alert || {};
+  const stateFrom = location.state?.from || {};
 
   /* UseForm */
   const { register, handleSubmit } = useForm();
 
   /* States */
-  const [showPassword, setShowPassword] = useState(false);
   const [alertData, setAlertData] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [dataUser, setDataUser] = useState({
+    name: "",
+    email: initialData.email || "",
+    password: initialData.password || "",
+    confirmePass: "",
+  });
+  const [firstNameUser, setFirstNameUser] = useState();
 
   /* Functions */
-  const handleLogin = async (data) => {
+  const handleRegister = async () => {
     setLoading(true);
-
     try {
-      const response = await loginStudent(data);
+      const response = await registerStudent(dataUser);
       const fullName = response.student?.name || "";
-      const names = fullName.trim().split(" ");
-
-      if (fullName === "Paulo Tadeu Martins Botelho Júnior") {
-        setAlertData({
-          type: "success",
-          title: "Login bem-sucedido!",
-          message: `Olá Macaquito, ${names[0]} ${names[names.length - 1]}`,
-        });
-      } else {
-        setAlertData({
-          type: "success",
-          title: "Login bem-sucedido!",
-          message: `Ficamos felizes em te ter novamente, ${names[0]} ${names[names.length - 1]}`,
-        });
-      }
+      setFirstNameUser(fullName.split(" ")[0]);
+      navigate("/login", {
+        state: {
+          alert: {
+            title: `Seja bem-vindo, ${firstNameUser}!`,
+            type: "success",
+            message: "Cadastro realizado com sucesso.",
+          },
+          from: "register",
+        },
+      });
     } catch (error) {
       console.log(`Erro: ${error.response?.data?.message || error.message}`);
-      if (
-        error.response?.data?.message == "Senha é obrigatória" ||
-        error.response?.data?.message == "E-mail é obrigatório"
-      ) {
-        setAlertData({
-          type: "warning",
-          title: "Tivemos um probleminha...",
-          message: error.response?.data?.message,
-        });
-      } else {
-        setAlertData({
-          type: "error",
-          title: "Tivemos um probleminha...",
-          message: error.response?.data?.message,
-        });
-      }
+
+      setAlertData({
+        type: "error",
+        title: "Tivemos um probleminha...",
+        message: error.response?.data?.message || "Verifique suas credenciais.",
+      });
     } finally {
-      /* Aqui direciona de acordo com o tipo do usuário */
       setLoading(false);
     }
   };
 
   /* Hooks */
-  usePageTitle("Entrar");
+  usePageTitle("Criar conta")
 
   /* Effects */
   useEffect(() => {
-    document.title = "Entrar | Vestibule";
-  }, []);
+    if (stateFrom === "login-account-not-found") {
+      setAlertData({
+        title: alertState.title,
+        type: alertState.type,
+        message: alertState.message,
+      });
+    }
+  }, [alertState]);
 
   return (
     <div>
@@ -90,7 +87,6 @@ const LoginPage = () => {
       {alertData && (
         <Alert data={alertData} onClose={() => setAlertData(null)} />
       )}
-
       <main className="relative isolate min-h-dvh overflow-x-hidden bg-white px-4 py-4 sm:px-6 lg:px-8 xl:h-dvh xl:overflow-hidden 2xl:px-10">
         {/* Background */}
         <div className="pointer-events-none fixed inset-0 z-0 h-dvh overflow-hidden bg-white">
@@ -109,7 +105,7 @@ const LoginPage = () => {
         <section className="relative z-10 grid min-h-[calc(100dvh-32px)] place-items-center xl:h-[calc(100dvh-32px)] xl:min-h-0">
           <div className="mx-auto grid w-full max-w-6xl items-center gap-8 xl:grid-cols-[0.95fr_1.05fr] 2xl:max-w-360 2xl:grid-cols-[1fr_1.05fr] 2xl:gap-12">
             {/* Esquerda */}
-            <div className="hidden  w-full flex-col items-start justify-center xl:flex">
+            <div className="hidden w-full flex-col items-start justify-center xl:flex">
               <button
                 type="button"
                 onClick={() => navigate(-1)}
@@ -121,12 +117,12 @@ const LoginPage = () => {
 
               <div className="max-w-xl 2xl:max-w-2xl">
                 <h1 className="text-4xl leading-[1.05] font-extrabold tracking-tight text-slate-950 2xl:text-6xl">
-                  Entre e continue sua preparação com clareza.
+                  Crie sua conta e comece a estudar com direção.
                 </h1>
 
                 <p className="mt-3 max-w-lg text-sm leading-6 font-light text-slate-500 2xl:mt-4 2xl:max-w-xl 2xl:text-base 2xl:leading-7">
-                  Acesse simulados, acompanhe sua evolução e visualize os
-                  próximos passos da sua rotina de estudo em um só lugar.
+                  O Vestibule organiza simulados, desempenho e trilhas para sua
+                  preparação ficar mais clara desde o primeiro acesso.
                 </p>
               </div>
 
@@ -155,20 +151,20 @@ const LoginPage = () => {
                       <div className="flex items-start justify-between gap-3">
                         <div>
                           <p className="text-xs font-bold text-white/70">
-                            Meta estimada
+                            Plano de estudo
                           </p>
 
                           <h3 className="mt-2 text-3xl font-extrabold tracking-tight 2xl:text-4xl">
-                            760 pts
+                            85%
                           </h3>
 
                           <p className="mt-0.5 text-xs font-medium text-white/70">
-                            faltam 60 pontos
+                            perfil quase completo
                           </p>
                         </div>
 
                         <span className="rounded-full bg-white/15 px-3 py-1.5 text-xs font-extrabold text-white">
-                          85%
+                          Novo
                         </span>
                       </div>
 
@@ -179,21 +175,21 @@ const LoginPage = () => {
 
                     <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm 2xl:p-5">
                       <p className="text-xs font-bold text-slate-500">
-                        Acerto geral
+                        Simulados
                       </p>
 
                       <div className="mt-2 flex items-end justify-between gap-3">
                         <h3 className="text-3xl font-extrabold tracking-tight text-slate-950 2xl:text-4xl">
-                          76%
+                          14
                         </h3>
 
                         <span className="rounded-full bg-violet-50 px-2.5 py-1 text-xs font-extrabold text-violet-600">
-                          +2%
+                          sugeridos
                         </span>
                       </div>
 
                       <p className="mt-2 text-xs font-semibold text-slate-400">
-                        evolução no mês
+                        para começar hoje
                       </p>
                     </div>
                   </div>
@@ -202,7 +198,7 @@ const LoginPage = () => {
                     <div className="flex items-start justify-between gap-4">
                       <div>
                         <p className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-violet-600">
-                          Próximo simulado
+                          Primeira trilha
                         </p>
 
                         <h3 className="mt-2 text-lg font-extrabold tracking-tight text-slate-950 2xl:text-xl">
@@ -211,12 +207,12 @@ const LoginPage = () => {
                       </div>
 
                       <span className="rounded-full bg-amber-50 px-3 py-1.5 text-xs font-extrabold text-amber-600">
-                        Hoje
+                        45%
                       </span>
                     </div>
 
                     <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-100">
-                      <div className="h-full w-[62%] rounded-full bg-linear-to-r from-blue-600 via-violet-500 to-amber-400" />
+                      <div className="h-full w-[45%] rounded-full bg-linear-to-r from-blue-600 via-violet-500 to-amber-400" />
                     </div>
                   </div>
                 </div>
@@ -231,11 +227,10 @@ const LoginPage = () => {
                 className="cursor-pointer flex items-center justify-between gap-4 xl:hidden"
               >
                 <Logo />
-
                 <button
                   type="button"
                   onClick={() => navigate(-1)}
-                  className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-500 shadow-sm transition hover:-translate-x-0.5 hover:border-violet-200 hover:bg-violet-50 hover:text-violet-600 hover:shadow-md"
+                  className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-500 shadow-sm transition hover:-translate-x-0.5 hover:border-violet-200 hover:bg-violet-50 hover:text-violet-600 hover:shadow-md"
                 >
                   <ArrowLeft className="size-4" />
                   Voltar
@@ -252,20 +247,37 @@ const LoginPage = () => {
 
               <div>
                 <h1 className="mt-3 text-2xl font-extrabold tracking-tight text-slate-950 2xl:text-3xl">
-                  Entre na sua conta.
+                  Crie sua conta de aluno.
                 </h1>
 
                 <p className="mt-2 text-sm leading-6 text-slate-500 2xl:max-w-xl 2xl:text-base 2xl:leading-7">
-                  Acesse seus simulados, desempenho por matéria e trilhas de
+                  Comece com simulados, desempenho por matéria e trilhas de
                   estudo personalizadas.
                 </p>
               </div>
 
               <form
-                onSubmit={handleSubmit(handleLogin)}
-                className="mt-5 grid gap-3.5 2xl:mt-6 2xl:gap-4"
+                onSubmit={handleSubmit(handleRegister)}
+                className="mt-5 grid gap-3.5 sm:grid-cols-2 2xl:mt-6 2xl:gap-4"
               >
-                {/* Email */}
+                {/* name */}
+                <div>
+                  <label className="text-sm font-bold text-slate-700">
+                    Nome completo
+                  </label>
+
+                  <input
+                    type="text"
+                    {...register("name")}
+                    value={dataUser.name}
+                    onChange={(e) =>
+                      setDataUser((prev) => ({ ...prev, name: e.target.value }))
+                    }
+                    placeholder="João da Silva"
+                    className="mt-1.5 w-full rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-violet-300 focus:ring-4 focus:ring-violet-100 2xl:py-3"
+                  />
+                </div>
+
                 <div>
                   <label className="text-sm font-bold text-slate-700">
                     E-mail
@@ -274,84 +286,85 @@ const LoginPage = () => {
                   <input
                     type="email"
                     {...register("email")}
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={dataUser.email}
+                    onChange={(e) =>
+                      setDataUser((prev) => ({
+                        ...prev,
+                        email: e.target.value,
+                      }))
+                    }
                     placeholder="joao@email.com"
                     className="mt-1.5 w-full rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-violet-300 focus:ring-4 focus:ring-violet-100 2xl:py-3"
                   />
                 </div>
 
-                {/* Senha */}
                 <div>
-                  <div className="flex items-center justify-between gap-4">
-                    <label className="text-sm font-bold text-slate-700">
-                      Senha
-                    </label>
+                  <label className="text-sm font-bold text-slate-700">
+                    Senha
+                  </label>
 
-                    <Link
-                      to="/credenciais/recuperar"
-                      className="text-xs font-bold text-violet-600 transition hover:text-violet-700"
-                    >
-                      Esqueci minha senha
-                    </Link>
-                  </div>
+                  <input
+                    type="password"
+                    {...register("password")}
+                    value={dataUser.password}
+                    onChange={(e) =>
+                      setDataUser((prev) => ({
+                        ...prev,
+                        password: e.target.value,
+                      }))
+                    }
+                    placeholder="••••••••"
+                    className="mt-1.5 w-full rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-violet-300 focus:ring-4 focus:ring-violet-100 2xl:py-3"
+                  />
+                </div>
 
-                  <div className="relative mt-1.5">
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      {...register("password")}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="••••••••"
-                      className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-2.5 pr-12 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-violet-300 focus:ring-4 focus:ring-violet-100 2xl:py-3"
-                    />
+                <div>
+                  <label className="text-sm font-bold text-slate-700">
+                    Confirmar senha
+                  </label>
 
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword((prev) => !prev)}
-                      className="absolute cursor-pointer top-1/2 right-4 -translate-y-1/2 text-slate-400 transition hover:text-violet-600"
-                      aria-label={
-                        showPassword ? "Ocultar senha" : "Mostrar senha"
-                      }
-                    >
-                      {showPassword ? (
-                        <EyeOff className="size-4" />
-                      ) : (
-                        <Eye className="size-4" />
-                      )}
-                    </button>
-                  </div>
+                  <input
+                    type="password"
+                    {...register("confirmePass")}
+                    value={dataUser.confirmePass}
+                    onChange={(e) =>
+                      setDataUser((prev) => ({
+                        ...prev,
+                        confirmePass: e.target.value,
+                      }))
+                    }
+                    placeholder="••••••••"
+                    className="mt-1.5 w-full rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-violet-300 focus:ring-4 focus:ring-violet-100 2xl:py-3"
+                  />
                 </div>
 
                 <button
                   type="submit"
-                  className="group relative cursor-pointer overflow-hidden rounded-2xl bg-violet-900 px-5 py-3 text-sm font-extrabold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-linear-to-r hover:from-violet-600 hover:via-purple-500 hover:to-blue-600 hover:shadow-xl 2xl:py-3.5"
+                  className="group cursor-pointer relative overflow-hidden rounded-2xl bg-violet-900 px-5 py-3 text-sm font-extrabold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-linear-to-r hover:from-violet-600 hover:via-purple-500 hover:to-blue-600 hover:shadow-xl sm:col-span-2 2xl:py-3.5"
                 >
-                  <span className="relative z-10">Entrar na plataforma</span>
+                  <span className="relative z-10">Criar conta de aluno</span>
 
                   <span className="absolute inset-y-0 -left-12 w-10 rotate-12 bg-white/40 blur-sm transition-all duration-700 group-hover:left-[120%]" />
                 </button>
 
                 <button
                   type="button"
-                  onClick={() => navigate("/student")}
-                  className="flex cursor-pointer items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-extrabold text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-violet-200 hover:bg-slate-50 hover:text-violet-600 hover:shadow-md 2xl:py-3.5"
+                  className="flex cursor-pointer items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-extrabold text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-violet-200 hover:bg-slate-50 hover:text-violet-600 hover:shadow-md sm:col-span-2 2xl:py-3.5"
                 >
                   <span className="grid size-5 place-items-center rounded-full border border-slate-200 text-xs font-extrabold text-blue-600">
                     G
                   </span>
-                  Entrar com Google
+                  Cadastrar com Google
                 </button>
               </form>
 
               <p className="mt-4 text-center text-sm text-slate-500 2xl:mt-5">
-                Ainda não tem conta?{" "}
+                Já tem conta?{" "}
                 <Link
-                  to="/signup"
-                  state={{ infosLogin: { email } }}
+                  to="/login"
                   className="font-extrabold text-violet-600 transition hover:text-violet-700"
                 >
-                  Criar conta
+                  Entrar
                 </Link>
               </p>
             </div>
@@ -362,4 +375,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;

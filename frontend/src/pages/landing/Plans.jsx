@@ -14,10 +14,10 @@ import {
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 /* Components */
-import Logo from "../components/ui/Logo";
+import Logo from "../../components/ui/Logo.jsx";
 
 /* Services */
-import { userPlansData } from "../services/userPlans.js";
+import { userPlansData } from "../../services/userPlans.js";
 import { useState } from "react";
 
 const PlansPage = () => {

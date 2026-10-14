@@ -7,21 +7,19 @@ import {
   Medal,
   TrendingUp,
 } from "lucide-react";
-import { useOutletContext } from "react-router-dom";
-
-const PREMIUM_GRADIENT_ID = "performance-premium-gradient";
-const premiumIconStroke = `url(#${PREMIUM_GRADIENT_ID})`;
+import { useEffect, useMemo, useState } from "react";
+import { useOutletContext, useNavigate } from "react-router-dom";
 
 import { getStudentResults } from "../../services/dashboard/callDashboard";
 
 import {
   planRank,
   planThemes,
-  history,
-  premiumInsights,
   fallbackSubjects,
 } from "../../services/performace/servicesPerformace";
-import { useState, useEffect, useMemo } from "react";
+
+const PREMIUM_GRADIENT_ID = "performance-premium-gradient";
+const premiumIconStroke = `url(#${PREMIUM_GRADIENT_ID})`;
 
 // eslint-disable-next-line no-unused-vars
 const PerformanceIconBox = ({ Icon, theme }) => {
@@ -42,6 +40,7 @@ const PerformanceIconBox = ({ Icon, theme }) => {
 
 const StudentPerformance = () => {
   const { student } = useOutletContext();
+  const navigate = useNavigate();
 
   const [dataSimulations, setDataSimulations] = useState(null);
 
@@ -52,48 +51,196 @@ const StudentPerformance = () => {
   const hasProAccess = rank >= planRank.pro;
   const hasPremiumAccess = rank >= planRank.premium;
 
-  const metaStudent = 900;
-  const actuallyScore = dataSimulations?.averageHitRate * 10 || 0;
-  const percentage = dataSimulations?.averageHitRate || 0;
   const studentId = student?.id;
 
-  const bestSubject =
-    dataSimulations?.subjectsPerformance?.reduce((best, subject) => {
-      if (!best || subject.percent > best.percent) {
-        return subject;
-      }
-      return best;
-    }, null) || 0;
+  const rawAverageHitRate = Number(dataSimulations?.averageHitRate);
+  const hasAverageHitRate =
+    dataSimulations?.averageHitRate !== null &&
+    dataSimulations?.averageHitRate !== undefined &&
+    Number.isFinite(rawAverageHitRate);
 
-  const worstSubject =
-    dataSimulations?.subjectsPerformance?.reduce((worst, subject) => {
-      if (!worst || subject.percent < worst.percent) {
+  const percentage = hasAverageHitRate ? rawAverageHitRate : 0;
+
+  const rawTargetScore = Number(student?.targetScore);
+  const targetScore =
+    Number.isFinite(rawTargetScore) && rawTargetScore > 0
+      ? rawTargetScore
+      : 900;
+
+  const estimatedScore = hasAverageHitRate ? Math.round(percentage * 10) : 0;
+  const remainingScore = Math.max(targetScore - estimatedScore, 0);
+
+  const history = Array.isArray(dataSimulations?.simulationsHistory)
+    ? dataSimulations.simulationsHistory
+    : [];
+
+  const rawSubjectsPerformance = useMemo(() => {
+    const subjectsPerformance = dataSimulations?.subjectsPerformance;
+
+    if (!Array.isArray(subjectsPerformance)) {
+      return [];
+    }
+
+    return subjectsPerformance;
+  }, [dataSimulations]);
+
+  const subjects = useMemo(() => {
+    if (rawSubjectsPerformance.length === 0) {
+      return fallbackSubjects;
+    }
+
+    return rawSubjectsPerformance;
+  }, [rawSubjectsPerformance]);
+
+  const bestSubject = useMemo(() => {
+    if (rawSubjectsPerformance.length === 0) {
+      return null;
+    }
+
+    return rawSubjectsPerformance.reduce((best, subject) => {
+      if (!best || Number(subject.percent) > Number(best.percent)) {
         return subject;
       }
+
+      return best;
+    }, null);
+  }, [rawSubjectsPerformance]);
+
+  const worstSubject = useMemo(() => {
+    if (rawSubjectsPerformance.length === 0) {
+      return null;
+    }
+
+    return rawSubjectsPerformance.reduce((worst, subject) => {
+      if (!worst || Number(subject.percent) < Number(worst.percent)) {
+        return subject;
+      }
+
       return worst;
-    }, null) || 0;
+    }, null);
+  }, [rawSubjectsPerformance]);
 
   const verifyNextGoal = (score) => {
     if (score >= 95) return "Mantenha esse desempenho!";
     if (score >= 80) return "Manter o acerto geral acima de 95%";
     if (score >= 60) return "Superar a média de acerto geral de 80%";
     if (score >= 40) return "Subir a média de acerto geral acima de 60%";
+
     return "Subir a média de acerto geral para 40%";
   };
 
-  const subjects = useMemo(() => {
-    const rawSubjects = Array.isArray(dataSimulations?.subjectsPerformance)
-      ? dataSimulations?.subjectsPerformance
-      : [];
-    if (rawSubjects.length === 0) {
-      return fallbackSubjects;
-    }
-    return rawSubjects;
-  }, [dataSimulations]);
+  const viewDate = (finishedAt) => {
+    if (!finishedAt) return "Data indisponível";
 
-  //Puxa os dados dos resultados de simulados do usuário logado.
+    const date = new Date(finishedAt);
+
+    if (Number.isNaN(date.getTime())) {
+      return "Data inválida";
+    }
+
+    const today = new Date();
+
+    const todayOnly = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate(),
+    );
+
+    const dateOnly = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+    );
+
+    const diffInMs = todayOnly - dateOnly;
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+    if (diffInDays === 0) return "Hoje";
+    if (diffInDays === 1) return "Ontem";
+    if (diffInDays > 1) return `Há ${diffInDays} dias`;
+
+    return "Data futura";
+  };
+
+  const proTrendLabel = !hasAverageHitRate
+    ? "Sem dados suficientes"
+    : percentage >= 80
+      ? "Evolução forte"
+      : percentage >= 60
+        ? "Evolução positiva"
+        : percentage >= 40
+          ? "Desempenho em atenção"
+          : "Risco de queda";
+
+  const recommendedFocus = worstSubject?.name
+    ? `Revisar ${worstSubject.name}`
+    : "Faça mais simulados para gerar recomendação";
+
+  const proReadingText =
+    bestSubject?.name && worstSubject?.name
+      ? `Seu desempenho mostra melhor base em ${bestSubject.name}, mas ${worstSubject.name} ainda está reduzindo sua média geral.`
+      : "Complete mais simulados para gerar uma leitura mais precisa do seu desempenho.";
+
+  const premiumRecommendations = useMemo(() => {
+    if (!hasAverageHitRate || rawSubjectsPerformance.length === 0) {
+      return [
+        {
+          title: "Primeira leitura estratégica",
+          description:
+            "Complete mais simulados para liberar recomendações inteligentes baseadas no seu desempenho real.",
+          Icon: Crown,
+        },
+        {
+          title: "Base de comparação",
+          description:
+            "A página precisa de histórico suficiente para identificar evolução, queda ou estabilidade.",
+          Icon: BarChart3,
+        },
+        {
+          title: "Meta personalizada",
+          description:
+            "Defina sua meta no perfil para comparar sua projeção atual com o objetivo real.",
+          Icon: TrendingUp,
+        },
+      ];
+    }
+
+    const prioritySubject = worstSubject?.name || "a matéria com menor acerto";
+    const strongSubject = bestSubject?.name || "sua matéria mais forte";
+
+    return [
+      {
+        title: "Prioridade de estudo",
+        description: `Seu foco principal agora deve ser ${prioritySubject}, pois essa área está puxando sua média para baixo.`,
+        Icon: Crown,
+      },
+      {
+        title: "Estratégia de manutenção",
+        description: `Mantenha revisões leves em ${strongSubject} para preservar sua melhor base sem roubar tempo da prioridade principal.`,
+        Icon: CheckCircle2,
+      },
+      {
+        title: "Caminho até a meta",
+        description:
+          remainingScore > 0
+            ? `Sua projeção atual está a ${remainingScore} pontos da meta de ${targetScore}. Priorize simulados direcionados para reduzir essa distância.`
+            : `Sua projeção já atingiu a meta de ${targetScore}. O foco agora é manter consistência e reduzir oscilações.`,
+        Icon: TrendingUp,
+      },
+    ];
+  }, [
+    hasAverageHitRate,
+    rawSubjectsPerformance.length,
+    worstSubject,
+    bestSubject,
+    remainingScore,
+    targetScore,
+  ]);
+
+  // Puxa os dados dos resultados de simulados do usuário logado.
   useEffect(() => {
     if (!studentId) return;
+
     const dashboardData = async () => {
       try {
         const response = await getStudentResults(studentId);
@@ -102,6 +249,7 @@ const StudentPerformance = () => {
         console.error(err);
       }
     };
+
     dashboardData();
   }, [studentId]);
 
@@ -128,6 +276,7 @@ const StudentPerformance = () => {
           </defs>
         </svg>
       )}
+
       {/* Bloco principal */}
       <section className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_24rem] 2xl:grid-cols-[minmax(0,1fr)_28rem] min-[2200px]:grid-cols-[minmax(0,1fr)_32rem]">
         {/* Acerto por matéria */}
@@ -152,8 +301,7 @@ const StudentPerformance = () => {
               ].join(" ")}
             >
               <BarChart3 className="size-4" />
-              {percentage || 0}% Geral
-              {/* Média geral do usuário vindo do backend ou averageHitRate */}
+              {percentage}% Geral
             </span>
           </div>
 
@@ -161,6 +309,7 @@ const StudentPerformance = () => {
             {subjects.map((subject) => {
               const percent = Number(subject.percent) || 0;
               const safePercent = Math.min(Math.max(percent, 0), 100);
+
               const colorPercent =
                 safePercent >= 90
                   ? "bg-green-600"
@@ -171,6 +320,7 @@ const StudentPerformance = () => {
                       : safePercent >= 40
                         ? "bg-yellow-500"
                         : "bg-red-500";
+
               const colorText =
                 safePercent >= 90
                   ? "text-green-600"
@@ -274,8 +424,9 @@ const StudentPerformance = () => {
                     theme.textStrong,
                   ].join(" ")}
                 >
-                  {verifyNextGoal(dataSimulations?.averageHitRate) ||
-                    "Nenhum resultado ainda"}
+                  {hasAverageHitRate
+                    ? verifyNextGoal(percentage)
+                    : "Nenhum resultado ainda"}
                 </p>
               </div>
             </div>
@@ -289,15 +440,19 @@ const StudentPerformance = () => {
                 </p>
 
                 <strong className="mt-2 flex items-end gap-2 text-4xl font-bold tracking-tight text-white sm:text-5xl xl:text-5xl 2xl:text-6xl min-[2200px]:text-7xl">
-                  <span>{actuallyScore}</span>
+                  <span>{estimatedScore}</span>
 
                   <span className="pb-1 text-lg font-bold tracking-normal text-white/35 sm:text-xl xl:text-xl 2xl:pb-1.5 2xl:text-2xl min-[2200px]:text-3xl">
-                    / {metaStudent}
+                    / {targetScore}
                   </span>
                 </strong>
 
                 <p className="mt-1 text-sm font-semibold text-white/60">
-                  pontos estimados para a meta
+                  {hasAverageHitRate
+                    ? remainingScore > 0
+                      ? `${remainingScore} pontos estimados para a meta`
+                      : "Meta estimada alcançada"
+                    : "Nenhum resultado ainda"}
                 </p>
               </div>
 
@@ -313,7 +468,11 @@ const StudentPerformance = () => {
                   theme.gradient ? theme.progress : "bg-white",
                 ].join(" ")}
                 style={{
-                  width: `${metaStudent ? Math.min((actuallyScore / metaStudent) * 100, 100) : 0}%`,
+                  width: `${
+                    targetScore
+                      ? Math.min((estimatedScore / targetScore) * 100, 100)
+                      : 0
+                  }%`,
                 }}
               />
             </div>
@@ -345,76 +504,82 @@ const StudentPerformance = () => {
                   desempenho.
                 </p>
               </div>
-
-              <button
-                type="button"
-                className={[
-                  "inline-flex w-fit cursor-pointer items-center justify-center rounded-full border bg-white px-4 py-2.5 text-xs font-bold transition hover:-translate-y-0.5",
-                  theme.borderStrong,
-                  theme.textStrong,
-                  theme.hoverBg,
-                ].join(" ")}
-              >
-                Ver todos
-              </button>
             </div>
 
             <div className="mt-6 grid gap-3 lg:grid-cols-3">
-              {history.map((item) => (
-                <article
-                  key={item.title}
-                  className={[
-                    "rounded-3xl border bg-white p-4 transition hover:-translate-y-0.5 hover:shadow-md",
-                    theme.border,
-                    theme.hoverBg,
-                  ].join(" ")}
-                >
-                  <PerformanceIconBox Icon={Medal} theme={theme} />
+              {history.length > 0 ? (
+                history.map((item) => {
+                  const itemPercentage = Math.min(
+                    Math.max(Number(item.percentage) || 0, 0),
+                    100,
+                  );
 
-                  <h3 className="mt-4 text-sm font-bold text-blue-950">
-                    {item.title}
-                  </h3>
-
-                  <p className="mt-1 text-xs font-medium text-slate-400">
-                    {item.date}
-                  </p>
-
-                  <div className="mt-4 flex items-end justify-between gap-3">
-                    <div>
-                      <p className="text-xs font-bold text-slate-400">
-                        Pontuação
-                      </p>
-
-                      <strong className="mt-1 block text-2xl font-bold text-blue-950">
-                        {item.score} <span className="text-sm">pts</span>
-                      </strong>
-                    </div>
-
-                    <span
+                  return (
+                    <article
+                      key={item.publicId || item.title}
                       className={[
-                        "rounded-full px-3 py-1 text-xs font-bold",
-                        theme.softBg,
-                        theme.textStrong,
+                        "flex h-full min-h-55 flex-col rounded-3xl border bg-white p-4 transition hover:-translate-y-0.5 hover:shadow-md",
+                        theme.border,
+                        theme.hoverBg,
                       ].join(" ")}
                     >
-                      {item.percent}%
-                    </span>
-                  </div>
+                      <PerformanceIconBox Icon={Medal} theme={theme} />
 
-                  <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-100">
-                    <div
-                      className={["h-full rounded-full", theme.progress].join(
-                        " ",
-                      )}
-                      style={{ width: `${item.percent}%` }}
-                    />
-                  </div>
-                </article>
-              ))}
+                      <div className="mt-4">
+                        <h3 className="line-clamp-2 min-h-10 text-sm font-bold leading-5 text-blue-950">
+                          {item.title}
+                        </h3>
+
+                        <p className="mt-1 text-xs font-medium text-slate-400">
+                          {viewDate(item.finishedAt)}
+                        </p>
+                      </div>
+
+                      <div className="mt-auto pt-5">
+                        <div className="flex items-end justify-between gap-3">
+                          <div>
+                            <p className="text-xs font-bold text-slate-400">
+                              Pontuação
+                            </p>
+
+                            <strong className="mt-1 block text-2xl font-bold text-blue-950">
+                              {item.score} <span className="text-sm">pts</span>
+                            </strong>
+                          </div>
+
+                          <span
+                            className={[
+                              "rounded-full px-3 py-1 text-xs font-bold",
+                              theme.softBg,
+                              theme.textStrong,
+                            ].join(" ")}
+                          >
+                            {itemPercentage}%
+                          </span>
+                        </div>
+
+                        <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-100">
+                          <div
+                            className={[
+                              "h-full rounded-full",
+                              theme.progress,
+                            ].join(" ")}
+                            style={{ width: `${itemPercentage}%` }}
+                          />
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })
+              ) : (
+                <div className="flex min-h-55 flex-col items-center justify-center rounded-3xl border border-slate-200 bg-white p-4 text-center text-sm font-medium text-slate-400 lg:col-span-3">
+                  Nenhum resultado de simulado encontrado.
+                </div>
+              )}
             </div>
           </article>
 
-          <aside className="rounded-[1.75rem] border border-slate-200 bg-white/95 p-4 shadow-sm backdrop-blur-xl sm:rounded-4xl sm:p-5 2xl:p-6">
+          <aside className="flex h-full flex-col rounded-[1.75rem] border border-slate-200 bg-white/95 p-4 shadow-sm backdrop-blur-xl sm:rounded-4xl sm:p-5 2xl:p-6">
             <PerformanceIconBox Icon={TrendingUp} theme={theme} />
 
             <h2 className="mt-5 text-xl font-bold text-blue-950">
@@ -422,11 +587,10 @@ const StudentPerformance = () => {
             </h2>
 
             <p className="mt-2 text-sm leading-6 text-slate-500">
-              Seu desempenho mostra uma boa base em Biologia e História, mas
-              Física ainda está reduzindo sua média geral.
+              {proReadingText}
             </p>
 
-            <div className="mt-5 grid gap-3">
+            <div className="mt-auto grid gap-3 pt-5">
               <div
                 className={[
                   "rounded-3xl p-4",
@@ -438,7 +602,7 @@ const StudentPerformance = () => {
                 </p>
 
                 <p className="mt-1 text-sm font-bold text-blue-950">
-                  Evolução positiva
+                  {proTrendLabel}
                 </p>
               </div>
 
@@ -448,7 +612,7 @@ const StudentPerformance = () => {
                 </p>
 
                 <p className="mt-1 text-sm font-bold text-blue-950">
-                  Revisar Física e Matemática
+                  {recommendedFocus}
                 </p>
               </div>
             </div>
@@ -498,13 +662,14 @@ const StudentPerformance = () => {
               </h2>
 
               <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-500">
-                Uma camada visual para mostrar quais ações devem receber
-                prioridade nos próximos estudos.
+                Recomendações geradas a partir do seu histórico, média geral,
+                pontos fortes, pontos fracos e meta configurada.
               </p>
             </div>
 
             <button
               type="button"
+              onClick={() => {navigate("/student/desempenho/plano-de-estudos")}}
               className="inline-flex cursor-pointer items-center justify-center rounded-full border border-purple-200 bg-white px-4 py-2.5 text-xs font-bold transition hover:bg-purple-50"
             >
               <span className="bg-linear-to-r from-purple-800 via-blue-700 to-teal-500 bg-clip-text text-transparent">
@@ -514,14 +679,14 @@ const StudentPerformance = () => {
           </div>
 
           <div className="mt-6 grid gap-3 lg:grid-cols-3">
-            {premiumInsights.map(({ title, description, Icon }) => (
+            {premiumRecommendations.map(({ title, description, Icon }) => (
               <article
                 key={title}
-                className="rounded-3xl border border-purple-200 bg-white p-4 transition hover:-translate-y-0.5 hover:border-purple-300 hover:bg-purple-50/40 hover:shadow-md md:p-5"
+                className="flex h-full min-h-58 flex-col rounded-3xl border border-purple-200 bg-white p-4 transition hover:-translate-y-0.5 hover:border-purple-300 hover:bg-purple-50/40 hover:shadow-md md:p-5"
               >
                 <PerformanceIconBox Icon={Icon} theme={theme} />
 
-                <h3 className="mt-4 text-sm font-bold text-blue-950 md:text-base">
+                <h3 className="mt-4 min-h-10 text-sm font-bold leading-5 text-blue-950 md:text-base">
                   {title}
                 </h3>
 

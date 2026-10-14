@@ -1,12 +1,16 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import LandingHome from "./pages/LandingHome";
-import ErrorPage from "./pages/ErrorPage";
-import LoginPage from "./pages/Login";
-import ForgetPass from "./pages/ForgetPass";
-import SigUpPage from "./pages/SignUp";
-import Enterprise from "./pages/Enterprise";
-import Plans from "./pages/Plans";
+/* Landing Page */
+import LandingHome from "./pages/landing/LandingHome";
+import ErrorPage from "./pages/landing/ErrorPage";
+import LoginPage from "./pages/landing/Login";
+import SigUpPage from "./pages/landing/SignUp";
+import ForgetPass from "./pages/landing/ForgetPass";
+import Enterprise from "./pages/landing/Enterprise";
+import Plans from "./pages/landing/Plans";
+/* Sobre */
+/* Contato */
+/* Termos e Privacidade */
 
 /* Student */
 import StudentPanel from "./pages/student/studentPanel";
@@ -16,6 +20,7 @@ import StudentSimulation from "./pages/student/studentSimulation";
 import StudentSimulations from "./pages/student/studentSimulations";
 import StudentSimulationResult from "./pages/student/studentSimulationResult";
 import StudentPerformance from "./pages/student/studentPerformance";
+import StudentPlanLearning from "./pages/student/studentPlanLearning";
 import StudentProfile from "./pages/student/studentProfile";
 import StudentRanking from "./pages/student/studentRanking";
 import StudentTrail from "./pages/student/studentTrail";
@@ -36,7 +41,6 @@ export default function App() {
       <Route path="/signup" element={<SigUpPage />} />
       <Route path="/planos" element={<Plans />} />
       <Route path="/enterprise" element={<Enterprise />} />
-      <Route path="*" element={<ErrorPage />} />
 
       {/* Student */}
       <Route path="/student" element={<StudentPanel />}>
@@ -48,11 +52,15 @@ export default function App() {
 
         <Route path="simulados" element={<StudentSimulations />} />
         <Route path="simulados/:simulationId" element={<StudentSimulation />} />
+
         <Route
           path="simulados/:simulationId/resultado"
           element={<StudentSimulationResult />}
         />
+
         <Route path="desempenho" element={<StudentPerformance />} />
+        <Route path="plano-de-estudos" element={<StudentPlanLearning />} />
+
         <Route path="perfil" element={<StudentProfile />} />
         <Route path="ranking" element={<StudentRanking />} />
         <Route path="trilhas" element={<StudentTrail />} />
@@ -61,6 +69,9 @@ export default function App() {
       {/* Teacher */}
 
       {/* Institution */}
+
+      {/* Error Page */}
+      <Route path="*" element={<ErrorPage />} />
     </Routes>
   );
 }

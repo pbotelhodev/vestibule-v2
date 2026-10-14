@@ -1,15 +1,15 @@
 /* Componentes */
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import HeroMockup from "../components/HeroMockup";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import HeroMockup from "../../components/HeroMockup";
 
 /* Icons */
 import { ChevronRight, Building2, GraduationCap, School } from "lucide-react";
 
 /* Services */
-import { recursos } from "../services/recursos";
-import { planos } from "../services/planos";
-import { faqs } from "../services/faqs";
+import { recursos } from "../../services/recursos";
+import { planos } from "../../services/planos";
+import { faqs } from "../../services/faqs";
 import { Link, useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
@@ -47,7 +47,7 @@ const LandingPage = () => {
 
               <h1 className="mt-5 text-3xl leading-[1.06] font-extrabold tracking-tight text-slate-950 sm:text-5xl lg:text-5xl xl:text-5xl 2xl:text-7xl">
                 Gabarite o ENEM e alcance a sua{" "}
-                <span className="text-violet-600">aprovação.</span>
+                <span className="text-red-">aprovação.</span>
               </h1>
 
               <p className="mx-auto mt-4 max-w-md text-sm leading-6 text-slate-500 sm:mt-5 sm:max-w-lg sm:text-base sm:leading-7 xl:mx-0 2xl:text-lg 2xl:leading-8">

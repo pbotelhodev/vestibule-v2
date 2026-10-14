@@ -16,9 +16,9 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 
 /* Imports Components */
-import Logo from "../components/ui/Logo";
-import Footer from "../components/Footer";
-import Demo from "../components/ui/demo";
+import Logo from "../../components/ui/Logo";
+import Footer from "../../components/Footer";
+import Demo from "../../components/ui/demo";
 
 const EnterprisePage = () => {
   const [demoActive, setDemoActive] = useState(false);

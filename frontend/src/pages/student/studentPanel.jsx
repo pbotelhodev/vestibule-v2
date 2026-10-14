@@ -9,7 +9,8 @@ const StudentPanel = () => {
     avatarUrl: null,
     createdAt: "2026-06-06T00:00:00.000Z",
     email: "pp@teste.com",
-    emailVerifiedAt: null,
+    credits: 2,
+    emailVerifiedAt: true,
     googleId: null,
     institutionCode: null,
     lastLoginAt: null,
@@ -21,7 +22,7 @@ const StudentPanel = () => {
     studentType: "INDIVIDUAL",
     updatedAt: new Date().toISOString(),
     /* Inserir no db essa coluna */
-    planActive: "free", // "free", "pro" ou "premium"
+    planActive: "premium", // "free", "pro" ou "premium"
   };
 
   return (

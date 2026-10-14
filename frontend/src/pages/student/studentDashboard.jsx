@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 /* Const Assets */
 
 /* Const components */
-import FreeDashboard from "../../components/student/FreeDashboard";
-import PremiumDashboard from "../../components/student/PremiuimDashboard";
-import ProDashboard from "../../components/student/ProDashboard";
+import FreeDashboard from "../../components/student/free/FreeDashboard";
+import PremiumDashboard from "../../components/student/premium/PremiuimDashboard";
+import ProDashboard from "../../components/student/pro/ProDashboard";
 
 /* Import services */
 import { getStudentResults } from "../../services/dashboard/callDashboard";

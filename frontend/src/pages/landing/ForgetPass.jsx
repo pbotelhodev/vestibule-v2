@@ -16,9 +16,9 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 /* imports components */
-import Logo from "../components/ui/Logo";
-import Alert from "../components/ui/Alert";
-import Loading from "../components/ui/Loading";
+import Logo from "../../components/ui/Logo";
+import Alert from "../../components/ui/Alert";
+import Loading from "../../components/ui/Loading";
 
 const ForgotPasswordPage = () => {
   /* Navigate */
