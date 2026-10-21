@@ -5,54 +5,16 @@ import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 /* Assets */
 
 /* Components */
-import Loading from "../../components/ui/Loading";
-import StudentSimulationContent from "../../components/student/studentSimulationContent";
+import Loading from "../../components/ui/Loading"; //Importa o componente de loading
 
 /* Services */
-import { getSimulationByPublicId } from "../../services/simulations/serviceSimulations";
 
-const StudentSimulationPage = () => {
-  const [simulation, setSimulation] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const { simulationId } = useParams();
-  const navigate = useNavigate();
-  const outletContext = useOutletContext();
-
-  const student = outletContext?.student;
-
-  useEffect(() => {
-    setLoading(true);
-
-    const getSimulation = async () => {
-      try {
-        const response = await getSimulationByPublicId(simulationId);
-        setSimulation(response);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    getSimulation();
-  }, [simulationId]);
-
-  const handleFinishSimulation = (submission) => {
-    navigate(`/student/simulados/${simulationId}/resultado`, {
-      state: { source: "fresh", submission },
-    });
-  };
-
-  if (loading || !simulation) {
-    return <Loading />;
-  }
-
-  return (
-    <StudentSimulationContent
-      student={student}
-      simulation={simulation}
-      onFinishSimulation={handleFinishSimulation}
-    />
-  );
+const StudentSimulation = () => {
+  const [loading, setLoading] = useState(true); //Chama a página de loading
+  const { simulationId } = useParams(); //Chama o parâmetro simulationId
+  const navigate = useNavigate(); //Chama a funçao de navegar
+  const outletContext = useOutletContext(); //Chama o contexto
+  const student = outletContext?.student; //Coleta os dados student do contexto
 };
 
-export default StudentSimulationPage;
+export default StudentSimulation;

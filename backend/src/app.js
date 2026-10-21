@@ -8,7 +8,7 @@ const allowedOrigins = [
   "https://vestibule-two.vercel.app",
   "http://localhost:5173",
   "http://localhost:3000",
-  "http://192.168.10.14:5173", 
+  "http://192.168.10.14:5173",
 ];
 
 app.use(helmet());
@@ -28,10 +28,8 @@ app.use(
 
 app.use(express.json());
 
-
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", service: "Backend vestibule ativo 🟢" });
 });
-
 
 module.exports = app;

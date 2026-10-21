@@ -12,6 +12,7 @@ import Plans from "./pages/landing/Plans";
 /* Contato */
 /* Termos e Privacidade */
 
+
 /* Student */
 import StudentPanel from "./pages/student/studentPanel";
 import StudentDashboard from "./pages/student/studentDashboard";

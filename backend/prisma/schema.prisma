@@ -6,6 +6,42 @@ datasource db {
   provider = "postgresql"
 }
 
+enum Plan {
+  FREE
+  PRO
+  PREMIUM
+}
+
+enum Subject {
+  GERAL
+  MATEMATICA
+  PORTUGUES
+  FISICA
+  QUIMICA
+  BIOLOGIA
+  FILOSOFIA
+  SOCIOLOGIA
+  TECNOLOGIA
+  INGLES
+  ESPANHOL
+  HISTORIA
+  GEOGRAFIA
+}
+
+
+model Simulation {
+  id              String   @id @default(uuid()) 
+  publicId        String   @unique
+  title           String
+  description     String?
+  published       Boolean  @default(false)
+  createdAt       DateTime @default(now()) 
+  updatedAt       DateTime @updatedAt 
+  durationMinutes Int 
+  requiredPlan Plan @default(FREE)
+  subject Subject @default(GERAL)
+}
+
 /**
  * npx prisma validate      → confere se o schema está válido
  * npx prisma format        → organiza o schema.prisma
