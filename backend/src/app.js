@@ -3,6 +3,10 @@ const cors = require("cors");
 const helmet = require("helmet");
 const app = express();
 
+/* Imports dos Routes */
+const simulationsRoute = require("./routes/SimulationsRoutes")
+
+
 /* Origens permitidas */
 const allowedOrigins = [
   "https://vestibule-two.vercel.app",
