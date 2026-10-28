@@ -4,11 +4,11 @@ const helmet = require("helmet");
 const app = express();
 
 /* Imports dos Routes */
-const simulationsRoute = require("./routes/SimulationsRoutes")
-
+const simulationRoutes = require("./routes/SimulationsRoutes");
 
 /* Origens permitidas */
 const allowedOrigins = [
+  "https://vestibule.com.br",
   "https://vestibule-two.vercel.app",
   "http://localhost:5173",
   "http://localhost:3000",
@@ -31,6 +31,8 @@ app.use(
 );
 
 app.use(express.json());
+
+app.use("/api/simulations", simulationRoutes);
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", service: "Backend vestibule ativo 🟢" });

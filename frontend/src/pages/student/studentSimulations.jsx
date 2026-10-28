@@ -12,28 +12,29 @@ import { getSimulations } from "../../services/simulations/serviceSimulations";
 const StudentSimulations = () => {
   /* State */
   const [simulations, setSimulations] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   /* Effects */
+
   useEffect(() => {
     setLoading(true);
-    const listSimulations = async () => {
+    const loadSimulations = async () => {
       try {
-        const response = await getSimulations();
-        setSimulations(response);
-        
+        const data = await getSimulations();
+        setSimulations(data);
       } catch (error) {
-        console.log(error);
+        console.error("Erro ao buscar os simulados", error);
       } finally {
         setLoading(false);
       }
     };
-    listSimulations();
+
+    loadSimulations();
   }, []);
 
   const { student } = useOutletContext();
 
-  if (loading || !simulations) {
+  if (loading) {
     return <Loading />;
   }
 

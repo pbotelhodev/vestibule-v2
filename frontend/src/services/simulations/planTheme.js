@@ -202,3 +202,49 @@ export const planThemesAside = {
     ring: "ring-purple-100",
   },
 };
+
+export const planThemesSimulation = {
+  free: {
+    name: "Free",
+    accent: "text-violet-700",
+    heading: "text-violet-700",
+    icon: "text-violet-600",
+    iconBox: "border-violet-100 bg-violet-50 text-violet-600",
+    badge: "border-violet-200 bg-violet-50 text-violet-700",
+    filter: "border-violet-200 bg-violet-50 text-violet-700",
+    filterHover: "hover:border-violet-200 hover:text-violet-700",
+    focus: "focus-within:border-violet-400 focus-within:ring-violet-100",
+    button: "bg-violet-600 text-white hover:bg-violet-700",
+    banner: "border-violet-100 bg-violet-50/60",
+  },
+
+  pro: {
+    name: "Pro",
+    accent: "text-blue-700",
+    heading: "text-blue-700",
+    icon: "text-blue-600",
+    iconBox: "border-blue-100 bg-blue-50 text-blue-600",
+    badge: "border-blue-200 bg-blue-50 text-blue-700",
+    filter: "border-blue-200 bg-blue-50 text-blue-700",
+    filterHover: "hover:border-blue-200 hover:text-blue-700",
+    focus: "focus-within:border-blue-400 focus-within:ring-blue-100",
+    button: "bg-blue-600 text-white hover:bg-blue-700",
+    banner: "border-blue-100 bg-blue-50/60",
+  },
+
+  premium: {
+    name: "Premium",
+    accent: "text-purple-700",
+    heading:
+      "bg-linear-to-r from-purple-800 via-blue-700 to-teal-500 bg-clip-text text-transparent",
+    icon: "text-purple-700",
+    iconBox: "border-purple-200 bg-purple-50 text-purple-700",
+    badge: "border-purple-200 bg-purple-50 text-purple-700",
+    filter: "border-purple-200 bg-purple-50 text-purple-700",
+    filterHover: "hover:border-purple-200 hover:text-purple-700",
+    focus: "focus-within:border-purple-400 focus-within:ring-purple-100",
+    button:
+      "bg-linear-to-r from-purple-800 via-blue-700 to-teal-500 text-white hover:opacity-90",
+    banner: "border-purple-100 bg-purple-50/50",
+  },
+};

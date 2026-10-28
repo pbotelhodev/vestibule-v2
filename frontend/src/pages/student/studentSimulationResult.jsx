@@ -7,8 +7,8 @@ import {
 import { useEffect, useRef, useState } from "react";
 
 import {
-  submitSimulationAnswers,
-  getSimulationResolved,
+  
+  /* submitSimulationAnswers, getSimulationResolved, */
 } from "../../services/simulations/serviceSimulations";
 
 import StudentSimulationResultContent from "../../components/student/studentSimulationResultContent";
@@ -34,8 +34,8 @@ const StudentSimulationResult = () => {
   const [manualPublicId, setManualPublicId] = useState("");
   const [showPublicIdModal, setShowPublicIdModal] = useState(!initialPublicId);
   const [modalError, setModalError] = useState("");
-
-  const studentId = "1d22a020-1a65-4ae4-b22a-6a76efb327f6";
+/* 
+  const studentId = "1d22a020-1a65-4ae4-b22a-6a76efb327f6"; */
   const hasSubmittedRef = useRef(false);
 
   const handleManualPublicIdSubmit = (event) => {
@@ -66,7 +66,7 @@ const StudentSimulationResult = () => {
           return;
         }
 
-        if (!submission) {
+        /* if (!submission) {
           const response = await getSimulationResolved(publicId, studentId);
 
           console.log(response);
@@ -75,17 +75,17 @@ const StudentSimulationResult = () => {
           setShowPublicIdModal(false);
           setModalError("");
           return;
-        }
+        } */
 
         hasSubmittedRef.current = true;
 
-        const response = await submitSimulationAnswers(
+        /* const response = await submitSimulationAnswers(
           submission.publicId,
           submission,
           studentId,
-        );
+        ); */
 
-        setResult(response);
+        /* setResult(response); */
         setShowPublicIdModal(false);
         setModalError("");
       } catch (error) {
