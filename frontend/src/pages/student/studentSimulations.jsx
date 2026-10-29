@@ -12,7 +12,7 @@ import { getSimulations } from "../../services/simulations/serviceSimulations";
 const StudentSimulations = () => {
   /* State */
   const [simulations, setSimulations] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   /* Effects */
 

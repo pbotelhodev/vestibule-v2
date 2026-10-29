@@ -1,33 +1,73 @@
-import { LoaderCircle } from "lucide-react";
+import { GraduationCap } from "lucide-react";
 
-const Loading = () => {
+const themes = {
+  free: {
+    primary: "text-violet-600",
+    background: "bg-violet-600",
+    soft: "bg-violet-100",
+  },
+  pro: {
+    primary: "text-blue-600",
+    background: "bg-blue-600",
+    soft: "bg-blue-100",
+  },
+  premium: {
+    primary: "text-purple-700",
+    background: "bg-linear-to-r from-purple-800 via-blue-700 to-teal-500",
+    soft: "bg-purple-100",
+  },
+};
+
+const Loading = ({ student }) => {
+  const plan = student?.planActive?.toLowerCase() ?? "free";
+  const theme = themes[plan] ?? themes.free;
+
   return (
-    <div className="fixed inset-0 z-9999 grid place-items-center bg-white/45 px-4 text-slate-900 backdrop-blur-md">
-      {/* Card */}
-      <section className="relative flex w-full max-w-70 flex-col items-center rounded-3xl border border-violet-100 bg-white/90 px-5 py-5 text-center shadow-2xl shadow-violet-950/10 backdrop-blur-xl sm:max-w-sm sm:rounded-4xl sm:px-8 sm:py-7">
-        <div className="relative grid size-12 place-items-center rounded-2xl bg-violet-50 text-violet-600 sm:size-16 sm:rounded-3xl">
-          <div className="absolute inset-0 rounded-2xl bg-violet-400/15 blur-xl sm:rounded-3xl" />
+    <div
+      role="status"
+      aria-label="Carregando conteúdo"
+      className="fixed inset-0 z-9999 flex min-h-dvh w-full flex-col items-center justify-center gap-5 bg-white/20 backdrop-blur-sm"
+    >
+      {/* Animação */}
+      <div className="relative grid size-24 place-items-center">
+        <div className="absolute inset-2 rounded-full border border-slate-200" />
 
-          <LoaderCircle
-            className="relative size-5 animate-spin sm:size-7"
-            strokeWidth={2}
+        <div className="absolute inset-0 motion-safe:animate-spin">
+          <span
+            className={[
+              "absolute left-1/2 top-0 size-3 -translate-x-1/2 rounded-full",
+              theme.background,
+            ].join(" ")}
           />
         </div>
 
-        <h1 className="mt-4 text-sm font-extrabold tracking-tight text-slate-800 sm:mt-5 sm:text-lg">
-          Preparando tudo
-        </h1>
+        <div
+          className={[
+            "absolute inset-3 rounded-full border-2 border-transparent border-t-current motion-safe:animate-[spin_3s_linear_infinite_reverse]",
+            theme.primary,
+          ].join(" ")}
+        />
 
-        <p className="mt-1.5 max-w-56 text-xs leading-5 text-slate-500 sm:mt-2 sm:max-w-xs sm:text-sm sm:leading-6">
-          Aguarde um instante enquanto carregamos sua experiência.
-        </p>
-
-        <div className="mt-4 flex items-center gap-1.5 sm:mt-6 sm:gap-2">
-          <span className="size-1.5 animate-pulse rounded-full bg-violet-500 sm:size-2" />
-          <span className="size-1.5 animate-pulse rounded-full bg-blue-500 delay-150 sm:size-2" />
-          <span className="size-1.5 animate-pulse rounded-full bg-amber-400 delay-300 sm:size-2" />
+        <div
+          className={[
+            "grid size-11 place-items-center rounded-full",
+            theme.soft,
+          ].join(" ")}
+        >
+          <GraduationCap className={["size-6", theme.primary].join(" ")} />
         </div>
-      </section>
+      </div>
+
+      {/* Texto */}
+      <div className="text-center">
+        <h3 className="text-sm font-bold text-blue-950">
+          Conectando conhecimento
+        </h3>
+
+        <p className="mt-1 text-xs text-slate-500">
+          Preparando o Vestibule para você.
+        </p>
+      </div>
     </div>
   );
 };
